@@ -23,7 +23,6 @@ export type {
   AuthenticatedHttpContext,
   SuperAdminHttpContext,
   PremiumHttpContext,
-  PermissionHttpContext
 } from '../../types/http_context.js'
 /**
  * Services utilisés par les contrôleurs

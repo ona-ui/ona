@@ -1,13 +1,22 @@
 import { BaseService, ValidationError, UnauthorizedError } from './base_service.js'
 import { userRepository } from '../repositories/index.js'
 import drive from '@adonisjs/drive/services/main'
-import { type ImageVariant } from './image_optimization_service.js'
 
 // Ré-export des types pour compatibilité
-export type { ImageVariant } from './image_optimization_service.js'
 import env from '#start/env'
 import { createHash } from 'crypto'
 import { extname } from 'path'
+
+
+export interface ImageVariant {
+  size: 'thumbnail' | 'small' | 'medium' | 'large' | 'original'
+  width: number
+  height: number
+  filename: string
+  url: string
+  path: string
+  fileSize: number
+}
 
 export interface UploadedFile {
   filename: string

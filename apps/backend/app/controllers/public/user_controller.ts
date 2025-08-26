@@ -1,9 +1,9 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import BasePublicController from './base_public_controller.js'
 import { auth } from '../../lib/auth.js'
-import { userService } from '../../services/index.js'
 import { licenseService } from '../../services/license_service.js'
 import type { licenses } from '../../db/schema.js'
+import { userService } from '#services/user_service'
 
 // Types pour les licences
 type License = typeof licenses.$inferSelect

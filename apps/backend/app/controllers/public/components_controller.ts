@@ -1069,32 +1069,6 @@ export default class ComponentsController extends BasePublicController {
   }
 
   /**
-   * Génère un preview compilé du composant
-   */
-  private async generatePreview(component: any, options: any) {
-    // Implémentation simplifiée - à améliorer avec un vrai système de compilation
-    return {
-      html: `<div class="preview-container">
-        <h3>${component.name}</h3>
-        <p>${component.description || 'Aperçu du composant'}</p>
-        ${component.previewImageLarge ? `<img src="${component.previewImageLarge}" alt="${component.name}" />` : ''}
-      </div>`,
-      css: `
-        .preview-container {
-          padding: 20px;
-          border: 1px solid #e5e7eb;
-          border-radius: 8px;
-          font-family: system-ui, -apple-system, sans-serif;
-        }
-      `,
-      js: '',
-      framework: options.framework || 'html',
-      cssFramework: options.cssFramework || 'css',
-      theme: options.theme || 'light',
-    }
-  }
-
-  /**
    * Groupe les assets par type pour les métadonnées
    */
   private groupAssetsByType(assets: Array<{ filename: string; url: string; type: string }>): Record<string, number> {

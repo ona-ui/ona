@@ -1,6 +1,5 @@
 import type { HttpContext as BaseHttpContext } from '@adonisjs/core/http'
 import type { UserPermissions, UserSubscriptionInfo } from '../services/user_service.js'
-import type { Permission } from '../middleware/permissions_middleware.js'
 
 /**
  * Extension du contexte HTTP d'AdonisJS avec les informations d'authentification
@@ -59,10 +58,6 @@ declare module '@adonisjs/core/http' {
     isAdmin?: boolean
     isSuperAdmin?: boolean
     isPreviewAccess?: boolean
-
-    // Informations de permission spécifique accordée
-    grantedPermission?: Permission
-    userPermissions?: Permission[]
 
     // Informations premium
     premiumTier?: string
@@ -146,14 +141,6 @@ export interface PremiumHttpContext extends AuthenticatedHttpContext {
 }
 
 /**
- * Type helper pour les contextes avec permissions spécifiques
- */
-export interface PermissionHttpContext extends AuthenticatedHttpContext {
-  grantedPermission: Permission
-  userPermissions: Permission[]
-}
-
-/**
  * Utilitaires de type guards pour vérifier le contexte
  */
 export function isAuthenticatedContext(ctx: BaseHttpContext): ctx is AuthenticatedHttpContext {
@@ -170,11 +157,6 @@ export function isSuperAdminContext(ctx: BaseHttpContext): ctx is SuperAdminHttp
 
 export function isPremiumContext(ctx: BaseHttpContext): ctx is PremiumHttpContext {
   return isAuthenticatedContext(ctx) && !!(ctx as any).isPremium
-}
-
-export function hasPermission(ctx: BaseHttpContext, permission: Permission): ctx is PermissionHttpContext {
-  const userPermissions = (ctx as any).userPermissions as Permission[] | undefined
-  return isAuthenticatedContext(ctx) && !!userPermissions?.includes(permission)
 }
 
 /**

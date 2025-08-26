@@ -373,3 +373,7 @@ export class UserService extends BaseService {
     return user?.role === 'admin' || user?.role === 'super_admin';
   }
 }
+
+
+
+export const userService = new UserService();
