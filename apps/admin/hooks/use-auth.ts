@@ -1,7 +1,7 @@
 "use client"
 
 import { useAuth as useAuthProvider } from "@/components/auth-provider"
-import { signIn, signOut } from "@/lib/auth"
+import { authClient } from "@/lib/auth"
 import { authUtils } from "@/lib/auth"
 import { useRouter } from "next/navigation"
 import { useCallback } from "react"
@@ -20,7 +20,7 @@ export function useAuth() {
     console.log("🔐 [AUTH HOOK] Début connexion pour:", email)
     
     try {
-      await signIn.email({
+      await authClient.signIn.email({
         email,
         password,
         rememberMe,
@@ -46,7 +46,7 @@ export function useAuth() {
    */
   const logout = useCallback(async () => {
     try {
-      await signOut({
+      await authClient.signOut({
         fetchOptions: {
           onSuccess: () => {
             // Rafraîchir les données de session

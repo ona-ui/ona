@@ -5,7 +5,7 @@ import { customSessionClient } from "better-auth/client/plugins"
  * Configuration du client Better-auth pour l'admin dashboard
  * Avec support des sessions personnalisées pour inclure le rôle
  */
-export const authClient = createAuthClient({
+export const authClient: ReturnType<typeof createAuthClient> = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333",
   fetchOptions: {
     credentials: "include",
@@ -16,15 +16,13 @@ export const authClient = createAuthClient({
   ],
 })
 
-console.log("🔧 [AUTH CLIENT DEBUG] Configuration Better-auth:", {
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333",
-  credentials: "include"
-})
-
 /**
  * Export des fonctions d'authentification Better-auth
  */
-export const { signIn, signOut, signUp, useSession } = authClient
+export const signIn: any = authClient.signIn
+export const signOut: any = authClient.signOut
+export const signUp: any = authClient.signUp
+export const useSession = authClient.useSession
 
 /**
  * Types d'erreur d'authentification
@@ -84,11 +82,6 @@ export const authUtils = {
     
     const canAccess = hasValidRole || hasAdminEmail
     
-    console.log("🔍 [AUTH UTILS] Résultat vérification:", {
-      hasValidRole,
-      hasAdminEmail,
-      canAccess
-    })
     
     return canAccess
   }

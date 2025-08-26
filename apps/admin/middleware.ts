@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { headers } from "next/headers"
-import { auth, serverAuthUtils } from "@/lib/auth-server"
 import { Session } from "better-auth/types"
 import { betterFetch } from "@better-fetch/fetch";
 
@@ -24,7 +22,6 @@ export async function middleware(request: NextRequest) {
 
   // Si c'est une page publique, continuer
   if (isPublicPath) {
-    console.log(`🛡️  [MIDDLEWARE] ℹ️  Page publique: ${pathname}`)
     return NextResponse.next()
   }
 
