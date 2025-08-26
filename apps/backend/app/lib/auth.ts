@@ -15,6 +15,8 @@ const options = {
     'http://localhost:3002',  // Frontend Next.js
     'http://localhost:3333',  // Backend Adonis
     'http://localhost:5173',  // Autre origine si nécessaire
+    'https://ona-ui.com',
+    'https://admin.ona-ui.com'
   ],
   
   // 🔍 Activer le mode verbose pour debugging
