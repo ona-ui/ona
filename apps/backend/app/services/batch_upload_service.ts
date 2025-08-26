@@ -318,8 +318,7 @@ export class BatchUploadService extends BaseService {
     const currentFile = fileURLToPath(import.meta.url)
     const currentDir = dirname(currentFile)
     
-    // Remonter depuis apps/backend/app/services vers le workspace root puis vers apps/components-compiler
-    const basePath = path.resolve(currentDir, '../../../components-compiler/dist-obf')
+    const basePath = path.resolve(currentDir, '../../../../../components-compiler/dist-obf')
     return path.join(basePath, relativePath)
   }
 

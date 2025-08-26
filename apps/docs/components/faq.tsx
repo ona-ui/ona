@@ -83,7 +83,7 @@ export default function FAQ() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-                className="border border-slate-200/50 rounded-xl bg-[#FAF3E0]/50 backdrop-blur-sm hover:bg-[#FAF3E0]/80 transition-all duration-200"
+                className="border rounded-xl bg-[#FAF3E0]/50 backdrop-blur-sm hover:bg-[#FAF3E0]/80 transition-all duration-200"
               >
                 <button
                   onClick={() => toggleFAQ(index)}

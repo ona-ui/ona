@@ -4,6 +4,8 @@ import { Check, ArrowRight, Loader2, ChevronDown } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@workspace/ui/components/button'
 import { useState } from 'react'
+import FAQ from './faq'
+import { useRouter } from 'next/navigation'
 
 interface FAQItem {
   question: string
@@ -14,32 +16,9 @@ export default function Pricing() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [openFAQ, setOpenFAQ] = useState<number | null>(0)
+  const router = useRouter();
 
   const PUBLIC_PRODUCT_ID = 'pro'
-
-  const faqItems: FAQItem[] = [
-    {
-      question: "How is this different from v0, ChatGPT, or Claude Artifacts?",
-      answer: "AI tools generate generic components from training data everyone has seen. We provide premium components from successful startups that aren't in training datasets. Plus, ours are optimization-tested, not just pretty."
-    },
-    {
-      question: "Can I use these with Cursor/Copilot?",
-      answer: "Absolutely! In fact, that's the recommended workflow. Use AI for logic, our components for UI. They're designed to be AI-friendly for customization."
-    },
-    {
-      question: "Won't AI eventually learn these designs?",
-      answer: "We ship 20+ new components weekly from emerging successful startups. By the time AI models train on current designs, we're already ahead. Plus, AI can't capture the conversion optimizations we build in."
-    },
-    {
-      question: "Is this worth it if I already have ChatGPT Pro?",
-      answer: "100%. ChatGPT is great for many things, but it generates the same Hero section everyone else gets. Our components make you stand out. Use both: AI for speed, our components for uniqueness."
-    }
-  ]
-
-  const toggleFAQ = (index: number) => {
-    setOpenFAQ(openFAQ === index ? null : index)
-  }
-
   const handleGetAccess = async () => {
     try {
       setIsLoading(true)
@@ -164,6 +143,7 @@ export default function Pricing() {
 
                 <Button
                   size="lg"
+                  onClick={() => router.push("/docs")}
                   className="w-full text-slate-700 px-6 py-3 rounded-xl font-semibold bg-[#FAF3E0] border-2 border-slate-300 hover:border-slate-400 hover:bg-slate-50 transition-all duration-200"
                 >
                   Start for free
@@ -280,7 +260,7 @@ export default function Pricing() {
                     </>
                   ) : (
                     <>
-                      Join the cult for life
+                      Join for life
                       <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                     </>
                   )}
@@ -295,83 +275,7 @@ export default function Pricing() {
           </div>
 
           {/* FAQ Section */}
-          <motion.div
-            className="mt-24 max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.0 }}
-          >
-            <div className="text-center mb-12">
-              <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-800 bg-[#FAF3E0]/80 backdrop-blur-sm rounded-full border shadow-sm mb-6"
-                style={{borderColor: 'rgba(201, 99, 66, 0.3)'}}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 1.1 }}
-              >
-                <div className="w-2 h-2 rounded-full animate-pulse" style={{backgroundColor: '#C96342'}}></div>
-                 FAQ
-              </motion.div>
-
-              <motion.h2
-                className="text-2xl md:text-3xl font-bold text-zinc-800 mb-3 tracking-tight"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1.2 }}
-              >
-                Questions About Using This With{" "}
-                <span className="bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 px-2 py-1 rounded-lg border border-amber-200/50">
-                  AI Tools
-                </span>
-              </motion.h2>
-            </div>
-
-            <div className="space-y-2">
-              {faqItems.map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 1.3 + index * 0.1 }}
-                  className="border border-slate-200/50 rounded-xl bg-[#FAF3E0]/50 backdrop-blur-sm hover:bg-[#FAF3E0]/80 transition-all duration-200"
-                >
-                  <button
-                    onClick={() => toggleFAQ(index)}
-                    className="w-full p-4 text-left flex items-center justify-between hover:bg-slate-50/30 transition-colors duration-200 rounded-xl"
-                  >
-                    <h3 className="text-base font-medium text-zinc-800 pr-4">
-                      {item.question}
-                    </h3>
-                    <motion.div
-                      animate={{ rotate: openFAQ === index ? 180 : 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="flex-shrink-0"
-                    >
-                      <ChevronDown className="w-4 h-4 text-slate-500" />
-                    </motion.div>
-                  </button>
-                  
-                  <AnimatePresence>
-                    {openFAQ === index && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2, ease: "easeInOut" }}
-                        className="overflow-hidden"
-                      >
-                        <div className="px-4 pb-4">
-                          <p className="text-sm text-slate-600 leading-relaxed">
-                            {item.answer}
-                          </p>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+          <FAQ />
 
         </div>
       </div>

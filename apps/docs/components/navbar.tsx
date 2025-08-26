@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Menu, X, Search, Square, SquareActivity, LucideLayoutPanelTop, AppWindowMac, CreditCard, User, Crown, LogOut } from 'lucide-react'
 import GlassSurface from './glass-surface'
 import Link from 'next/link'
+import Image from 'next/image'
 import { PremiumIndicator, PremiumIndicatorCompact } from './premium-indicator'
 import { useAuth } from '@/hooks/use-auth'
 import { signOut } from '@/lib/auth-client'
@@ -18,6 +19,14 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { user, isAuthenticated, isPremium, subscription } = useAuth()
 
+  // Debug logs pour diagnostiquer les chevauchements
+  console.log('Navbar Debug:', {
+    isAuthenticated,
+    isPremium,
+    hasUser: !!user,
+    mobileMenuOpen
+  })
+
   const handleSignOut = async () => {
     try {
       await signOut()
@@ -30,7 +39,7 @@ export function Navbar() {
   return (
     <>
       <div className="w-full"></div>
-      <div className="fixed top-4 left-4 right-4 md:left-1/2 md:right-auto md:transform md:-translate-x-1/2 z-50 rounded-3xl ring-1 ring-white/20 ring-inset shadow-lg shadow-black/5 md:w-auto md:min-w-[600px] md:max-w-[900px] overflow-visible">
+      <div className="fixed top-4 left-4 right-4 md:left-1/2 md:right-auto md:transform md:-translate-x-1/2 z-50 rounded-3xl ring-1 ring-white/20 ring-inset shadow-lg shadow-black/5 md:w-auto md:min-w-[750px] md:max-w-[1100px] overflow-visible">
         <GlassSurface
           displace={15}
           distortionScale={-150}
@@ -47,21 +56,20 @@ export function Navbar() {
         >
         <header className="w-full bg-transparent min-w-0 overflow-visible">
           <nav className="px-4 sm:px-6 md:px-8 lg:px-10 overflow-visible">
-            <div className="flex items-center justify-between h-14 sm:h-16">
+            <div className="flex items-center justify-between h-14 sm:h-16 min-w-0">
               {/* Left side - Logo + Navigation */}
-              <div className="flex items-center gap-4 sm:gap-6 lg:gap-8 mr-4">
+              <div className="flex items-center gap-2 sm:gap-4 lg:gap-6 mr-2 min-w-0 flex-shrink">
                 <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center" style={{background: 'linear-gradient(135deg, #C96342, #E8915B)'}}>
-                    <span className="text-white font-bold text-xs sm:text-sm">O</span>
-                  </div>
-                  <span className="text-base sm:text-lg font-semibold text-slate-800">
-                    ONA<span style={{color: '#C96342'}}>UI</span>
-                  </span>
-                  <span className="hidden sm:inline text-xs bg-[#FAF3E0]/60 text-slate-700 px-2 py-0.5 rounded-full backdrop-blur-sm">1.0</span>
+                  <Image
+                    src="https://cdn.ona-ui.com/logo-ona.png"
+                    alt="Ona UI Logo"
+                    width={40}
+                    height={30}
+                  />
                 </Link>
 
                 {/* Navigation */}
-                <div className="hidden md:flex items-center gap-4 lg:gap-6">
+                <div className="hidden md:flex items-center gap-2 lg:gap-4 flex-shrink">
                   {navigation.map((item) => {
                     const isDisabled = item.badge === 'soon'
                     const baseClasses = "text-sm font-medium transition-colors flex items-center gap-2"
@@ -115,10 +123,10 @@ export function Navbar() {
               </div>
 
               {/* Right side - Social icons, Premium indicator and CTA */}
-              <div className="flex items-center gap-3 sm:gap-4 lg:gap-6">
+              <div className="flex items-center gap-1 sm:gap-2 lg:gap-3 flex-shrink-0">
                 
                 {/* Social Icons */}
-                <div className="hidden sm:flex items-center gap lg:gap-1">
+                <div className="hidden sm:flex items-center gap-1 lg:gap-1">
                   <a
                     href="https://twitter.com"
                     target="_blank"
@@ -240,12 +248,12 @@ export function Navbar() {
 
                 {/* CTA Button - Desktop (only show if not premium) */}
                 {!isPremium && (
-                  <div className="hidden md:block">
+                  <div className="hidden lg:block flex-shrink-0">
                     <Link
                       href="/pricing"
-                      className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-[#C96342] to-[#E8915B] hover:from-[#B85A3A] hover:to-[#D7824F] rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md whitespace-nowrap"
+                      className="px-3 py-1.5 text-sm font-medium text-white bg-gradient-to-r from-[#C96342] to-[#E8915B] hover:from-[#B85A3A] hover:to-[#D7824F] rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md whitespace-nowrap"
                     >
-                      View Pricing
+                      Pricing
                     </Link>
                   </div>
                 )}
@@ -275,12 +283,12 @@ export function Navbar() {
           <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-[#FAF3E0]/95 backdrop-blur-md px-4 py-4 sm:max-w-sm border-l border-slate-200 shadow-xl">
             <div className="flex items-center justify-between mb-6">
               <Link href="/" className="flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background: 'linear-gradient(135deg, #C96342, #E8915B)'}}>
-                  <span className="text-white font-bold text-sm">O</span>
-                </div>
-                <span className="text-lg font-semibold text-zinc-800">
-                  ONA<span style={{color: '#C96342'}}>UI</span>
-                </span>
+                <Image
+                  src="https://cdn.ona-ui.com/logo-ona.png"
+                  alt="Ona UI Logo"
+                  width={100}
+                  height={25}
+                />
                 <span className="text-xs bg-[#FAF3E0]/60 text-slate-700 px-2 py-0.5 rounded-full">1.0</span>
               </Link>
               <button

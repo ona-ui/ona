@@ -1,6 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ["@workspace/ui"],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.ona-ui.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
 
   async rewrites() {
     return [
