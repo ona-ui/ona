@@ -23,7 +23,7 @@ export default class WebhookController extends BasePublicController {
     }
     
     this.stripe = new Stripe(secretKey, {
-      apiVersion: '2025-07-30.basil',
+      apiVersion: '2025-08-27.basil',
       typescript: true,
     });
 

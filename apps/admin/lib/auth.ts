@@ -1,4 +1,4 @@
-import { createAuthClient } from "better-auth/react"
+import { createAuthClient } from "better-auth/client"
 import { customSessionClient } from "better-auth/client/plugins"
 
 /**
@@ -22,7 +22,7 @@ export const authClient: ReturnType<typeof createAuthClient> = createAuthClient(
 export const signIn: any = authClient.signIn
 export const signOut: any = authClient.signOut
 export const signUp: any = authClient.signUp
-export const useSession = authClient.useSession
+export const { useSession } = authClient
 
 /**
  * Types d'erreur d'authentification

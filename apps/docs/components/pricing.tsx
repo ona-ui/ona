@@ -15,7 +15,6 @@ interface FAQItem {
 export default function Pricing() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [openFAQ, setOpenFAQ] = useState<number | null>(0)
   const router = useRouter();
 
   const PUBLIC_PRODUCT_ID = 'pro'
@@ -27,7 +26,7 @@ export default function Pricing() {
       const successUrl = `${window.location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`
       const cancelUrl = `${window.location.origin}/pricing`
 
-      const response = await fetch('http://localhost:3333/api/public/payment/create-checkout-session', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333"}/api/public/payment/create-checkout-session`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

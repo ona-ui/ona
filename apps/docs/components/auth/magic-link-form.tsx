@@ -139,27 +139,6 @@ export function MagicLinkForm({
           />
         </div>
 
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">
-            Nom (optionnel)
-          </label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-3 border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
-            style={{
-              '--tw-ring-color': 'rgba(201, 99, 66, 0.5)',
-            } as React.CSSProperties}
-            placeholder="Votre nom"
-            disabled={isLoading}
-          />
-          <p className="text-xs text-slate-500 mt-2">
-            Utilisé uniquement pour personnaliser l'email
-          </p>
-        </div>
-
         <button
           type="submit"
           disabled={isLoading || !email}

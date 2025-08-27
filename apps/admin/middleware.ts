@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { Session } from "better-auth/types"
 import { betterFetch } from "@better-fetch/fetch";
+import { authUtils } from "@/lib/auth";
 
 /**
  * Middleware d'authentification moderne pour protéger les routes admin
@@ -42,13 +43,27 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(loginUrl)
     }
 
-    // // Vérifier si l'utilisateur a accès au dashboard admin
-    // const canAccess = serverAuthUtils.canAccessAdminDashboard(session.user)
-    // if (!canAccess) {
+    // Récupérer les informations utilisateur depuis l'API
+    const userResponse = await betterFetch(`/api/user/profile`, {
+      baseURL: process.env.NEXT_PUBLIC_API_URL,
+      headers: {
+        cookie: request.headers.get("cookie") || "",
+      },
+    });
+
+    if (!userResponse.data) {
+      console.log(`🛡️  [MIDDLEWARE] ❌ Impossible de récupérer les infos utilisateur`)
+      const loginUrl = new URL("/login?error=auth_error", request.url)
+      return NextResponse.redirect(loginUrl)
+    }
+
+    // Vérifier si l'utilisateur a accès au dashboard admin
+    const canAccess = authUtils.canAccessAdminDashboard(userResponse.data)
+     if (!canAccess) {
      
-    //   const loginUrl = new URL("/login?error=access_denied", request.url)
-    //   return NextResponse.redirect(loginUrl)
-    // }
+       const loginUrl = new URL("/login?error=access_denied", request.url)
+       return NextResponse.redirect(loginUrl)
+     }
 
     // Utilisateur authentifié et autorisé, continuer
     console.log(`🛡️  [MIDDLEWARE] ✅ Accès autorisé pour ${session.id || session.userId}`)
