@@ -17,15 +17,7 @@ const navigation = [
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const { user, isAuthenticated, isPremium, subscription } = useAuth()
-
-  // Debug logs pour diagnostiquer les chevauchements
-  console.log('Navbar Debug:', {
-    isAuthenticated,
-    isPremium,
-    hasUser: !!user,
-    mobileMenuOpen
-  })
+  const { user, isAuthenticated, isPremium } = useAuth()
 
   const handleSignOut = async () => {
     try {
@@ -148,7 +140,7 @@ export function Navbar() {
                     </svg>
                   </a>
                   <a
-                    href="https://discord.gg/ona-ui"
+                    href="https://discord.gg/XzsMz8BjbV"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2 lg:p-2.5 text-slate-700 hover:text-[#C96342] transition-colors"
@@ -387,7 +379,7 @@ export function Navbar() {
                     </svg>
                   </a>
                   <a
-                    href="https://discord.gg/ona-ui"
+                    href="https://discord.gg/XzsMz8BjbV"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2 text-slate-700 hover:text-[#C96342] transition-colors rounded-lg hover:bg-slate-100"
