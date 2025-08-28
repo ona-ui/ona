@@ -29,7 +29,7 @@ export function Breadcrumbs({ category, subcategory, componentName }: Breadcrumb
   const categories = Array.isArray(categoriesData) ? categoriesData : (categoriesData?.data || [])
 
   const getCategoryName = (slug: string) => {
-    const cat = categories.find(c => c.slug === slug)
+    const cat = categories.find((c: any) => c.slug === slug)
     return cat?.name || slug
   }
 
