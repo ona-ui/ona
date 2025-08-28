@@ -34,7 +34,7 @@ export function Breadcrumbs({ category, subcategory, componentName }: Breadcrumb
   }
 
   const getSubcategoryName = (categorySlug: string, subcategorySlug: string) => {
-    const cat = categories.find(c => c.slug === categorySlug)
+    const cat = categories.find((c: any) => c.slug === categorySlug)
     const sub = cat?.subcategories?.find((s: any) => s.slug === subcategorySlug)
     return sub?.name || subcategorySlug
   }
