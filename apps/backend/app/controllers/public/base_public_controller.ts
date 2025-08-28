@@ -101,7 +101,8 @@ export default abstract class BasePublicController {
         'http://localhost:3001',
         'http://localhost:3002',
         'http://localhost:3333',
-        'http://localhost:5173'
+        'http://localhost:5173',
+        'https://ona-ui.com'
       ]
 
       // Utiliser l'origine spécifique si elle est autorisée pour éviter les conflits avec credentials
@@ -165,7 +166,8 @@ export default abstract class BasePublicController {
         'http://localhost:3001',
         'http://localhost:3002',
         'http://localhost:3333',
-        'http://localhost:5173'
+        'http://localhost:5173',
+        'https://ona-ui.com'
       ]
 
       // Utiliser l'origine spécifique si elle est autorisée pour éviter les conflits avec credentials
