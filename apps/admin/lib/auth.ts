@@ -5,6 +5,15 @@ import { customSessionClient } from "better-auth/client/plugins"
  * Configuration du client Better-auth pour l'admin dashboard
  * Avec support des sessions personnalisées pour inclure le rôle
  */
+
+// 🔧 DEBUG: Log des variables d'environnement pour l'admin auth
+console.log('🔍 [ADMIN-AUTH] Variables d\'environnement chargées:', {
+  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  NODE_ENV: process.env.NODE_ENV,
+  authBaseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333",
+  allEnvKeys: Object.keys(process.env).filter(key => key.startsWith('NEXT_PUBLIC_'))
+})
+
 export const authClient: ReturnType<typeof createAuthClient> = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333",
   fetchOptions: {

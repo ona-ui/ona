@@ -1,6 +1,13 @@
 import { createAuthClient } from "better-auth/client";
 import { magicLinkClient } from "better-auth/client/plugins";
 
+// 🔧 DEBUG: Log des variables d'environnement pour l'auth
+console.log('🔍 [AUTH-CLIENT] Variables d\'environnement chargées:', {
+  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  NODE_ENV: process.env.NODE_ENV,
+  authBaseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333"
+})
+
 export const authClient = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333",
   plugins: [

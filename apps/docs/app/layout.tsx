@@ -4,6 +4,17 @@ import type { Metadata, Viewport } from "next"
 import "@workspace/ui/globals.css"
 import { Providers } from "@/components/providers"
 
+// 🔧 DEBUG: Log global des variables d'environnement au démarrage de l'app docs
+console.log('🔍 [DOCS-LAYOUT] Variables d\'environnement au démarrage:', {
+  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+  NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
+  NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+  NODE_ENV: process.env.NODE_ENV,
+  allNextPublicKeys: Object.keys(process.env).filter(key => key.startsWith('NEXT_PUBLIC_')),
+  allEnvKeys: Object.keys(process.env)
+})
+
 // Base URL du site pour les URLs canoniques / OG / sitemap
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
 

@@ -1,5 +1,13 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333'
 
+// 🔧 DEBUG: Log des variables d'environnement au chargement
+console.log('🔍 [API] Variables d\'environnement chargées:', {
+  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  NODE_ENV: process.env.NODE_ENV,
+  API_BASE_URL: API_BASE_URL,
+  allEnvKeys: Object.keys(process.env).filter(key => key.startsWith('NEXT_PUBLIC_'))
+})
+
 // Types from database schema
 export type LicenseTier = 'free' | 'pro' | 'team' | 'enterprise'
 export type AccessType = 'preview_only' | 'copy' | 'full_access' | 'download'

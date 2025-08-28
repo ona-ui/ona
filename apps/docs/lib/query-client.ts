@@ -114,6 +114,15 @@ export const queryClient = new QueryClient({
 /**
  * Configuration de base pour les requêtes API
  */
+
+// 🔧 DEBUG: Log des variables d'environnement pour le docs query-client
+console.log('🔍 [DOCS-QUERY-CLIENT] Variables d\'environnement chargées:', {
+  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  NODE_ENV: process.env.NODE_ENV,
+  apiBaseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333",
+  allEnvKeys: Object.keys(process.env).filter(key => key.startsWith('NEXT_PUBLIC_'))
+})
+
 export const apiConfig = {
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333",
   timeout: 30000, // 30 secondes
