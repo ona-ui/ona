@@ -16,6 +16,7 @@ const options = {
     'http://localhost:3333',  // Backend Adonis
     'http://localhost:5173',  // Autre origine si nécessaire
     'https://ona-ui.com',
+    'https://ona-ui.com/',    // With trailing slash for consistency
     'https://admin.ona-ui.com'
   ],
   

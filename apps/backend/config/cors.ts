@@ -18,7 +18,7 @@ const corsConfig = defineConfig({
     'http://localhost:3333',
     'http://localhost:5173',
     'https://admin.ona-ui.com',
-    'https://ona-ui.com/'
+    'https://ona-ui.com'
   ],
   credentials: true,
   maxAge: 90,

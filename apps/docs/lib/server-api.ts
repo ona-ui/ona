@@ -31,8 +31,6 @@ export class ServerApi {
           requestHeaders['Cookie'] = cookie
         }
       } catch (error) {
-        // Ignore les erreurs de headers dans les contextes statiques
-        console.warn('Headers not available in static context, proceeding without cookies')
       }
     }
 

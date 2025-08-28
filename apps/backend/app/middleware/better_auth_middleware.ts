@@ -16,8 +16,7 @@ export default class BetterAuthMiddleware {
     // Si c'est une route d'authentification, traiter avec Better Auth
     if (request.url().startsWith('/api/auth')) {
       try {
- 
-    
+
         // 🔧 FIX: Créer un objet Request standard comme dans la doc Better Auth
         const pathname = request.url()
         const queryParams = request.qs()
@@ -85,7 +84,7 @@ export default class BetterAuthMiddleware {
 
         // Transférer la réponse Better Auth vers AdonisJS
         response.status(authResponse.status)
-        
+
         // Copier les headers de la réponse
         authResponse.headers.forEach((value: string, key: string) => {
           response.header(key, value)
