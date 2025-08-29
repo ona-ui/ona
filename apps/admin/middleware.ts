@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { Session } from "better-auth/types"
 import { betterFetch } from "@better-fetch/fetch";
 import { authUtils } from "@/lib/auth";
 
@@ -27,8 +26,18 @@ export async function middleware(request: NextRequest) {
   }
 
   try {    
+    type BetterAuthUser = {
+      id: string
+      email?: string | null
+      name?: string | null
+      role?: string | null
+    }
+    type BetterAuthSession = {
+      user?: BetterAuthUser | null
+    }
+
     // Utiliser l'API Better-auth directement (Next.js 15.2+)
-    const { data: session } = await betterFetch<Session>("/api/auth/get-session", {
+    const { data: session } = await betterFetch<BetterAuthSession>("/api/auth/get-session", {
       baseURL: process.env.NEXT_PUBLIC_API_URL,
       headers: {
           cookie: request.headers.get("cookie") || "", // Forward the cookies from the request
@@ -36,29 +45,26 @@ export async function middleware(request: NextRequest) {
   });
 
 
+  
+
     // Si pas de session valide, rediriger vers login
     if (!session) {
       console.log(`🛡️  [MIDDLEWARE] ❌ Aucune session - Redirection vers /login`)
+      console.log(`🛡️  [MIDDLEWARE] URL demandée: ${request.url}`)
       const loginUrl = new URL("/login", request.url)
       return NextResponse.redirect(loginUrl)
     }
 
-    // Récupérer les informations utilisateur depuis l'API
-    const userResponse = await betterFetch(`/api/user/profile`, {
-      baseURL: process.env.NEXT_PUBLIC_API_URL,
-      headers: {
-        cookie: request.headers.get("cookie") || "",
-      },
-    });
-
-    if (!userResponse.data) {
-      console.log(`🛡️  [MIDDLEWARE] ❌ Impossible de récupérer les infos utilisateur`)
+    if (session && !session.user) {
       const loginUrl = new URL("/login?error=auth_error", request.url)
       return NextResponse.redirect(loginUrl)
     }
 
     // Vérifier si l'utilisateur a accès au dashboard admin
-    const canAccess = authUtils.canAccessAdminDashboard(userResponse.data)
+    const canAccess = authUtils.canAccessAdminDashboard(session.user)
+
+    
+
      if (!canAccess) {
      
        const loginUrl = new URL("/login?error=access_denied", request.url)
@@ -66,7 +72,7 @@ export async function middleware(request: NextRequest) {
      }
 
     // Utilisateur authentifié et autorisé, continuer
-    console.log(`🛡️  [MIDDLEWARE] ✅ Accès autorisé pour ${session.id || session.userId}`)
+    console.log(`🛡️  [MIDDLEWARE] ✅ Accès autorisé pour ${session.user?.name || session.user?.email || session.user?.id}`)
     return NextResponse.next()
 
   } catch (error) {

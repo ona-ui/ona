@@ -26,9 +26,9 @@ export function useAuth() {
         rememberMe,
       }, {
         onSuccess: () => {
-          console.log("✅ [AUTH HOOK] Connexion réussie - redirection via window.location")
-          // Redirection immédiate pour éviter les race conditions
-          window.location.href = "/"
+          console.log("✅ [AUTH HOOK] Connexion réussie - redirection côté client")
+          // Utiliser router.push pour éviter les problèmes de synchronisation de session
+          router.push("/")
         },
         onError: (ctx) => {
           console.error("❌ [AUTH HOOK] Erreur de connexion:", ctx.error)
@@ -96,12 +96,6 @@ export function useRequireAuth() {
   // Rediriger vers login si pas authentifié
   if (!auth.isLoading && !auth.isAuthenticated) {
     router.push("/login")
-    return null
-  }
-
-  // Rediriger vers login si l'utilisateur n'a pas accès au dashboard
-  if (!auth.isLoading && auth.isAuthenticated && !auth.canAccessDashboard()) {
-    router.push("/login?error=access_denied")
     return null
   }
 

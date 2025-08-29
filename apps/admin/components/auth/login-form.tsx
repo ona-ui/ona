@@ -48,6 +48,13 @@ export default function LoginForm() {
 
   // Rediriger si déjà connecté avec une vérification simple
   React.useEffect(() => {
+    console.log("🔍 [LOGIN FORM] Vérification état auth:", {
+      authLoading,
+      isAuthenticated,
+      canAccessDashboard: canAccessDashboard(),
+      willRedirect: !authLoading && isAuthenticated && canAccessDashboard()
+    })
+
     if (!authLoading && isAuthenticated && canAccessDashboard()) {
       console.log("🔄 [LOGIN FORM] Utilisateur déjà connecté, redirection vers /")
       router.push("/")
@@ -89,9 +96,13 @@ export default function LoginForm() {
         rememberMe: data.rememberMe,
       }, {
         onSuccess: () => {
-          console.log("✅ [LOGIN FORM] Connexion réussie - redirection immédiate")
-          // Redirection immédiate sans attendre la synchronisation
-          window.location.href = "/"
+          console.log("✅ [LOGIN FORM] Connexion réussie - redirection côté client")
+          console.log("🔄 [LOGIN FORM] Avant setIsLoading(false) - isLoading:", isLoading)
+          setIsLoading(false) // Important : arrêter le chargement
+          console.log("🔄 [LOGIN FORM] Après setIsLoading(false) - appel router.push('/')")
+          // Utiliser router.push pour éviter les problèmes de synchronisation de session
+          router.push("/")
+          console.log("🔄 [LOGIN FORM] router.push('/') appelé - redirection initiée")
         },
         onError: (ctx: any) => {
           console.error("❌ [LOGIN FORM] Erreur de connexion:", ctx.error)
@@ -115,12 +126,20 @@ export default function LoginForm() {
 
   // Ne pas rendre la page si l'utilisateur est déjà connecté
   if (!authLoading && isAuthenticated && canAccessDashboard()) {
+    console.log("🔄 [LOGIN FORM] Rendu conditionnel: utilisateur connecté, affichage spinner")
     return (
       <div className="flex items-center justify-center">
         <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full"></div>
       </div>
     )
   }
+
+  console.log("🔄 [LOGIN FORM] Rendu normal du formulaire de connexion", {
+    authLoading,
+    isAuthenticated,
+    canAccessDashboard: canAccessDashboard(),
+    localIsLoading: isLoading
+  })
 
   return (
     <div className="space-y-6">
