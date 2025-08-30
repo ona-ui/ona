@@ -48,9 +48,9 @@ export function useAuth() {
     try {
       await authClient.signOut({
         fetchOptions: {
-          onSuccess: () => {
+          onSuccess: async () => {
             // Rafraîchir les données de session
-            auth.refetch()
+            await auth.refetch()
             // Rediriger vers la page de connexion
             router.push("/login")
           }

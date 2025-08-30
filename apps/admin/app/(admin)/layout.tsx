@@ -193,7 +193,15 @@ function AdminHeader() {
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const { user, isLoading } = useAuth()
 
+  console.log("🔍 [ADMIN LAYOUT] État auth:", {
+    isLoading,
+    hasUser: !!user,
+    userEmail: user?.email,
+    userRole: user?.role
+  })
+
   if (isLoading) {
+    console.log("⏳ [ADMIN LAYOUT] Affichage loading - auth en cours")
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">
@@ -205,13 +213,17 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   if (!user) {
+    console.log("🚫 [ADMIN LAYOUT] Pas d'utilisateur - redirection vers /login")
     redirect("/login")
   }
 
   // Vérifier que l'utilisateur est admin
   if (user.role !== "admin" && user.role !== "super_admin") {
+    console.log("🚫 [ADMIN LAYOUT] Utilisateur non admin - redirection vers /unauthorized")
     redirect("/unauthorized")
   }
+
+  console.log("✅ [ADMIN LAYOUT] Utilisateur admin validé - affichage dashboard")
 
   return (
     <SidebarProvider>

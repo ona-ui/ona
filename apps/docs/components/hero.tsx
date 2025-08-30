@@ -87,23 +87,24 @@ export default function Hero() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
               >
-                <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-zinc-800 drop-shadow-[0_1.2px_1.2px_rgba(255,255,255,0.3)] tracking-[-0.5px] md:tracking-[-1px] leading-tight text-left">
+                <h1 className="text-xl md:text-3xl lg:text-4xl font-bold text-zinc-800 drop-shadow-[0_1.2px_1.2px_rgba(255,255,255,0.3)] tracking-[-0.5px] md:tracking-[-1px] leading-tight text-left">
                   <motion.span
                     className=""
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.5 }}
                   >
-                    Finally. Landing Pages That Don't Look Like 
+                    React Components That Don't Look Like Everyone
                   </motion.span>
+                  <br />
                   <motion.span
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.7 }}
                   >
-                    {" "}They Were Made By{" "}
+                    Else's{" "}
                     </motion.span>
-                  <motion.span 
+                  <motion.span
                     className="relative mx-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 font-medium shadow-sm border border-amber-200/50"
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -115,37 +116,123 @@ export default function Hero() {
                       interval={2500}
                     />
                   </motion.span>
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 1.1 }}
+                  >
+                    {" "}Site
+                  </motion.span>
                 </h1>
               </motion.div>
 
               {/* Description */}
               <motion.p
-                className="text-lg text-slate-600 mb-12 leading-relaxed text-left"
+                className="text-lg text-slate-600 mb-8 leading-relaxed text-left"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
               >
-                Premium components extracted from $10M+ companies.
+                Copy-paste ready. Tailwind styled. Actually convert.
                 <br />
-                <strong className="text-slate-900 font-semibold">Because your startup deserves better than generic AI code.</strong>
+                <strong className="text-slate-900 font-semibold">Ship unique apps while competitors use generic AI designs.</strong>
               </motion.p>
 
+              {/* Component Types Badges - Infinite Scroll */}
+              <motion.div
+                className="mb-6 overflow-hidden max-w-lg lg:max-w-xl"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.7 }}
+              >
+                <div className="relative mb-3 overflow-hidden">
+                  <div
+                    className="flex gap-3 whitespace-nowrap"
+                    style={{
+                      animation: 'scroll-left 30s linear infinite'
+                    }}
+                  >
+                    {[
+                      "Hero sections",
+                      "Pricing tables",
+                      "Navigation",
+                      "Features",
+                      "CTAs",
+                      "Forms",
+                      "Testimonials",
+                      "FAQ sections",
+                      "Contact forms",
+                      "Footer",
+                      "About sections",
+                      "Team cards",
+                      "Blog layouts",
+                      "Product cards",
+                      "Stats sections",
+                      "Hero sections",
+                      "Pricing tables",
+                      "Navigation",
+                      "Features",
+                      "CTAs",
+                      "Forms",
+                      "Testimonials",
+                      "FAQ sections",
+                      "Contact forms",
+                      "Footer",
+                      "About sections",
+                      "Team cards",
+                      "Blog layouts",
+                      "Product cards",
+                      "Stats sections"
+                    ].map((item, index) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white/60 backdrop-blur-sm rounded-lg border border-dashed border-slate-300 shadow-sm flex-shrink-0"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <p className="text-sm text-slate-500 leading-relaxed">
+                  All battle-tested. All production-ready. All impossible for AI to generate.
+                </p>
+              </motion.div>
+
               {/* CTA Buttons avec orange */}
-              <motion.div 
-                className="flex flex-col sm:flex-row gap-4 items-start"
+              <motion.div
+                className="flex flex-col sm:flex-row gap-4 items-start mb-8"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.8 }}
               >
-                <Button 
+                <Button
                   size="lg"
                   onClick={() => router.push('/docs')}
-                  className="group relative text-white px-8 py-3.5 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:-translate-y-0.5 bg-gradient-to-r from-[#C96342] to-[#B55638] hover:from-[#B55638] hover:to-[#A14D2F] shadow-lg hover:shadow-xl hover:shadow-orange-500/25"
+                  className="group relative text-white px-8 py-3.5 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 bg-gradient-to-r from-[#C96342] to-[#B55638] hover:from-[#B55638] hover:to-[#A14D2F] shadow-lg hover:shadow-xl hover:shadow-orange-500/25"
                 >
-                  Browse Blocks
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  Browse 40 components
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 group-hover:rotate-45 transition-all duration-300" />
                 </Button>
-               
+              </motion.div>
+
+              {/* Trust Bar */}
+              <motion.div
+                className="flex flex-wrap gap-4 text-xs text-slate-600"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.9 }}
+              >
+                {[
+                  "Copy-paste ready",
+                  "Tailwind + React",
+                  "From real startups",
+                  "Lifetime updates"
+                ].map((item, index) => (
+                  <div key={index} className="flex items-center gap-1.5">
+                    <Check className="w-3 h-3 text-green-600" />
+                    <span>{item}</span>
+                  </div>
+                ))}
               </motion.div>
             </motion.div>
             {/* Right side - Infinite Scroll Images */}
@@ -253,6 +340,15 @@ export default function Hero() {
                 
                 .animate-infinite-scroll-horizontal {
                   animation: infinite-scroll-horizontal 4s linear infinite;
+                }
+                
+                @keyframes scroll-left {
+                  0% {
+                    transform: translateX(0);
+                  }
+                  100% {
+                    transform: translateX(-50%);
+                  }
                 }
               `}</style>
             </motion.div>

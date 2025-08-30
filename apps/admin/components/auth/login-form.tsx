@@ -44,7 +44,7 @@ export default function LoginForm() {
   const searchParams = useSearchParams()
   const [isLoading, setIsLoading] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
-  const { isAuthenticated, isLoading: authLoading, canAccessDashboard } = useAuth()
+  const { isAuthenticated, isLoading: authLoading, canAccessDashboard, refetch } = useAuth()
 
   // Rediriger si déjà connecté avec une vérification simple
   React.useEffect(() => {
@@ -95,14 +95,18 @@ export default function LoginForm() {
         password: data.password,
         rememberMe: data.rememberMe,
       }, {
-        onSuccess: () => {
-          console.log("✅ [LOGIN FORM] Connexion réussie - redirection côté client")
-          console.log("🔄 [LOGIN FORM] Avant setIsLoading(false) - isLoading:", isLoading)
-          setIsLoading(false) // Important : arrêter le chargement
-          console.log("🔄 [LOGIN FORM] Après setIsLoading(false) - appel router.push('/')")
-          // Utiliser router.push pour éviter les problèmes de synchronisation de session
-          router.push("/")
-          console.log("🔄 [LOGIN FORM] router.push('/') appelé - redirection initiée")
+        onSuccess: async () => {
+          console.log("✅ [LOGIN FORM] Connexion réussie - synchronisation session")
+          
+          // 🔧 CORRECTION: Forcer un refetch de la session immédiatement
+          console.log("🔄 [LOGIN FORM] Refetch de la session...")
+          await refetch()
+          
+          console.log("🔄 [LOGIN FORM] Session synchronisée - redirection")
+          setIsLoading(false)
+          
+          // Utiliser window.location pour forcer un rechargement complet
+          window.location.href = "/"
         },
         onError: (ctx: any) => {
           console.error("❌ [LOGIN FORM] Erreur de connexion:", ctx.error)

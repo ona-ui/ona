@@ -10,7 +10,7 @@ interface AuthContextType {
    user: any | null
    isLoading: boolean
    error: Error | null
-   refetch: () => void
+   refetch: () => Promise<void>
 }
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined)
@@ -38,13 +38,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
    const fetchSession = React.useCallback(async () => {
      try {
+       console.log("🔄 [AUTH PROVIDER] Début fetchSession")
        setIsLoading(true)
        const result = await authClient.getSession()
+       console.log("🔍 [AUTH PROVIDER] Résultat fetchSession:", {
+         hasUser: !!result?.data?.user,
+         userEmail: result?.data?.user?.email,
+         userRole: result?.data?.user?.role,
+         error: result?.error
+       })
        setSessionData(result)
      } catch (error) {
+       console.error("❌ [AUTH PROVIDER] Erreur fetchSession:", error)
        setSessionData({ data: null, error })
      } finally {
        setIsLoading(false)
+       console.log("✅ [AUTH PROVIDER] fetchSession terminé")
      }
    }, [])
 
@@ -66,9 +75,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
      user: sessionData?.data?.user || null,
      isLoading,
      error: sessionData?.error || null,
-     refetch: () => {
+     refetch: async () => {
        console.log("🔄 [AUTH PROVIDER] Refetch demandé")
-       fetchSession()
+       await fetchSession()
+       console.log("✅ [AUTH PROVIDER] Refetch terminé")
      }
    }
 

@@ -120,7 +120,7 @@ export function Navbar() {
                 {/* Social Icons */}
                 <div className="hidden sm:flex items-center gap-1 lg:gap-1">
                   <a
-                    href="https://twitter.com"
+                    href="https://twitter.com/ona_ui"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2 lg:p-2.5 text-slate-700 hover:text-[#C96342] transition-colors"
