@@ -44,31 +44,10 @@ export default function LoginForm() {
   const searchParams = useSearchParams()
   const [isLoading, setIsLoading] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
-  const { isAuthenticated, isLoading: authLoading, canAccessDashboard, refetch } = useAuth()
+  const { isAuthenticated, isLoading: authLoading, refetch } = useAuth()
 
-  // Rediriger si déjà connecté - Version simplifiée sans état de redirection
-  React.useEffect(() => {
-    const canAccess = canAccessDashboard()
-    const shouldRedirect = !authLoading && isAuthenticated && canAccess
-
-    console.log("🔍 [LOGIN FORM] Vérification état auth dans useEffect:", {
-      authLoading,
-      isAuthenticated,
-      canAccessDashboard: canAccess,
-      willRedirect: shouldRedirect,
-      currentPath: window.location.pathname,
-      timestamp: new Date().toISOString()
-    })
-
-    if (shouldRedirect) {
-      console.log("🔄 [LOGIN FORM] Utilisateur déjà connecté, redirection vers dashboard")
-      
-      // 🔧 FIX: Utiliser router.replace pour éviter les boucles
-      console.log("🔄 [LOGIN FORM] Utilisation de router.replace")
-      router.replace("/")
-      return
-    }
-  }, [authLoading, isAuthenticated, canAccessDashboard, router])
+  // 🔧 SIMPLIFICATION DRASTIQUE : Pas de redirection côté client
+  // Le layout admin se chargera de la vérification et redirection
   
   // Récupérer les erreurs depuis les paramètres d'URL
   const urlError = searchParams?.get("error")
@@ -114,9 +93,9 @@ export default function LoginForm() {
           console.log("🔄 [LOGIN FORM] Session synchronisée - redirection")
           setIsLoading(false)
 
-          // 🔧 FIX: Redirection forcée après connexion réussie
-          console.log("🔄 [LOGIN FORM] Redirection forcée vers dashboard")
-          router.replace("/")
+          // 🔧 FIX: Redirection simple après connexion
+          console.log("🔄 [LOGIN FORM] Redirection vers dashboard")
+          window.location.href = "/"
         },
         onError: (ctx: any) => {
           console.error("❌ [LOGIN FORM] Erreur de connexion:", ctx.error)
@@ -138,31 +117,10 @@ export default function LoginForm() {
     }
   }
 
-  // Ne pas rendre la page si l'utilisateur est déjà connecté
-  const canAccess = canAccessDashboard()
-  const shouldShowSpinner = !authLoading && isAuthenticated
-
-  console.log("🔄 [LOGIN FORM] Vérification rendu conditionnel:", {
+  // 🔧 SIMPLIFICATION TOTALE : Toujours afficher le formulaire
+  console.log("🔄 [LOGIN FORM] Rendu du formulaire de connexion", {
     authLoading,
     isAuthenticated,
-    canAccessDashboard: canAccess,
-    shouldShowSpinner,
-    timestamp: new Date().toISOString()
-  })
-
-  if (shouldShowSpinner) {
-    console.log("🔄 [LOGIN FORM] Rendu conditionnel: utilisateur connecté, affichage spinner")
-    return (
-      <div className="flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full"></div>
-      </div>
-    )
-  }
-
-  console.log("🔄 [LOGIN FORM] Rendu normal du formulaire de connexion", {
-    authLoading,
-    isAuthenticated,
-    canAccessDashboard: canAccessDashboard(),
     localIsLoading: isLoading
   })
 
