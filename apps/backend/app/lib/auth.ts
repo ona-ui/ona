@@ -40,6 +40,26 @@ const options = {
     database: {
       generateId: false,
     },
+    // 🔧 Configuration des cookies pour cross-domain
+    crossSubDomainCookies: {
+      enabled: true,
+      domain: process.env.NODE_ENV === 'production' ? '.ona-ui.com' : undefined,
+    },
+    // 🔧 Forcer les cookies sécurisés en production
+    useSecureCookies: process.env.NODE_ENV === 'production',
+    // 🔧 Configuration par défaut des cookies
+    defaultCookieAttributes: {
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+    },
+  },
+  // 🔧 Configuration pour cross-domain en production
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 60 * 60 * 24 * 7, // 7 jours
+    },
   },
   emailAndPassword: {
     enabled: true,
