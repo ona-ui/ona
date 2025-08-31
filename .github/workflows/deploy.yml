@@ -37,29 +37,37 @@ jobs:
               service=$1
               max_attempts=12
               attempt=1
-              
+
               echo "⏳ Attente que $service soit healthy..."
-              
+
               while [ $attempt -le $max_attempts ]; do
-                  health_status=$(sudo docker inspect --format='{{.State.Health.Status}}' $(sudo docker compose ps -q $service) 2>/dev/null || echo "starting")
-                
+                health_status=$(sudo docker inspect \
+                  --format='{{.State.Health.Status}}' \
+                  $(sudo docker compose ps -q $service) 2>/dev/null || echo "starting")
+
                 if [ "$health_status" = "healthy" ]; then
                   echo "✅ $service est healthy (tentative $attempt/$max_attempts)"
-                  return 0
+                  success=1
+                  break
                 elif [ "$health_status" = "unhealthy" ]; then
                   echo "❌ $service est unhealthy"
                   return 1
                 fi
-                
+
                 echo "🔄 Tentative $attempt/$max_attempts - $service: $health_status"
                 sleep 15
                 attempt=$((attempt + 1))
               done
-              
-              echo "❌ $service n'est pas healthy après $max_attempts tentatives"
-              sudo docker compose logs --tail=10 $service
-              return 1
+
+              if [ "$success" = "1" ]; then
+                return 0
+              else
+                echo "❌ $service n'est pas healthy après $max_attempts tentatives"
+                sudo docker compose logs --tail=10 $service
+                return 1
+              fi
             }
+
             
             # Fonction pour déployer un service avec rolling update
             deploy_service() {
