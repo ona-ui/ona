@@ -30,6 +30,7 @@ FROM base AS admin-builder
 COPY --from=base /app/packages/ ./packages/
 COPY apps/admin/ ./apps/admin/
 RUN yarn install --frozen-lockfile
+RUN yarn workspace @workspace/types build
 RUN yarn workspace admin build
 
 # Image finale pour le backend

@@ -41,12 +41,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
        console.log("🔄 [AUTH PROVIDER] Début fetchSession")
        setIsLoading(true)
        const result = await authClient.getSession()
-       console.log("🔍 [AUTH PROVIDER] Résultat fetchSession:", {
-         hasUser: !!result?.data?.user,
-         userEmail: result?.data?.user?.email,
-         userRole: result?.data?.user?.role,
-         error: result?.error
-       })
        setSessionData(result)
      } catch (error) {
        console.error("❌ [AUTH PROVIDER] Erreur fetchSession:", error)
