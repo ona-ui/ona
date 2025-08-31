@@ -28,7 +28,7 @@ import {
   DialogFooter,
 } from "@workspace/ui/components/dialog"
 import { ENUM_VALUES } from "@workspace/types"
-import type { UUID } from "@workspace/types/common"
+import type { UUID } from "@workspace/types"
 import { VersionAssets } from "./version-assets"
 
 // Schéma de validation pour la création de version

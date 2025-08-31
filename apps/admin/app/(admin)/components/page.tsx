@@ -88,7 +88,7 @@ import {
 import { VersionForm, type CreateVersionFormData } from "../../../components/admin/components/version-form"
 import { VersionList } from "../../../components/admin/components/version-list"
 import type { FullComponent, CreateComponentData, CreateComponentVersionData, ComponentVersion } from "@workspace/types/components"
-import type { ComponentStatus } from "@workspace/types/common"
+import type { ComponentStatus } from "@workspace/types"
 
 // Schéma de validation pour la création de composant
 const createComponentSchema = z.object({

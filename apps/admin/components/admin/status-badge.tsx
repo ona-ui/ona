@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Badge } from "@workspace/ui/components/badge"
 import { cn } from "@workspace/ui/lib/utils"
-import type { ComponentStatus } from "@workspace/types/common"
+import type { ComponentStatus } from "@workspace/types"
 
 export interface StatusBadgeProps {
   status: ComponentStatus | string

@@ -20,7 +20,7 @@ import {
 import { Progress } from "@workspace/ui/components/progress"
 import { Trash2, Upload, Image, Video, FileText, AlertCircle } from "lucide-react"
 import { cn } from "@workspace/ui/lib/utils"
-import type { UUID } from "@workspace/types/common"
+import type { UUID } from "@workspace/types"
 import { 
   useVersionAssets, 
   useUploadVersionAssetsWithProgress,

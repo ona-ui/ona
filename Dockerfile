@@ -22,13 +22,13 @@ RUN yarn workspace backend build
 # Stage pour le frontend
 FROM base AS frontend-builder
 COPY apps/docs/ ./apps/docs/
-RUN yarn install --frozen-lockfile
+# Pas besoin de réinstaller, les dépendances sont déjà dans base
 RUN yarn workspace docs build
 
 # Stage pour l'admin
 FROM base AS admin-builder
 COPY apps/admin/ ./apps/admin/
-RUN yarn install --frozen-lockfile
+# Pas besoin de réinstaller, les dépendances sont déjà dans base
 RUN yarn workspace admin build
 
 # Image finale pour le backend
