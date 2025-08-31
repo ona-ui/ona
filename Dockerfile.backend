@@ -9,13 +9,13 @@ COPY packages/ ./packages/
 # Copier le backend
 COPY apps/backend/ ./apps/backend/
 
-# Installer les dépendances
+# Installer les dépendances depuis la racine (monorepo)
 RUN yarn install --frozen-lockfile
 
 # Build le backend
-WORKDIR /app/apps/backend
-RUN yarn build
+RUN yarn workspace backend build
 
 EXPOSE 3333
 
-CMD ["yarn", "start"]
+# Démarrer depuis le workspace backend
+CMD ["yarn", "workspace", "backend", "start"]

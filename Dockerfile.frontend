@@ -9,13 +9,13 @@ COPY packages/ ./packages/
 # Copier le frontend
 COPY apps/docs/ ./apps/docs/
 
-# Installer les dépendances
+# Installer les dépendances depuis la racine (monorepo)
 RUN yarn install --frozen-lockfile
 
 # Build le frontend
-WORKDIR /app/apps/docs
-RUN yarn build
+RUN yarn workspace docs build
 
 EXPOSE 3000
 
-CMD ["yarn", "start"]
+# Démarrer depuis le workspace docs
+CMD ["yarn", "workspace", "docs", "start"]
