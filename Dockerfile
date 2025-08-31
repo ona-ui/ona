@@ -58,4 +58,5 @@ WORKDIR /app
 RUN apk add --no-cache curl
 COPY --from=admin-builder /app ./
 EXPOSE 3002
+ENV PORT=3002 HOSTNAME=0.0.0.0
 CMD ["yarn", "workspace", "admin", "start"]
