@@ -48,15 +48,20 @@ export default function LoginForm() {
 
   // Rediriger si déjà connecté avec une vérification simple
   React.useEffect(() => {
-    console.log("🔍 [LOGIN FORM] Vérification état auth:", {
+    const canAccess = canAccessDashboard()
+    const shouldRedirect = !authLoading && isAuthenticated && canAccess
+
+    console.log("🔍 [LOGIN FORM] Vérification état auth dans useEffect:", {
       authLoading,
       isAuthenticated,
-      canAccessDashboard: canAccessDashboard(),
-      willRedirect: !authLoading && isAuthenticated && canAccessDashboard()
+      canAccessDashboard: canAccess,
+      willRedirect: shouldRedirect,
+      timestamp: new Date().toISOString()
     })
 
-    if (!authLoading && isAuthenticated && canAccessDashboard()) {
+    if (shouldRedirect) {
       console.log("🔄 [LOGIN FORM] Utilisateur déjà connecté, redirection vers /")
+      // Utiliser router.push au lieu de window.location pour éviter les problèmes de synchronisation
       router.push("/")
     }
   }, [authLoading, isAuthenticated, canAccessDashboard, router])
@@ -97,16 +102,16 @@ export default function LoginForm() {
       }, {
         onSuccess: async () => {
           console.log("✅ [LOGIN FORM] Connexion réussie - synchronisation session")
-          
+
           // 🔧 CORRECTION: Forcer un refetch de la session immédiatement
           console.log("🔄 [LOGIN FORM] Refetch de la session...")
           await refetch()
-          
+
           console.log("🔄 [LOGIN FORM] Session synchronisée - redirection")
           setIsLoading(false)
-          
-          // Utiliser window.location pour forcer un rechargement complet
-          window.location.href = "/"
+
+          // Utiliser router.push au lieu de window.location pour éviter les problèmes de synchronisation
+          router.push("/")
         },
         onError: (ctx: any) => {
           console.error("❌ [LOGIN FORM] Erreur de connexion:", ctx.error)
@@ -129,7 +134,18 @@ export default function LoginForm() {
   }
 
   // Ne pas rendre la page si l'utilisateur est déjà connecté
-  if (!authLoading && isAuthenticated && canAccessDashboard()) {
+  const canAccess = canAccessDashboard()
+  const shouldShowSpinner = !authLoading && isAuthenticated && canAccess
+
+  console.log("🔄 [LOGIN FORM] Vérification rendu conditionnel:", {
+    authLoading,
+    isAuthenticated,
+    canAccessDashboard: canAccess,
+    shouldShowSpinner,
+    timestamp: new Date().toISOString()
+  })
+
+  if (shouldShowSpinner) {
     console.log("🔄 [LOGIN FORM] Rendu conditionnel: utilisateur connecté, affichage spinner")
     return (
       <div className="flex items-center justify-center">

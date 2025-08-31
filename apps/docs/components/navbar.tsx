@@ -31,7 +31,7 @@ export function Navbar() {
   return (
     <>
       <div className="w-full"></div>
-      <div className="fixed top-4 left-4 right-4 md:left-1/2 md:right-auto md:transform md:-translate-x-1/2 z-50 rounded-3xl ring-1 ring-white/20 ring-inset shadow-lg shadow-black/5 md:w-auto md:min-w-[750px] md:max-w-[1100px] overflow-visible">
+      <div className="fixed top-4 left-4 right-4 md:left-1/2 md:right-auto md:transform md:-translate-x-1/2 z-30 md:z-50 rounded-3xl ring-1 ring-white/20 ring-inset shadow-lg shadow-black/5 md:w-auto md:min-w-[750px] md:max-w-[1100px] overflow-visible">
         <GlassSurface
           displace={15}
           distortionScale={-150}

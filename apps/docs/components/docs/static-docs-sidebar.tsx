@@ -98,14 +98,16 @@ export function StaticDocsSidebar({ navigationData, categories = [], isOpen = fa
 
   return (
     <>
-      {/* Mobile Toggle Button */}
-      <button
-        onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="sidebar-toggle fixed top-20 left-4 z-40 md:hidden p-2 bg-[#FAF3E0]/90 backdrop-blur-sm border border-slate-200 rounded-lg shadow-sm hover:bg-[#FAF3E0] transition-colors"
-        aria-label="Toggle sidebar"
-      >
-        {isMobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-      </button>
+      {/* Mobile Toggle Button - Only show when sidebar is closed */}
+      {!isMobileOpen && (
+        <button
+          onClick={() => setIsMobileOpen(!isMobileOpen)}
+          className="sidebar-toggle fixed top-16 left-4 z-50 md:hidden p-2 bg-[#FAF3E0]/90 backdrop-blur-sm border border-slate-200 rounded-lg shadow-sm hover:bg-[#FAF3E0] transition-colors"
+          aria-label="Toggle sidebar"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+      )}
 
       {/* Mobile Overlay */}
       {isMobileOpen && (

@@ -61,7 +61,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
        hasUser: !!sessionData?.data?.user,
        isLoading,
        userEmail: sessionData?.data?.user?.email,
-       userId: sessionData?.data?.user?.id
+       userId: sessionData?.data?.user?.id,
+       userRole: sessionData?.data?.user?.role,
+       timestamp: new Date().toISOString()
      })
    }, [sessionData?.data?.user, isLoading])
 

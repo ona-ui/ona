@@ -11,10 +11,10 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function Hero() {
-  
-  // Images pour le défilement automatique
 
-  const router = useRouter();
+   // Images pour le défilement automatique
+
+   const router = useRouter();
 
   const images = [
     {
@@ -35,7 +35,7 @@ export default function Hero() {
     }
   ]
   return (
-    <div className="min-h-screen bg-[#FAF3E0] relative pt-4 sm:pt-6 lg:pt-4 overflow-hidden">
+    <div className="min-h-screen bg-[#FAF3E0] relative pt-20 sm:pt-24 lg:pt-20 overflow-hidden">
       {/* Grid background */}
       <div className="absolute inset-0" style={{
         backgroundSize: '24px 24px'
