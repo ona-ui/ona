@@ -80,7 +80,7 @@ jobs:
               
               # Attendre que le nouveau service soit healthy
               echo "⏳ Attente que le nouveau $service soit prêt..."
-              sleep 30
+              sleep 10
               
               if ! wait_for_healthy "$service"; then
                 echo "❌ Rollback de $service..."
