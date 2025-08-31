@@ -35,6 +35,8 @@
     "@types/react-dom": "^19.1.7",
     "@workspace/eslint-config": "*",
     "@workspace/typescript-config": "*",
+    "eslint": "^8",
+    "eslint-config-next": "^15.4.5",
     "typescript": "^5.9.2"
   },
    "engines": {
