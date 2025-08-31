@@ -37,6 +37,7 @@ jobs:
               service=$1
               max_attempts=12
               attempt=1
+              success=0
 
               echo "⏳ Attente que $service soit healthy..."
 
@@ -59,7 +60,7 @@ jobs:
                 attempt=$((attempt + 1))
               done
 
-              if [ "$success" = "1" ]; then
+              if [ "$success" -eq 1 ]; then
                 return 0
               else
                 echo "❌ $service n'est pas healthy après $max_attempts tentatives"
@@ -67,6 +68,7 @@ jobs:
                 return 1
               fi
             }
+
 
             
             # Fonction pour déployer un service avec rolling update
