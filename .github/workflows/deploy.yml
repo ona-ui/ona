@@ -21,6 +21,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key:      ${{ secrets.VPS_SSH_KEY }}
           script: |
+            #!/bin/bash
             set -e
             
             echo "🚀 Début du déploiement rolling..."
@@ -33,14 +34,14 @@ jobs:
             
             # Fonction pour attendre qu'un service soit healthy
             wait_for_healthy() {
-              local service=$1
-              local max_attempts=12
-              local attempt=1
+              service=$1
+              max_attempts=12
+              attempt=1
               
               echo "⏳ Attente que $service soit healthy..."
               
               while [ $attempt -le $max_attempts ]; do
-              health_status=$(sudo docker inspect --format='{{.State.Health.Status}}' $(sudo docker compose ps -q $service) 2>/dev/null || echo "starting")
+                  health_status=$(sudo docker inspect --format='{{.State.Health.Status}}' $(sudo docker compose ps -q $service) 2>/dev/null || echo "starting")
                 
                 if [ "$health_status" = "healthy" ]; then
                   echo "✅ $service est healthy (tentative $attempt/$max_attempts)"
