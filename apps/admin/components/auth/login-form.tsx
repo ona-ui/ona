@@ -46,8 +46,8 @@ export default function LoginForm() {
   const [error, setError] = React.useState<string | null>(null)
   const { isAuthenticated, isLoading: authLoading, refetch } = useAuth()
 
-  // 🔧 SIMPLIFICATION DRASTIQUE : Pas de redirection côté client
-  // Le layout admin se chargera de la vérification et redirection
+  // 🔧 Le middleware gère maintenant la redirection des utilisateurs connectés
+  // Pas besoin de redirection côté client
   
   // Récupérer les erreurs depuis les paramètres d'URL
   const urlError = searchParams?.get("error")

@@ -20,12 +20,7 @@ export async function middleware(request: NextRequest) {
   const publicPaths = ["/login"]
   const isPublicPath = publicPaths.some(path => pathname.startsWith(path))
 
-  // Si c'est une page publique, continuer
-  if (isPublicPath) {
-    return NextResponse.next()
-  }
-
-  try {    
+  try {
     type BetterAuthUser = {
       id: string
       email?: string | null
@@ -42,10 +37,24 @@ export async function middleware(request: NextRequest) {
       headers: {
           cookie: request.headers.get("cookie") || "", // Forward the cookies from the request
       },
-  });
+    });
 
+    // 🔧 GESTION SPÉCIALE POUR /login
+    if (isPublicPath && pathname === "/login") {
+      // Si l'utilisateur est déjà connecté et va sur /login, le rediriger
+      if (session?.user && authUtils.canAccessAdminDashboard(session.user)) {
+        console.log(`🛡️  [MIDDLEWARE] ✅ Utilisateur déjà connecté sur /login - Redirection vers /`)
+        const dashboardUrl = new URL("/", request.url)
+        return NextResponse.redirect(dashboardUrl)
+      }
+      // Sinon, laisser accéder à la page de login
+      return NextResponse.next()
+    }
 
-  
+    // Si c'est une autre page publique, continuer
+    if (isPublicPath) {
+      return NextResponse.next()
+    }
 
     // Si pas de session valide, rediriger vers login
     if (!session) {
@@ -63,10 +72,7 @@ export async function middleware(request: NextRequest) {
     // Vérifier si l'utilisateur a accès au dashboard admin
     const canAccess = authUtils.canAccessAdminDashboard(session.user)
 
-    
-
-     if (!canAccess) {
-     
+    if (!canAccess) {
        const loginUrl = new URL("/login?error=access_denied", request.url)
        return NextResponse.redirect(loginUrl)
      }
