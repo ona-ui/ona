@@ -28,6 +28,8 @@ RUN yarn workspace docs build
 # Image finale pour le backend
 FROM node:22.11.0-alpine AS backend
 WORKDIR /app
+# Installer curl pour les health checks
+RUN apk add --no-cache curl
 COPY --from=backend-builder /app ./
 EXPOSE 3333
 CMD ["yarn", "workspace", "backend", "start"]
@@ -35,6 +37,8 @@ CMD ["yarn", "workspace", "backend", "start"]
 # Image finale pour le frontend
 FROM node:22.11.0-alpine AS frontend
 WORKDIR /app
+# Installer curl pour les health checks
+RUN apk add --no-cache curl
 COPY --from=frontend-builder /app ./
 EXPOSE 3000
 CMD ["yarn", "workspace", "docs", "start"]

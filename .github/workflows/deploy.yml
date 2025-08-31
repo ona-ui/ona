@@ -14,16 +14,105 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to VPS
+      - name: Rolling Deploy to VPS
         uses: appleboy/ssh-action@v1.2.2
         with:
           host:     ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key:      ${{ secrets.VPS_SSH_KEY }}
           script: |
+            set -e
+            
+            echo "🚀 Début du déploiement rolling..."
+            
             cd /var/www/ona
+            
+            # Récupérer les dernières modifications
+            echo "📥 Récupération des modifications..."
             sudo git pull origin main
-            sudo docker compose down
-            sudo docker compose build --no-cache
-            sudo docker compose up -d
+            
+            # Fonction pour attendre qu'un service soit healthy
+            wait_for_healthy() {
+              local service=$1
+              local max_attempts=30
+              local attempt=1
+              
+              echo "⏳ Attente que $service soit healthy..."
+              
+              while [ $attempt -le $max_attempts ]; do
+                if sudo docker compose ps --format json | jq -r ".[] | select(.Service==\"$service\") | .Health" | grep -q "healthy"; then
+                  echo "✅ $service est healthy (tentative $attempt/$max_attempts)"
+                  return 0
+                fi
+                
+                echo "🔄 Tentative $attempt/$max_attempts - $service pas encore healthy..."
+                sleep 10
+                attempt=$((attempt + 1))
+              done
+              
+              echo "❌ $service n'est pas healthy après $max_attempts tentatives"
+              return 1
+            }
+            
+            # Déploiement rolling du backend
+            echo "🔧 Déploiement rolling du backend..."
+            
+            # Construire la nouvelle image backend
+            echo "🏗️ Construction de la nouvelle image backend..."
+            sudo docker compose build --no-cache backend
+            
+            # Démarrer un nouveau conteneur backend en parallèle
+            echo "🚀 Démarrage du nouveau backend..."
+            sudo docker compose up -d --no-deps --scale backend=2 backend
+            
+            # Attendre que le nouveau backend soit healthy
+            sleep 20
+            if ! wait_for_healthy "backend"; then
+              echo "❌ Rollback du backend..."
+              sudo docker compose up -d --no-deps --scale backend=1 backend
+              exit 1
+            fi
+            
+            # Arrêter l'ancien conteneur backend
+            echo "🔄 Remplacement de l'ancien backend..."
+            sudo docker compose up -d --no-deps --scale backend=1 backend
+            
+            echo "✅ Backend déployé avec succès"
+            
+            # Attendre un peu avant le frontend
+            sleep 10
+            
+            # Déploiement rolling du frontend
+            echo "🔧 Déploiement rolling du frontend..."
+            
+            # Construire la nouvelle image frontend
+            echo "🏗️ Construction de la nouvelle image frontend..."
+            sudo docker compose build --no-cache frontend
+            
+            # Démarrer un nouveau conteneur frontend en parallèle
+            echo "🚀 Démarrage du nouveau frontend..."
+            sudo docker compose up -d --no-deps --scale frontend=2 frontend
+            
+            # Attendre que le nouveau frontend soit healthy
+            sleep 20
+            if ! wait_for_healthy "frontend"; then
+              echo "❌ Rollback du frontend..."
+              sudo docker compose up -d --no-deps --scale frontend=1 frontend
+              exit 1
+            fi
+            
+            # Arrêter l'ancien conteneur frontend
+            echo "🔄 Remplacement de l'ancien frontend..."
+            sudo docker compose up -d --no-deps --scale frontend=1 frontend
+            
+            echo "✅ Frontend déployé avec succès"
+            
+            # Nettoyage
+            echo "🧹 Nettoyage des images inutilisées..."
             sudo docker system prune -f
+            
+            # Statut final
+            echo "📊 Statut final des services:"
+            sudo docker compose ps
+            
+            echo "🎉 Déploiement rolling terminé avec succès !"
