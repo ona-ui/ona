@@ -1,0 +1,21 @@
+FROM node:22.11.0-alpine
+
+WORKDIR /app
+
+# Copier les fichiers de configuration du workspace
+COPY package.json yarn.lock .npmrc ./
+COPY packages/ ./packages/
+
+# Copier le backend
+COPY apps/backend/ ./apps/backend/
+
+# Installer les dépendances
+RUN yarn install --frozen-lockfile
+
+# Build le backend
+WORKDIR /app/apps/backend
+RUN yarn build
+
+EXPOSE 3333
+
+CMD ["yarn", "start"]
