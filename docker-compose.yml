@@ -56,7 +56,6 @@ services:
       context: .
       dockerfile: Dockerfile
       target: backend
-    container_name: ona-backend
     restart: unless-stopped
     env_file:
       - ./apps/backend/.env
@@ -81,7 +80,6 @@ services:
       context: .
       dockerfile: Dockerfile
       target: frontend
-    container_name: ona-frontend
     restart: unless-stopped
     env_file:
       - ./apps/docs/.env
