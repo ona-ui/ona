@@ -35,7 +35,7 @@ export default function Hero() {
     }
   ]
   return (
-    <div className="min-h-screen bg-[#FAF3E0] relative pt-4 overflow-hidden">
+    <div className="min-h-screen bg-[#FAF3E0] relative pt-4 sm:pt-6 lg:pt-4 overflow-hidden">
       {/* Grid background */}
       <div className="absolute inset-0" style={{
         backgroundSize: '24px 24px'
@@ -57,20 +57,20 @@ export default function Hero() {
   />
       </div>
       
-      <div className="relative px-6 py-20 lg:px-8">
+      <div className="relative px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
         <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col lg:flex-row gap-12 items-center min-h-[80vh]">
+          <div className="flex flex-col lg:flex-row gap-8 sm:gap-10 lg:gap-12 items-center min-h-[70vh] sm:min-h-[75vh] lg:min-h-[80vh]">
             
             {/* Left side - Content */}
-            <motion.div 
-              className="lg:pr-8 flex-[2]"
+            <motion.div
+              className="w-full lg:pr-8 lg:flex-[2]"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
               {/* Badge with accent color */}
               <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-800 bg-[#FAF3E0]/80 backdrop-blur-sm rounded-full border shadow-sm mb-12"
+                className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-slate-800 bg-[#FAF3E0]/80 backdrop-blur-sm rounded-full border shadow-sm mb-6 sm:mb-8 lg:mb-12"
                 style={{borderColor: 'rgba(201, 99, 66, 0.3)'}}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -81,13 +81,13 @@ export default function Hero() {
               </motion.div>
 
               {/* TITRE classique avec effet original */}
-              <motion.div 
-                className="mb-8"
+              <motion.div
+                className="mb-6 sm:mb-8"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
               >
-                <h1 className="text-xl md:text-3xl lg:text-4xl font-bold text-zinc-800 drop-shadow-[0_1.2px_1.2px_rgba(255,255,255,0.3)] tracking-[-0.5px] md:tracking-[-1px] leading-tight text-left">
+                <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-zinc-800 drop-shadow-[0_1.2px_1.2px_rgba(255,255,255,0.3)] tracking-[-0.5px] md:tracking-[-1px] leading-tight text-left">
                   <motion.span
                     className=""
                     initial={{ opacity: 0 }}
@@ -105,11 +105,11 @@ export default function Hero() {
                     Else's{" "}
                     </motion.span>
                   <motion.span
-                    className="relative mx-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 font-medium shadow-sm border border-amber-200/50"
+                    className="relative mx-1 sm:mx-2 px-2 py-1 sm:px-4 sm:py-1.5 rounded-full bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 font-medium shadow-sm border border-amber-200/50 text-sm sm:text-base"
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.6, delay: 0.9 }}
-                    style={{ display: 'inline-block', marginTop: '0.5rem' }}
+                    style={{ display: 'inline-block', marginTop: '0.25rem', marginBottom: '0.25rem' }}
                   >
                     <WordSwitcher
                       words={["ChatGPT", "Claude", "V0", "Gemini"]}
@@ -128,7 +128,7 @@ export default function Hero() {
 
               {/* Description */}
               <motion.p
-                className="text-lg text-slate-600 mb-8 leading-relaxed text-left"
+                className="text-base sm:text-lg text-slate-600 mb-6 sm:mb-8 leading-relaxed text-left"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
@@ -140,7 +140,7 @@ export default function Hero() {
 
               {/* Component Types Badges - Infinite Scroll */}
               <motion.div
-                className="mb-6 overflow-hidden max-w-lg lg:max-w-xl"
+                className="mb-4 sm:mb-6 overflow-hidden max-w-full sm:max-w-lg lg:max-w-xl"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.7 }}
@@ -200,7 +200,7 @@ export default function Hero() {
 
               {/* CTA Buttons avec orange */}
               <motion.div
-                className="flex flex-col sm:flex-row gap-4 items-start mb-8"
+                className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start mb-6 sm:mb-8"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.8 }}
@@ -208,7 +208,7 @@ export default function Hero() {
                 <Button
                   size="lg"
                   onClick={() => router.push('/docs')}
-                  className="group relative text-white px-8 py-3.5 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 bg-gradient-to-r from-[#C96342] to-[#B55638] hover:from-[#B55638] hover:to-[#A14D2F] shadow-lg hover:shadow-xl hover:shadow-orange-500/25"
+                  className="group relative text-white px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 bg-gradient-to-r from-[#C96342] to-[#B55638] hover:from-[#B55638] hover:to-[#A14D2F] shadow-lg hover:shadow-xl hover:shadow-orange-500/25 w-full sm:w-auto"
                 >
                   Browse 40 components
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 group-hover:rotate-45 transition-all duration-300" />
@@ -217,7 +217,7 @@ export default function Hero() {
 
               {/* Trust Bar */}
               <motion.div
-                className="flex flex-wrap gap-4 text-xs text-slate-600"
+                className="flex flex-wrap gap-3 sm:gap-4 text-xs text-slate-600"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.9 }}
@@ -237,14 +237,14 @@ export default function Hero() {
             </motion.div>
             {/* Right side - Infinite Scroll Images */}
             <motion.div
-              className="lg:pl-8 flex-[2]"
+              className="w-full mt-8 sm:mt-10 lg:mt-0 lg:pl-8 lg:flex-[2]"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
             >
               <div className="relative">
                 <motion.div
-                  className="aspect-[5/6] rounded-2xl overflow-hidden relative"
+                  className="aspect-[4/5] sm:aspect-[5/6] rounded-2xl overflow-hidden relative"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.8, delay: 0.6 }}
@@ -256,7 +256,7 @@ export default function Hero() {
                     <div className="hidden md:block animate-infinite-scroll-vertical flex flex-col">
                       {/* Premier cycle d'images */}
                       {images.map((image, index) => (
-                        <div key={`first-${index}`} className="w-full h-[120%] flex-shrink-0 p-6">
+                        <div key={`first-${index}`} className="w-full h-[120%] flex-shrink-0 p-4 sm:p-6">
                           <Image
                             src={image.src}
                             alt={image.alt}
@@ -269,7 +269,7 @@ export default function Hero() {
                       ))}
                       {/* Deuxième cycle d'images pour la continuité */}
                       {images.map((image, index) => (
-                        <div key={`second-${index}`} className="w-full h-[120%] flex-shrink-0 p-6">
+                        <div key={`second-${index}`} className="w-full h-[120%] flex-shrink-0 p-4 sm:p-6">
                           <Image
                             src={image.src}
                             alt={image.alt}
@@ -285,7 +285,7 @@ export default function Hero() {
                     <div className="md:hidden animate-infinite-scroll-horizontal flex flex-row">
                       {/* Premier cycle d'images */}
                       {images.map((image, index) => (
-                        <div key={`first-mobile-${index}`} className="w-[120%] h-full flex-shrink-0 p-6">
+                        <div key={`first-mobile-${index}`} className="w-[120%] h-full flex-shrink-0 p-3 sm:p-6">
                           <Image
                             src={image.src}
                             alt={image.alt}
@@ -298,7 +298,7 @@ export default function Hero() {
                       ))}
                       {/* Deuxième cycle d'images pour la continuité */}
                       {images.map((image, index) => (
-                        <div key={`second-mobile-${index}`} className="w-[120%] h-full flex-shrink-0 p-6">
+                        <div key={`second-mobile-${index}`} className="w-[120%] h-full flex-shrink-0 p-3 sm:p-6">
                           <Image
                             src={image.src}
                             alt={image.alt}
@@ -358,7 +358,7 @@ export default function Hero() {
       </div>
       
       {/* Transition fluide vers la section suivante */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent via-amber-50/30 to-amber-50/60 pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 right-0 h-20 sm:h-32 lg:h-40 bg-gradient-to-b from-transparent via-amber-50/30 to-amber-50/60 pointer-events-none"></div>
     </div>
   )
 }

@@ -16,6 +16,7 @@ services:
       - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
       - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+      - "traefik.http.routers.traefik.service=api@internal"   # 👈 AJOUT ICI
       # Sécurité : redirection HTTPS
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
       - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
