@@ -22,7 +22,7 @@ jobs:
           key:      ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /var/www/ona
-            git pull origin main
+            sudo git pull origin main
             sudo docker compose down
             sudo docker compose build --no-cache
             sudo docker compose up -d
