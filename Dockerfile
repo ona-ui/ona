@@ -1,33 +1,38 @@
+# Dockerfile multi-stage pour optimiser le build du monorepo
 FROM node:22.11.0-alpine AS base
 
 WORKDIR /app
 
-# Copier tout ce qui est nécessaire pour que yarn installe les workspaces
+# Copier les fichiers de configuration du workspace
 COPY package.json yarn.lock .npmrc ./
 COPY packages/ ./packages/
-COPY apps/backend/package.json apps/backend/
-COPY apps/docs/package.json apps/docs/
 
+# Installer les dépendances une seule fois
 RUN yarn install --frozen-lockfile
 
-# Backend build
+# Ajouter les binaires locaux au PATH
+ENV PATH="/app/node_modules/.bin:$PATH"
+
+# Stage pour le backend
 FROM base AS backend-builder
-COPY apps/backend ./apps/backend
+COPY apps/backend/ ./apps/backend/
+RUN yarn install --frozen-lockfile
 RUN yarn workspace backend build
 
-# Frontend build
+# Stage pour le frontend
 FROM base AS frontend-builder
-COPY apps/docs ./apps/docs
+COPY apps/docs/ ./apps/docs/
+RUN yarn install --frozen-lockfile
 RUN yarn workspace docs build
 
-# Image backend
+# Image finale pour le backend
 FROM node:22.11.0-alpine AS backend
 WORKDIR /app
 COPY --from=backend-builder /app ./
 EXPOSE 3333
 CMD ["yarn", "workspace", "backend", "start"]
 
-# Image frontend
+# Image finale pour le frontend
 FROM node:22.11.0-alpine AS frontend
 WORKDIR /app
 COPY --from=frontend-builder /app ./
