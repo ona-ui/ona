@@ -37,6 +37,7 @@ export async function middleware(request: NextRequest) {
     
     const { data: session } = await betterFetch<BetterAuthSession>("/api/auth/get-session", {
       baseURL: process.env.NEXT_PUBLIC_API_URL,
+      credentials: "include", // 🔧 FIX: Inclure les cookies dans la requête
       headers: {
           cookie: request.headers.get("cookie") || "", // Forward the cookies from the request
       },
