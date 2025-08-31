@@ -27,6 +27,8 @@ const sessionConfig = defineConfig({
     httpOnly: true,
     secure: app.inProduction,
     sameSite: 'lax',
+    // 🔧 FIX: Permettre le partage de cookies entre sous-domaines en production
+    domain: app.inProduction ? '.ona-ui.com' : undefined,
   },
 
   /**

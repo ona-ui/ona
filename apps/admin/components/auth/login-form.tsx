@@ -61,8 +61,22 @@ export default function LoginForm() {
 
     if (shouldRedirect) {
       console.log("🔄 [LOGIN FORM] Utilisateur déjà connecté, redirection vers /")
+      console.log("🔍 [LOGIN FORM] Détails de redirection:", {
+        currentUrl: window.location.href,
+        targetUrl: "/",
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString()
+      })
+      
       // Utiliser router.push au lieu de window.location pour éviter les problèmes de synchronisation
-      router.push("/")
+      try {
+        router.push("/")
+        console.log("✅ [LOGIN FORM] router.push('/') appelé avec succès")
+      } catch (error) {
+        console.error("❌ [LOGIN FORM] Erreur lors de router.push:", error)
+        // Fallback avec window.location si router.push échoue
+        window.location.href = "/"
+      }
     }
   }, [authLoading, isAuthenticated, canAccessDashboard, router])
   
@@ -110,8 +124,15 @@ export default function LoginForm() {
           console.log("🔄 [LOGIN FORM] Session synchronisée - redirection")
           setIsLoading(false)
 
-          // Utiliser router.push au lieu de window.location pour éviter les problèmes de synchronisation
-          router.push("/")
+          // Redirection robuste avec fallback
+          try {
+            console.log("🔄 [LOGIN FORM] Tentative de redirection avec router.push")
+            await router.push("/")
+            console.log("✅ [LOGIN FORM] Redirection router.push réussie")
+          } catch (routerError) {
+            console.error("❌ [LOGIN FORM] Erreur router.push, fallback vers window.location:", routerError)
+            window.location.href = "/"
+          }
         },
         onError: (ctx: any) => {
           console.error("❌ [LOGIN FORM] Erreur de connexion:", ctx.error)

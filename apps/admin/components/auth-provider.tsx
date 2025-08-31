@@ -39,11 +39,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    const fetchSession = React.useCallback(async () => {
      try {
        console.log("🔄 [AUTH PROVIDER] Début fetchSession")
+       console.log("🔍 [AUTH PROVIDER] Configuration réseau:", {
+         baseURL: (authClient as any).options?.baseURL,
+         credentials: (authClient as any).options?.fetchOptions?.credentials,
+         userAgent: navigator.userAgent,
+         cookieEnabled: navigator.cookieEnabled,
+         timestamp: new Date().toISOString()
+       })
+       
        setIsLoading(true)
        const result = await authClient.getSession()
+       
+       console.log("🔍 [AUTH PROVIDER] Résultat getSession:", {
+         hasData: !!result?.data,
+         hasUser: !!result?.data?.user,
+         hasError: !!result?.error,
+         errorMessage: result?.error?.message,
+         timestamp: new Date().toISOString()
+       })
+       
        setSessionData(result)
      } catch (error) {
        console.error("❌ [AUTH PROVIDER] Erreur fetchSession:", error)
+       console.error("🔍 [AUTH PROVIDER] Détails erreur:", {
+         errorType: error?.constructor?.name,
+         errorMessage: (error as any)?.message,
+         errorStack: (error as any)?.stack,
+         timestamp: new Date().toISOString()
+       })
        setSessionData({ data: null, error })
      } finally {
        setIsLoading(false)

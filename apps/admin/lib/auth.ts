@@ -16,6 +16,14 @@ export const authClient: ReturnType<typeof createAuthClient> = createAuthClient(
   ],
 })
 
+// 🔍 [DEBUG] Logs pour diagnostiquer la configuration en production
+console.log("🔧 [AUTH CONFIG] Configuration Better-auth:", {
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333",
+  environment: process.env.NODE_ENV,
+  isProduction: process.env.NODE_ENV === 'production',
+  timestamp: new Date().toISOString()
+})
+
 /**
  * Export des fonctions d'authentification Better-auth
  */
