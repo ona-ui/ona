@@ -85,9 +85,26 @@ export default class BetterAuthMiddleware {
         // Transférer la réponse Better Auth vers AdonisJS
         response.status(authResponse.status)
 
-        // Copier les headers de la réponse
+        // 🔧 DIAGNOSTIC: Logger tous les headers de la réponse Better-auth
+        console.log('🔍 [BETTER AUTH MIDDLEWARE] Headers de réponse Better-auth:')
         authResponse.headers.forEach((value: string, key: string) => {
-          response.header(key, value)
+          console.log(`  ${key}: ${value}`)
+        })
+
+        // 🔧 FIX: Gestion spéciale des cookies Set-Cookie (peuvent être multiples)
+        const setCookieHeaders = authResponse.headers.getSetCookie?.() || []
+        if (setCookieHeaders.length > 0) {
+          console.log('🍪 [BETTER AUTH MIDDLEWARE] Cookies Set-Cookie trouvés:', setCookieHeaders)
+          setCookieHeaders.forEach(cookie => {
+            response.header('Set-Cookie', cookie)
+          })
+        }
+
+        // Copier les autres headers (sauf Set-Cookie qui est déjà géré)
+        authResponse.headers.forEach((value: string, key: string) => {
+          if (key.toLowerCase() !== 'set-cookie') {
+            response.header(key, value)
+          }
         })
         
         // Envoyer le body de la réponse
