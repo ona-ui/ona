@@ -44,10 +44,17 @@ export default function LoginForm() {
   const searchParams = useSearchParams()
   const [isLoading, setIsLoading] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
+  const [hasRedirected, setHasRedirected] = React.useState(false)
   const { isAuthenticated, isLoading: authLoading, canAccessDashboard, refetch } = useAuth()
 
-  // Rediriger si déjà connecté avec une vérification simple
+  // Rediriger si déjà connecté avec protection contre les boucles
   React.useEffect(() => {
+    // Éviter les redirections multiples
+    if (hasRedirected) {
+      console.log("🚫 [LOGIN FORM] Redirection déjà effectuée, éviter la boucle")
+      return
+    }
+
     const canAccess = canAccessDashboard()
     const shouldRedirect = !authLoading && isAuthenticated && canAccess
 
@@ -56,25 +63,20 @@ export default function LoginForm() {
       isAuthenticated,
       canAccessDashboard: canAccess,
       willRedirect: shouldRedirect,
+      hasRedirected,
       timestamp: new Date().toISOString()
     })
 
     if (shouldRedirect) {
-      console.log("🔄 [LOGIN FORM] Utilisateur déjà connecté, redirection vers /")
-      console.log("🔍 [LOGIN FORM] Détails de redirection:", {
-        currentUrl: window.location.href,
-        targetUrl: "/",
-        userAgent: navigator.userAgent,
-        timestamp: new Date().toISOString()
-      })
+      console.log("🔄 [LOGIN FORM] Utilisateur déjà connecté, redirection vers dashboard")
+      setHasRedirected(true)
       
-      // 🔧 FIX: Utiliser window.location.replace pour forcer la redirection
-      // Cela évite les problèmes de cache et de synchronisation Next.js
-      console.log("🔄 [LOGIN FORM] Utilisation de window.location.replace pour redirection forcée")
+      // 🔧 FIX: Redirection vers la racine qui sera gérée par le groupe (admin)
+      console.log("🔄 [LOGIN FORM] Redirection vers le dashboard admin")
       window.location.replace("/")
       return
     }
-  }, [authLoading, isAuthenticated, canAccessDashboard, router])
+  }, [authLoading, isAuthenticated, canAccessDashboard, hasRedirected])
   
   // Récupérer les erreurs depuis les paramètres d'URL
   const urlError = searchParams?.get("error")
@@ -122,6 +124,7 @@ export default function LoginForm() {
 
           // 🔧 FIX: Redirection forcée après connexion réussie
           console.log("🔄 [LOGIN FORM] Redirection forcée vers dashboard")
+          setHasRedirected(true)
           window.location.replace("/")
         },
         onError: (ctx: any) => {

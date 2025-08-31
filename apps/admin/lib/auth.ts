@@ -86,11 +86,10 @@ export const authUtils = {
     )
     
     // Fallback temporaire basé sur l'email (à retirer en production)
-    const hasAdminEmail = user.email?.includes("admin")
     
-    const canAccess = hasValidRole || hasAdminEmail
+    const canAccess = hasValidRole
     
-    
+  
     return canAccess
   }
 }
