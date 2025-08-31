@@ -7,21 +7,23 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+    environment:
+      name: VPS-ONA
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-        
-    - name: Deploy to VPS
-      uses: appleboy/ssh-action@v1.2.2
-      with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USER }}
-        key: ${{ secrets.VPS_SSH_KEY }}
-        script: |
-          cd /var/www/ona
-          git pull origin main
-          docker compose down
-          docker compose build --no-cache
-          docker compose up -d
-          docker system prune -f
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host:     ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key:      ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /var/www/ona
+            git pull origin main
+            docker compose down
+            docker compose build --no-cache
+            docker compose up -d
+            docker system prune -f
