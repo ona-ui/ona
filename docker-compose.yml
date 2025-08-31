@@ -84,7 +84,7 @@ services:
     env_file:
       - ./apps/docs/.env
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/", "||", "exit", "1"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
       interval: 15s
       timeout: 5s
       retries: 5
@@ -95,6 +95,27 @@ services:
       - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
       - "traefik.http.routers.frontend.middlewares=security-headers"
       - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+
+  admin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: admin
+    restart: unless-stopped
+    env_file:
+      - ./apps/admin/.env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.admin.rule=Host(`admin.${DOMAIN}`)"
+      - "traefik.http.routers.admin.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.admin.middlewares=security-headers"
+      - "traefik.http.services.admin.loadbalancer.server.port=3002"
 
 volumes:
   postgres_data:

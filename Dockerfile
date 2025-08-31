@@ -25,6 +25,12 @@ COPY apps/docs/ ./apps/docs/
 RUN yarn install --frozen-lockfile
 RUN yarn workspace docs build
 
+# Stage pour l'admin
+FROM base AS admin-builder
+COPY apps/admin/ ./apps/admin/
+RUN yarn install --frozen-lockfile
+RUN yarn workspace admin build
+
 # Image finale pour le backend
 FROM node:22.11.0-alpine AS backend
 WORKDIR /app
@@ -42,3 +48,12 @@ RUN apk add --no-cache curl
 COPY --from=frontend-builder /app ./
 EXPOSE 3000
 CMD ["yarn", "workspace", "docs", "start"]
+
+# Image finale pour l'admin
+FROM node:22.11.0-alpine AS admin
+WORKDIR /app
+# Installer curl pour les health checks
+RUN apk add --no-cache curl
+COPY --from=admin-builder /app ./
+EXPOSE 3002
+CMD ["yarn", "workspace", "admin", "start"]

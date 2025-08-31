@@ -118,6 +118,15 @@ jobs:
               exit 1
             fi
             
+            # Attendre avant l'admin
+            sleep 15
+            
+            # Déploiement de l'admin
+            if ! deploy_service "admin"; then
+              echo "❌ Échec du déploiement de l'admin"
+              exit 1
+            fi
+            
             # Nettoyage
             echo "🧹 Nettoyage des images inutilisées..."
             sudo docker system prune -f
