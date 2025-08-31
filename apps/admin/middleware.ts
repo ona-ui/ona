@@ -32,12 +32,22 @@ export async function middleware(request: NextRequest) {
     }
 
     // Utiliser l'API Better-auth directement (Next.js 15.2+)
+    console.log(`🔍 [MIDDLEWARE] Vérification session pour: ${pathname}`)
+    console.log(`🔍 [MIDDLEWARE] Cookies reçus:`, request.headers.get("cookie")?.substring(0, 100) + "...")
+    
     const { data: session } = await betterFetch<BetterAuthSession>("/api/auth/get-session", {
       baseURL: process.env.NEXT_PUBLIC_API_URL,
       headers: {
           cookie: request.headers.get("cookie") || "", // Forward the cookies from the request
       },
     });
+    
+    console.log(`🔍 [MIDDLEWARE] Session récupérée:`, {
+      hasSession: !!session,
+      hasUser: !!session?.user,
+      userEmail: session?.user?.email,
+      userRole: session?.user?.role
+    })
 
     // 🔧 GESTION SPÉCIALE POUR /login
     if (isPublicPath && pathname === "/login") {

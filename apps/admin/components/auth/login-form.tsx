@@ -90,12 +90,14 @@ export default function LoginForm() {
           console.log("🔄 [LOGIN FORM] Refetch de la session...")
           await refetch()
 
-          console.log("🔄 [LOGIN FORM] Session synchronisée - redirection")
-          setIsLoading(false)
-
-          // 🔧 FIX: Redirection simple après connexion
-          console.log("🔄 [LOGIN FORM] Redirection vers dashboard")
-          window.location.href = "/"
+          console.log("🔄 [LOGIN FORM] Session synchronisée - attente avant redirection")
+          
+          // 🔧 FIX: Petit délai pour s'assurer que les cookies sont bien définis
+          setTimeout(() => {
+            console.log("🔄 [LOGIN FORM] Redirection vers dashboard via router")
+            setIsLoading(false)
+            router.push("/")
+          }, 100)
         },
         onError: (ctx: any) => {
           console.error("❌ [LOGIN FORM] Erreur de connexion:", ctx.error)
