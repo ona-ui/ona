@@ -68,18 +68,6 @@ export default function Hero() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              {/* Badge with accent color */}
-              <motion.div
-                className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-slate-800 bg-[#FAF3E0]/80 backdrop-blur-sm rounded-full border shadow-sm mb-6 sm:mb-8 lg:mb-12"
-                style={{borderColor: 'rgba(201, 99, 66, 0.3)'}}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
-                <div className="w-2 h-2 rounded-full animate-pulse" style={{backgroundColor: '#C96342'}}></div>
-                React & Tailwind available !
-              </motion.div>
-
               {/* TITRE classique avec effet original */}
               <motion.div
                 className="mb-6 sm:mb-8"
