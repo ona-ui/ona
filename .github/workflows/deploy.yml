@@ -37,36 +37,30 @@ jobs:
               service=$1
               max_attempts=12
               attempt=1
-              success=0
 
               echo "⏳ Attente que $service soit healthy..."
 
               while [ $attempt -le $max_attempts ]; do
-                health_status=$(sudo docker inspect \
-                  --format='{{.State.Health.Status}}' \
-                  $(sudo docker compose ps -q $service) 2>/dev/null || echo "starting")
-
-                if [ "$health_status" = "healthy" ]; then
+                # Vérifier le health status avec docker compose ps
+                health_output=$(sudo docker compose ps $service 2>/dev/null || echo "")
+                
+                if echo "$health_output" | grep -q "(healthy)"; then
                   echo "✅ $service est healthy (tentative $attempt/$max_attempts)"
-                  success=1
-                  break
-                elif [ "$health_status" = "unhealthy" ]; then
+                  return 0
+                elif echo "$health_output" | grep -q "(unhealthy)"; then
                   echo "❌ $service est unhealthy"
+                  sudo docker compose logs --tail=10 $service
                   return 1
                 fi
 
-                echo "🔄 Tentative $attempt/$max_attempts - $service: $health_status"
-                sleep 15
+                echo "🔄 Tentative $attempt/$max_attempts - $service: en cours de vérification..."
+                sleep 10
                 attempt=$((attempt + 1))
               done
 
-              if [ "$success" -eq 1 ]; then
-                return 0
-              else
-                echo "❌ $service n'est pas healthy après $max_attempts tentatives"
-                sudo docker compose logs --tail=10 $service
-                return 1
-              fi
+              echo "❌ $service n'est pas healthy après $max_attempts tentatives"
+              sudo docker compose logs --tail=10 $service
+              return 1
             }
 
 
