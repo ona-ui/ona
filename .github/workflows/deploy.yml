@@ -40,7 +40,7 @@ jobs:
               echo "⏳ Attente que $service soit healthy..."
               
               while [ $attempt -le $max_attempts ]; do
-                local health_status=$(sudo docker compose ps --format json | jq -r ".[] | select(.Service==\"$service\") | .Health" 2>/dev/null || echo "starting")
+              health_status=$(sudo docker inspect --format='{{.State.Health.Status}}' $(sudo docker compose ps -q $service) 2>/dev/null || echo "starting")
                 
                 if [ "$health_status" = "healthy" ]; then
                   echo "✅ $service est healthy (tentative $attempt/$max_attempts)"
