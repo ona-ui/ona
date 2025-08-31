@@ -13,12 +13,12 @@ RUN yarn install --frozen-lockfile
 # Stage pour le backend
 FROM base AS backend-builder
 COPY apps/backend/ ./apps/backend/
-RUN yarn workspace backend build
+RUN cd apps/backend && yarn build
 
 # Stage pour le frontend
 FROM base AS frontend-builder
 COPY apps/docs/ ./apps/docs/
-RUN yarn workspace docs build
+RUN cd apps/docs && yarn build
 
 # Image finale pour le backend
 FROM node:22.11.0-alpine AS backend
