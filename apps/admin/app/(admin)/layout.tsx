@@ -197,7 +197,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     isLoading,
     hasUser: !!user,
     userEmail: user?.email,
-    userRole: user?.role
+    userRole: user?.role,
+    currentPath: typeof window !== 'undefined' ? window.location.pathname : 'SSR'
   })
 
   if (isLoading) {

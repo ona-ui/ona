@@ -68,15 +68,11 @@ export default function LoginForm() {
         timestamp: new Date().toISOString()
       })
       
-      // Utiliser router.push au lieu de window.location pour éviter les problèmes de synchronisation
-      try {
-        router.push("/")
-        console.log("✅ [LOGIN FORM] router.push('/') appelé avec succès")
-      } catch (error) {
-        console.error("❌ [LOGIN FORM] Erreur lors de router.push:", error)
-        // Fallback avec window.location si router.push échoue
-        window.location.href = "/"
-      }
+      // 🔧 FIX: Utiliser window.location.replace pour forcer la redirection
+      // Cela évite les problèmes de cache et de synchronisation Next.js
+      console.log("🔄 [LOGIN FORM] Utilisation de window.location.replace pour redirection forcée")
+      window.location.replace("/")
+      return
     }
   }, [authLoading, isAuthenticated, canAccessDashboard, router])
   
@@ -124,15 +120,9 @@ export default function LoginForm() {
           console.log("🔄 [LOGIN FORM] Session synchronisée - redirection")
           setIsLoading(false)
 
-          // Redirection robuste avec fallback
-          try {
-            console.log("🔄 [LOGIN FORM] Tentative de redirection avec router.push")
-            await router.push("/")
-            console.log("✅ [LOGIN FORM] Redirection router.push réussie")
-          } catch (routerError) {
-            console.error("❌ [LOGIN FORM] Erreur router.push, fallback vers window.location:", routerError)
-            window.location.href = "/"
-          }
+          // 🔧 FIX: Redirection forcée après connexion réussie
+          console.log("🔄 [LOGIN FORM] Redirection forcée vers dashboard")
+          window.location.replace("/")
         },
         onError: (ctx: any) => {
           console.error("❌ [LOGIN FORM] Erreur de connexion:", ctx.error)
@@ -156,7 +146,7 @@ export default function LoginForm() {
 
   // Ne pas rendre la page si l'utilisateur est déjà connecté
   const canAccess = canAccessDashboard()
-  const shouldShowSpinner = !authLoading && isAuthenticated && canAccess
+  const shouldShowSpinner = !authLoading && isAuthenticated
 
   console.log("🔄 [LOGIN FORM] Vérification rendu conditionnel:", {
     authLoading,
