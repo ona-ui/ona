@@ -41,8 +41,14 @@ const options = {
     },
     crossSubDomainCookies: {
       enabled: true,
-      domain: ".ona.com", // your domain
-  },
+      domain: ".ona-ui.com", // Correction: domaine correct pour vos sous-domaines
+    },
+    // Configuration des cookies pour cross-domain (HTTPS requis)
+    defaultCookieAttributes: {
+      sameSite: "none",
+      secure: true,
+      partitioned: true // Nouveau standard pour les cookies cross-domain
+    },
   },
   // 🔧 Configuration pour cross-domain en production
   session: {
