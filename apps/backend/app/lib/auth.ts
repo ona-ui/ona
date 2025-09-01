@@ -40,8 +40,6 @@ const options = {
     database: {
       generateId: false,
     },
-    // 🔧 Forcer les cookies sécurisés en production
-    useSecureCookies: process.env.NODE_ENV === 'production',
   },
   // 🔧 Configuration pour cross-domain en production
   session: {
