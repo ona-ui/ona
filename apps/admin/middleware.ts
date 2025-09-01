@@ -1,17 +1,12 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { betterFetch } from "@better-fetch/fetch";
-import { authUtils } from "@/lib/auth";
+import { getSessionCookie } from "better-auth/cookies"
 
 /**
- * Middleware d'authentification moderne pour protéger les routes admin
+ * Middleware d'authentification optimiste selon les recommandations Better-auth
  *
- * Utilise Better-auth API directement avec le runtime Node.js (Next.js 15.2+)
- *
- * Ce middleware :
- * - Vérifie l'authentification sur toutes les routes sauf /login
- * - Redirige les utilisateurs non authentifiés vers /login
- * - Vérifie les permissions d'accès au dashboard admin
+ * Utilise getSessionCookie pour une redirection rapide sans appel API
+ * La vérification complète de session se fait dans chaque page/route
  */
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -20,85 +15,29 @@ export async function middleware(request: NextRequest) {
   const publicPaths = ["/login"]
   const isPublicPath = publicPaths.some(path => pathname.startsWith(path))
 
-  try {
-    type BetterAuthUser = {
-      id: string
-      email?: string | null
-      name?: string | null
-      role?: string | null
-    }
-    type BetterAuthSession = {
-      user?: BetterAuthUser | null
-    }
-
-    // Utiliser l'API Better-auth directement (Next.js 15.2+)
-    console.log(`🔍 [MIDDLEWARE] Vérification session pour: ${pathname}`)
-    console.log(`🔍 [MIDDLEWARE] Cookies reçus:`, request.headers.get("cookie")?.substring(0, 100) + "...")
-    
-    const { data: session } = await betterFetch<BetterAuthSession>("/api/auth/get-session", {
-      baseURL: process.env.NEXT_PUBLIC_API_URL,
-      credentials: "include", // 🔧 FIX: Inclure les cookies dans la requête
-      headers: {
-          cookie: request.headers.get("cookie") || "", // Forward the cookies from the request
-      },
-    });
-    
-    console.log(`🔍 [MIDDLEWARE] Session récupérée:`, {
-      hasSession: !!session,
-      hasUser: !!session?.user,
-      userEmail: session?.user?.email,
-      userRole: session?.user?.role
-    })
-
-    // 🔧 GESTION SPÉCIALE POUR /login
-    if (isPublicPath && pathname === "/login") {
-      // Si l'utilisateur est déjà connecté et va sur /login, le rediriger
-      if (session?.user && authUtils.canAccessAdminDashboard(session.user)) {
-        console.log(`🛡️  [MIDDLEWARE] ✅ Utilisateur déjà connecté sur /login - Redirection vers /`)
-        const dashboardUrl = new URL("/", request.url)
-        return NextResponse.redirect(dashboardUrl)
-      }
-      // Sinon, laisser accéder à la page de login
-      return NextResponse.next()
-    }
-
-    // Si c'est une autre page publique, continuer
-    if (isPublicPath) {
-      return NextResponse.next()
-    }
-
-    // Si pas de session valide, rediriger vers login
-    if (!session) {
-      console.log(`🛡️  [MIDDLEWARE] ❌ Aucune session - Redirection vers /login`)
-      console.log(`🛡️  [MIDDLEWARE] URL demandée: ${request.url}`)
-      const loginUrl = new URL("/login", request.url)
-      return NextResponse.redirect(loginUrl)
-    }
-
-    if (session && !session.user) {
-      const loginUrl = new URL("/login?error=auth_error", request.url)
-      return NextResponse.redirect(loginUrl)
-    }
-
-    // Vérifier si l'utilisateur a accès au dashboard admin
-    const canAccess = authUtils.canAccessAdminDashboard(session.user)
-
-    if (!canAccess) {
-       const loginUrl = new URL("/login?error=access_denied", request.url)
-       return NextResponse.redirect(loginUrl)
-     }
-
-    // Utilisateur authentifié et autorisé, continuer
-    console.log(`🛡️  [MIDDLEWARE] ✅ Accès autorisé pour ${session.user?.name || session.user?.email || session.user?.id}`)
+  // Si c'est une page publique, laisser passer
+  if (isPublicPath) {
     return NextResponse.next()
+  }
 
-  } catch (error) {
-    console.error("🛡️  [MIDDLEWARE] 💥 Erreur dans le middleware d'authentification:", error)
-    
-    // En cas d'erreur, rediriger vers login par sécurité
-    const loginUrl = new URL("/login?error=auth_error", request.url)
+  // Vérification optimiste de l'existence du cookie de session
+  const sessionCookie = getSessionCookie(request, {
+    cookiePrefix: "ona-ui" // Correspond à notre configuration Better-auth
+  })
+
+  console.log(`🔍 [MIDDLEWARE] Vérification cookie pour: ${pathname}`)
+  console.log(`🔍 [MIDDLEWARE] Cookie de session trouvé:`, !!sessionCookie)
+
+  // Si pas de cookie de session, rediriger vers login
+  if (!sessionCookie) {
+    console.log(`🛡️  [MIDDLEWARE] ❌ Pas de cookie de session - Redirection vers /login`)
+    const loginUrl = new URL("/login", request.url)
     return NextResponse.redirect(loginUrl)
   }
+
+  // Cookie trouvé, laisser passer (la vérification complète se fait dans la page)
+  console.log(`🛡️  [MIDDLEWARE] ✅ Cookie de session présent - Accès autorisé`)
+  return NextResponse.next()
 }
 
 /**
