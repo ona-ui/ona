@@ -1,19 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
-import { authClient } from "./lib/auth";
  
 export async function middleware(request: NextRequest) {
-  const sessionCookie = getSessionCookie(request, {
-    cookiePrefix: "ona-ui"
-}); 
+  const sessionCookie = getSessionCookie(request); 
 
 console.log('SESSION : ' + sessionCookie)
     // THIS IS NOT SECURE!
     // This is the recommended approach to optimistically redirect users
     // We recommend handling auth checks in each page/route
-	if (!sessionCookie) {
-		return NextResponse.redirect(new URL("/login", request.url));
-	}
+
+    
 
 	return NextResponse.next();
 }
