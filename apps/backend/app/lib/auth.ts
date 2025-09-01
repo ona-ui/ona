@@ -52,10 +52,12 @@ const options = {
   },
   // 🔧 Configuration pour cross-domain en production
   session: {
+    // 🔧 Désactiver temporairement le cookie cache pour diagnostiquer
     cookieCache: {
-      enabled: true,
-      maxAge: 60 * 60 * 24 * 7, // 7 jours
+      enabled: false, // Désactivé temporairement pour forcer l'utilisation du cookie principal
     },
+    expiresIn: 60 * 60 * 24 * 7, // 7 jours
+    updateAge: 60 * 60 * 24, // 1 jour
   },
   emailAndPassword: {
     enabled: true,
