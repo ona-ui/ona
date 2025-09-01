@@ -16,7 +16,6 @@ const options = {
     'http://localhost:3333',  // Backend Adonis
     'http://localhost:5173',  // Autre origine si nécessaire
     'https://ona-ui.com',
-    'https://ona-ui.com/',    // With trailing slash for consistency
     'https://admin.ona-ui.com'
   ],
   
@@ -40,6 +39,10 @@ const options = {
     database: {
       generateId: false,
     },
+    crossSubDomainCookies: {
+      enabled: true,
+      domain: ".ona.com", // your domain
+  },
   },
   // 🔧 Configuration pour cross-domain en production
   session: {
