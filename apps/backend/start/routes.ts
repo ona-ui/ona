@@ -289,7 +289,7 @@ router.group(() => {
 
   }).prefix('/files')
 
-}).prefix('/api/admin').middleware([])
+}).prefix('/api/admin').middleware([middleware.admin()])
 
 /*
 |--------------------------------------------------------------------------

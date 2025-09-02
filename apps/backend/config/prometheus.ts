@@ -22,7 +22,7 @@ export default defineConfig({
    * metrics endpoint. If empty, then everyone
    * can access the endpoint
    */
-  ipsWhitelist: ['147.79.100.38', '83.114.59.193'],
+  ipsWhitelist: ['83.114.59.193', '80.15.118.132', '162.19.230.171'],
 
   /**
    * List of collectors that will be registered

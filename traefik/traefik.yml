@@ -12,6 +12,8 @@ entryPoints:
           scheme: https
   websecure:
     address: ":443"
+  metrics:
+    address: ":8082"
 
 providers:
   docker:
@@ -25,3 +27,14 @@ certificatesResolvers:
       storage: /acme/acme.json
       httpChallenge:
         entryPoint: web
+
+# Access logs (stdout) — mets filePath si tu veux un fichier
+accessLog: {}
+
+# Metrics Prometheus
+metrics:
+  prometheus:
+    entryPoint: metrics
+    addEntryPointsLabels: true
+    addRoutersLabels: true
+    addServicesLabels: true
