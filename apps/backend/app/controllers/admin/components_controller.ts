@@ -56,8 +56,8 @@ export default class ComponentsController extends BaseAdminController {
         sortBy: this.convertSortBy(query.sortBy)
       }
 
-      // Récupération des composants avec filtres
-      const result = await this.componentService.listComponents(
+      // Récupération des composants avec filtres (TOUS les statuts pour l'admin)
+      const result = await this.componentService.listAllComponentsForAdmin(
         serviceFilters,
         paginationParams,
         this.getUserId(ctx) || undefined

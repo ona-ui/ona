@@ -101,6 +101,32 @@ export class ComponentService extends BaseService {
   }
 
   /**
+   * Liste TOUS les composants pour l'admin (tous statuts inclus)
+   */
+  async listAllComponentsForAdmin(
+    filters: ComponentSearchFilters = {},
+    options: PaginationOptions = {},
+    userId?: string
+  ) {
+    this.logOperation('listAllComponentsForAdmin', { filters, options, userId });
+
+    const validatedOptions = this.validatePaginationOptions(options);
+    
+    // Convertir les filtres de recherche en filtres de repository
+    const repositoryFilters = this.convertSearchFilters(filters);
+    
+    // Ne pas filtrer par statut pour l'admin - permettre tous les statuts
+    if (!filters.status) {
+      repositoryFilters.status = null; // Explicitement null pour désactiver le filtre
+    }
+    
+    const result = await componentRepository.paginate(validatedOptions, repositoryFilters);
+
+    // Pour l'admin, pas besoin du contrôle d'accès - retourner les composants tels quels
+    return this.createPaginatedResponse(result, 'Composants admin récupérés avec succès');
+  }
+
+  /**
    * Recherche des composants avec filtrage avancé
    */
   async searchComponents(

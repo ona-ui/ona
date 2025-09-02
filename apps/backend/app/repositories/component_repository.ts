@@ -7,7 +7,7 @@ export interface ComponentFilters {
   categoryId?: string;
   productId?: string;
   isFree?: boolean;
-  status?: 'draft' | 'published' | 'archived' | 'deprecated';
+  status?: 'draft' | 'published' | 'archived' | 'deprecated' | null;
   isNew?: boolean;
   isFeatured?: boolean;
   search?: string;
@@ -115,7 +115,15 @@ export class ComponentRepository {
   async findWithFilters(filters: ComponentFilters): Promise<(typeof components.$inferSelect)[]> {
     // Si on filtre par catégorie, on doit faire une jointure
     if (filters.categoryId) {
-      const conditions: SQL<unknown>[] = [eq(components.status, filters.status || 'published')];
+      const conditions: SQL<unknown>[] = [];
+      
+      // Ajouter le filtre de statut seulement s'il est spécifié
+      if (filters.status !== undefined) {
+        conditions.push(eq(components.status, filters.status));
+      } else if (filters.status !== null) {
+        // Par défaut, filtrer sur published sauf si explicitement null
+        conditions.push(eq(components.status, 'published'));
+      }
 
       if (filters.subcategoryId) {
         conditions.push(eq(components.subcategoryId, filters.subcategoryId));
@@ -265,7 +273,15 @@ export class ComponentRepository {
 
     // Si on filtre par catégorie, on doit faire une jointure
     if (filters.categoryId) {
-      const conditions: SQL<unknown>[] = [eq(components.status, filters.status || 'published')];
+      const conditions: SQL<unknown>[] = [];
+      
+      // Ajouter le filtre de statut seulement s'il est spécifié
+      if (filters.status !== undefined) {
+        conditions.push(eq(components.status, filters.status));
+      } else if (filters.status !== null) {
+        // Par défaut, filtrer sur published sauf si explicitement null
+        conditions.push(eq(components.status, 'published'));
+      }
 
       if (filters.subcategoryId) {
         conditions.push(eq(components.subcategoryId, filters.subcategoryId));
@@ -360,7 +376,14 @@ export class ComponentRepository {
 
     // Sans filtre de catégorie, logique existante
     const conditions: SQL<unknown>[] = [];
-    conditions.push(eq(components.status, filters.status || 'published'));
+    
+    // Ajouter le filtre de statut seulement s'il est spécifié
+    if (filters.status !== undefined) {
+      conditions.push(eq(components.status, filters.status));
+    } else if (filters.status !== null) {
+      // Par défaut, filtrer sur published sauf si explicitement null
+      conditions.push(eq(components.status, 'published'));
+    }
 
     if (filters.subcategoryId) {
       conditions.push(eq(components.subcategoryId, filters.subcategoryId));

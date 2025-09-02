@@ -59,7 +59,7 @@ export default function Hero() {
       
       <div className="relative px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
         <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col lg:flex-row gap-8 sm:gap-10 lg:gap-12 items-center min-h-[70vh] sm:min-h-[75vh] lg:min-h-[80vh]">
+          <div className="flex flex-col lg:flex-row gap-8 sm:gap-10 lg:gap-12 items-start min-h-[40vh] sm:min-h-[50vh] lg:min-h-[60vh]">
             
             {/* Left side - Content */}
             <motion.div
