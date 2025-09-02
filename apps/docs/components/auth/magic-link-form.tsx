@@ -58,7 +58,7 @@ export function MagicLinkForm({
 
   if (isSuccess) {
     return (
-      <div className="max-w-md mx-auto p-8 bg-[#FAF3E0]/80 backdrop-blur-sm rounded-3xl shadow-lg border" style={{borderColor: 'rgba(201, 99, 66, 0.3)'}}>
+      <div className="max-w-md mx-auto p-8 bg-[#F1F0EE]/80 backdrop-blur-sm rounded-3xl shadow-lg border" style={{borderColor: 'rgba(201, 99, 66, 0.3)'}}>
         <div className="text-center">
           <div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(135deg, #C96342, #E8915B)'}}>
             <svg
@@ -102,10 +102,10 @@ export function MagicLinkForm({
   }
 
   return (
-    <div className="max-w-md mx-auto p-8 bg-[#FAF3E0]/80 backdrop-blur-sm rounded-3xl shadow-lg border" style={{borderColor: 'rgba(201, 99, 66, 0.3)'}}>
+    <div className="max-w-md mx-auto p-8 bg-[#F1F0EE]/80 backdrop-blur-sm rounded-3xl shadow-lg border" style={{borderColor: 'rgba(201, 99, 66, 0.3)'}}>
       <div className="text-center mb-8">
         {/* Badge avec accent color */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-800 bg-[#FAF3E0]/80 backdrop-blur-sm rounded-full border shadow-sm mb-6"
+        <div className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-800 bg-[#F1F0EE]/80 backdrop-blur-sm rounded-full border shadow-sm mb-6"
              style={{borderColor: 'rgba(201, 99, 66, 0.3)'}}>
           <div className="w-2 h-2 rounded-full animate-pulse" style={{backgroundColor: '#C96342'}}></div>
           ONA UI

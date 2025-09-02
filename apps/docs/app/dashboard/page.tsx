@@ -207,7 +207,7 @@ export default function DashboardPage() {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-100 flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-[#FAF3E0] rounded-2xl shadow-xl p-8 text-center">
+        <div className="max-w-md w-full bg-[#F1F0EE] rounded-2xl shadow-xl p-8 text-center">
           <div className="mb-6">
             <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
               <span className="text-2xl">❌</span>
@@ -232,7 +232,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <div className="bg-[#FAF3E0] shadow-sm border-b">
+      <div className="bg-[#F1F0EE] shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-4">

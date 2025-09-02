@@ -50,7 +50,7 @@ export default function WelcomePage() {
         </div>
 
         {/* Welcome Card */}
-        <div className="bg-[#FAF3E0] rounded-lg shadow-lg p-8 border border-green-100">
+        <div className="bg-[#F1F0EE] rounded-lg shadow-lg p-8 border border-green-100">
           <div className="text-center">
             {/* Success Icon */}
             <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6">
@@ -101,7 +101,7 @@ export default function WelcomePage() {
 
         {/* Next Steps */}
         <div className="mt-8">
-          <div className="bg-[#FAF3E0] rounded-lg p-6 shadow-sm border border-gray-100">
+          <div className="bg-[#F1F0EE] rounded-lg p-6 shadow-sm border border-gray-100">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
               🚀 Prochaines étapes recommandées
             </h3>

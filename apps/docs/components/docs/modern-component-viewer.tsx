@@ -4,9 +4,9 @@ import { useState, useEffect, useRef } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@workspace/ui/components/card'
 import { Badge } from '@workspace/ui/components/badge'
 import { Button } from '@workspace/ui/components/button'
-import { Copy, Eye, Code2, ExternalLink, Sparkles, Monitor, Smartphone, Tv, RefreshCw } from 'lucide-react'
+import { Copy, Eye, Code2, ExternalLink, Sparkles, Monitor, Smartphone, Tv, RefreshCw, Maximize2, Check } from 'lucide-react'
 import { toast } from 'sonner'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 
 interface Component {
@@ -39,6 +39,8 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
   const [selectedFramework, setSelectedFramework] = useState('')
   const [viewportSize, setViewportSize] = useState<'mobile' | 'tablet' | 'desktop'>('desktop')
   const [refreshKey, setRefreshKey] = useState(0)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [isCopied, setIsCopied] = useState(false)
 
   const copyCode = async () => {
     try {
@@ -47,10 +49,20 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
         : component.versions?.[0]
       const codeToCopy = selectedVersion?.codeFull || ''
       await navigator.clipboard.writeText(codeToCopy)
+      setIsCopied(true)
       toast.success('Code copied to clipboard!')
+      setTimeout(() => setIsCopied(false), 2000)
     } catch (err) {
       toast.error('Failed to copy code')
     }
+  }
+
+  const openFullscreen = () => {
+    setIsFullscreen(true)
+  }
+
+  const closeFullscreen = () => {
+    setIsFullscreen(false)
   }
 
   const refreshPreview = () => {
@@ -83,90 +95,105 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
   }, [component.versions, selectedFramework])
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="mb-8"
-    >
-      <Card className="bg-[#FAF3E0]/80 backdrop-blur-sm border shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
-        <CardHeader className="pb-4">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-3">
-                <CardTitle className="text-2xl font-bold text-zinc-800">{component.name}</CardTitle>
-                <div className="flex gap-2">
-                  {component.isFree && (
-                    <Badge className="bg-green-100 text-green-700 border-green-200">
-                      <Sparkles className="w-3 h-3 mr-1" />
-                      Free
-                    </Badge>
-                  )}
-                  {component.isNew && (
-                    <Badge className="bg-blue-100 text-blue-700 border-blue-200">
-                      New
-                    </Badge>
-                  )}
-                  {component.isFeatured && (
-                    <Badge className="bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 border-amber-200/50">
-                      Featured
-                    </Badge>
-                  )}
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="mb-6"
+      >
+        <div className="bg-white/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+          {/* Header */}
+          <div className="px-6 py-4 border-b border-slate-200/50">
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-2">
+                  <h3 className="text-xl font-bold text-zinc-800">{component.name}</h3>
+                  <div className="flex gap-2">
+                    {component.isFree && (
+                      <Badge className="bg-green-100 text-green-700 border-green-200 text-xs">
+                        <Sparkles className="w-3 h-3 mr-1" />
+                        Free
+                      </Badge>
+                    )}
+                    {component.isNew && (
+                      <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-xs">
+                        New
+                      </Badge>
+                    )}
+                    {component.isFeatured && (
+                      <Badge className="bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 border-amber-200/50 text-xs">
+                        Featured
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+                
+                {component.description && (
+                  <p className="text-slate-600 text-sm leading-relaxed">
+                    {component.description}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Controls */}
+          <div className="px-6 py-3 bg-slate-50/50 border-b border-slate-200/50">
+            <div className="flex items-center justify-between">
+              {/* Compact Toggle */}
+              <div className="relative bg-white rounded-lg px-1 shadow-sm border border-slate-200">
+                <div className="relative flex">
+                  <motion.div
+                    className="absolute inset-y-1 bg-zinc-800 rounded-md"
+                    initial={false}
+                    animate={{
+                      x: activeTab === 'preview' ? 0 : '100%',
+                      width: '50%',
+                    }}
+                    transition={{
+                      type: "tween",
+                      duration: 0.2,
+                      ease: "easeInOut"
+                    }}
+                  />
+                  <button
+                    onClick={() => setActiveTab('preview')}
+                    className={`flex items-center gap-2 pl-4 pr-8 py-2 text-sm font-medium z-10 ${
+                      activeTab === 'preview'
+                        ? 'text-white'
+                        : 'text-slate-600 hover:text-zinc-800'
+                    }`}
+                  >
+                    <Eye className="w-4 h-4" />
+                    Preview
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('code')}
+                    className={`flex items-center gap-2 pl-4 pr-8 py-2 text-sm font-medium transition-colors relative z-10 flex-1 justify-center ${
+                      activeTab === 'code'
+                        ? 'text-white'
+                        : 'text-slate-600 hover:text-zinc-800'
+                    }`}
+                  >
+                    <Code2 className="w-4 h-4" />
+                    Code
+                  </button>
                 </div>
               </div>
-              
-              {component.description && (
-                <p className="text-slate-600 leading-relaxed mb-4">
-                  {component.description}
-                </p>
-              )}
-            </div>
 
-          
-          </div>
-        </CardHeader>
-
-        <CardContent className="pt-0">
-          <div className="border-t border-slate-200 pt-6">
-            {/* Tabs + Controls */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-1 bg-slate-50 rounded-lg p-1">
-                <button
-                  onClick={() => setActiveTab('preview')}
-                  className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-md text-sm font-medium transition-all ${
-                    activeTab === 'preview'
-                      ? 'bg-[#FAF3E0] text-zinc-800 shadow-sm'
-                      : 'text-slate-600 hover:text-zinc-800'
-                  }`}
-                >
-                  <Eye className="w-4 h-4" />
-                  Preview
-                </button>
-                <button
-                  onClick={() => setActiveTab('code')}
-                  className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-md text-sm font-medium transition-all ${
-                    activeTab === 'code'
-                      ? 'bg-[#FAF3E0] text-zinc-800 shadow-sm'
-                      : 'text-slate-600 hover:text-zinc-800'
-                  }`}
-                >
-                  <Code2 className="w-4 h-4" />
-                  Code
-                </button>
-              </div>
-
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 {/* Preview Controls */}
                 {activeTab === 'preview' && (
                   <>
                     {/* Viewport Size Controls */}
-                    <div className="flex items-center gap-1 bg-slate-50 rounded-lg p-1">
+                    <div className="flex items-center gap-1 bg-white rounded-lg p-1 shadow-sm border border-slate-200">
                       <button
                         onClick={() => setViewportSize('mobile')}
-                        className={`flex items-center justify-center p-2 rounded-md text-sm font-medium transition-all ${
+                        className={`p-1.5 rounded-md transition-all ${
                           viewportSize === 'mobile'
-                            ? 'bg-[#FAF3E0] text-zinc-800 shadow-sm'
-                            : 'text-slate-600 hover:text-zinc-800'
+                            ? 'bg-zinc-800 text-white shadow-sm'
+                            : 'text-slate-600 hover:text-zinc-800 hover:bg-slate-50'
                         }`}
                         title="Mobile View"
                       >
@@ -174,10 +201,10 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
                       </button>
                       <button
                         onClick={() => setViewportSize('tablet')}
-                        className={`flex items-center justify-center p-2 rounded-md text-sm font-medium transition-all ${
+                        className={`p-1.5 rounded-md transition-all ${
                           viewportSize === 'tablet'
-                            ? 'bg-[#FAF3E0] text-zinc-800 shadow-sm'
-                            : 'text-slate-600 hover:text-zinc-800'
+                            ? 'bg-zinc-800 text-white shadow-sm'
+                            : 'text-slate-600 hover:text-zinc-800 hover:bg-slate-50'
                         }`}
                         title="Tablet View"
                       >
@@ -185,10 +212,10 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
                       </button>
                       <button
                         onClick={() => setViewportSize('desktop')}
-                        className={`flex items-center justify-center p-2 rounded-md text-sm font-medium transition-all ${
+                        className={`p-1.5 rounded-md transition-all ${
                           viewportSize === 'desktop'
-                            ? 'bg-[#FAF3E0] text-zinc-800 shadow-sm'
-                            : 'text-slate-600 hover:text-zinc-800'
+                            ? 'bg-zinc-800 text-white shadow-sm'
+                            : 'text-slate-600 hover:text-zinc-800 hover:bg-slate-50'
                         }`}
                         title="Desktop View"
                       >
@@ -196,26 +223,51 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
                       </button>
                     </div>
 
-                    {/* Preview Action Buttons */}
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-slate-600 hover:bg-slate-100 transition-colors"
+                    {/* Action Buttons */}
+                    <div className="flex items-center gap-1">
+                      <button
                         onClick={copyCode}
+                        className="p-1.5 text-slate-600 hover:text-zinc-800 hover:bg-white rounded-md transition-all"
                         title="Copy Code"
                       >
-                        <Copy className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-slate-600 hover:bg-slate-100 transition-colors"
+                        <AnimatePresence mode="wait">
+                          {isCopied ? (
+                            <motion.div
+                              key="check"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              exit={{ scale: 0 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <Check className="w-4 h-4 text-green-600" />
+                            </motion.div>
+                          ) : (
+                            <motion.div
+                              key="copy"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              exit={{ scale: 0 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <Copy className="w-4 h-4" />
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </button>
+                      <button
                         onClick={refreshPreview}
+                        className="p-1.5 text-slate-600 hover:text-zinc-800 hover:bg-white rounded-md transition-all"
                         title="Refresh Preview"
                       >
                         <RefreshCw className="w-4 h-4" />
-                      </Button>
+                      </button>
+                      <button
+                        onClick={openFullscreen}
+                        className="p-1.5 text-slate-600 hover:text-zinc-800 hover:bg-white rounded-md transition-all"
+                        title="Fullscreen Preview"
+                      >
+                        <Maximize2 className="w-4 h-4" />
+                      </button>
                     </div>
                   </>
                 )}
@@ -225,7 +277,7 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
                   <select
                     value={selectedFramework}
                     onChange={(e) => setSelectedFramework(e.target.value)}
-                    className="px-3 py-2 text-sm border border-slate-200 rounded-lg bg-[#FAF3E0] text-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-800 focus:border-transparent"
+                    className="px-3 py-1.5 text-sm border border-slate-200 rounded-lg bg-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-800 focus:border-transparent"
                   >
                     {component.versions.map((version) => (
                       <option key={version.id} value={version.framework}>
@@ -234,97 +286,162 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
                     ))}
                   </select>
                 )}
+
+                {/* Code Copy Button */}
+                {activeTab === 'code' && (
+                  <button
+                    onClick={copyCode}
+                    className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-zinc-800 hover:bg-white rounded-lg transition-all"
+                  >
+                    <AnimatePresence mode="wait">
+                      {isCopied ? (
+                        <motion.div
+                          key="check"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          exit={{ scale: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="flex items-center gap-2"
+                        >
+                          <Check className="w-4 h-4 text-green-600" />
+                          <span className="text-green-600">Copied!</span>
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="copy"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          exit={{ scale: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="flex items-center gap-2"
+                        >
+                          <Copy className="w-4 h-4" />
+                          <span>Copy</span>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </button>
+                )}
               </div>
             </div>
+          </div>
 
-            {/* Content */}
-            <div className="space-y-6">
-              {activeTab === 'preview' && (
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="bg-[#FAF3E0] rounded-xl border border-slate-200 p-4 min-h-[600px] flex items-center justify-center shadow-sm" style={getViewportStyles()}>
+          {/* Content */}
+          <div className="p-4">
+            {activeTab === 'preview' && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="bg-white rounded-xl p-4 min-h-[500px] flex items-center justify-center" style={getViewportStyles()}>
+                  {selectedVersion?.codePreview ? (
+                    <PreviewIframe
+                      key={refreshKey}
+                      htmlContent={selectedVersion.codePreview}
+                      viewportSize={viewportSize}
+                    />
+                  ) : (
+                    <div className="text-center text-slate-400">
+                      <Eye className="w-16 h-16 mx-auto mb-4 opacity-30" />
+                      <p className="text-lg">Preview not available</p>
+                      <p className="text-sm text-slate-500 mt-2">{component.name}</p>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            )}
+
+            {activeTab === 'code' && (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {selectedVersion && (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Badge variant="secondary" className="bg-slate-100 text-slate-700 font-medium text-xs">
+                        {selectedVersion.framework}
+                      </Badge>
+                      <Badge variant="outline" className="border-slate-300 text-slate-600 text-xs">
+                        {selectedVersion.cssFramework}
+                      </Badge>
+                      <span className="text-xs text-slate-500">v{selectedVersion.versionNumber}</span>
+                    </div>
+                    
+                    <div className="bg-slate-900 rounded-xl overflow-hidden">
+                      <div className="bg-slate-800 px-4 py-2 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="flex gap-1.5">
+                            <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                          </div>
+                          <span className="text-slate-300 text-sm font-mono">
+                            {component.slug}.{selectedVersion.framework.toLowerCase()}
+                          </span>
+                        </div>
+                      </div>
+                      <pre className="p-4 overflow-x-auto text-sm max-h-[400px] overflow-y-auto">
+                        <code className="text-slate-100 leading-relaxed font-mono">
+                          {selectedVersion.codeFull || '// Full code not available'}
+                        </code>
+                      </pre>
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Fullscreen Modal */}
+      <AnimatePresence>
+        {isFullscreen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm"
+            onClick={closeFullscreen}
+          >
+            <div className="absolute inset-4 bg-white rounded-2xl overflow-hidden">
+              <div className="h-full flex flex-col">
+                <div className="flex items-center justify-between p-4 border-b border-slate-200">
+                  <h3 className="text-lg font-semibold text-zinc-800">{component.name} - Fullscreen Preview</h3>
+                  <button
+                    onClick={closeFullscreen}
+                    className="p-2 text-slate-600 hover:text-zinc-800 hover:bg-slate-100 rounded-lg transition-colors"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="flex-1 p-4 overflow-hidden">
+                  <div className=" bg-[#F1F0EE] rounded-xl flex items-center justify-center">
                     {selectedVersion?.codePreview ? (
                       <PreviewIframe
-                        key={refreshKey}
+                        key={`fullscreen-${refreshKey}`}
                         htmlContent={selectedVersion.codePreview}
-                        viewportSize={viewportSize}
+                        viewportSize="desktop"
                       />
                     ) : (
                       <div className="text-center text-slate-400">
                         <Eye className="w-16 h-16 mx-auto mb-4 opacity-30" />
-                        <p className="text-lg">Full screen preview</p>
-                        <p className="text-sm text-slate-500 mt-2">{component.name}</p>
+                        <p className="text-lg">Preview not available</p>
                       </div>
                     )}
                   </div>
-                  
-                 
-                </motion.div>
-              )}
-
-              {activeTab === 'code' && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="space-y-4"
-                >
-                  {selectedVersion && (
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Badge variant="secondary" className="bg-slate-100 text-slate-700 font-medium">
-                            {selectedVersion.framework}
-                          </Badge>
-                          <Badge variant="outline" className="border-slate-300 text-slate-600">
-                            {selectedVersion.cssFramework}
-                          </Badge>
-                          <span className="text-sm text-slate-500">v{selectedVersion.versionNumber}</span>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-slate-600 hover:bg-slate-100 transition-colors"
-                          onClick={() => copyCode()}
-                        >
-                          <Copy className="w-4 h-4 mr-2" />
-                          Copy
-                        </Button>
-                      </div>
-                      
-                      <div className="bg-slate-900 rounded-xl overflow-hidden">
-                        <div className="bg-slate-800 px-4 py-2 flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="flex gap-1.5">
-                              <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                              <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                            </div>
-                            <span className="text-slate-300 text-sm font-mono">
-                              {component.slug}.{selectedVersion.framework.toLowerCase()}
-                            </span>
-                          </div>
-                        </div>
-                        <pre className="p-6 overflow-x-auto text-sm max-h-[500px] overflow-y-auto">
-                          <code className="text-slate-100 leading-relaxed font-mono">
-                            {selectedVersion.codeFull || '// Full code not available'}
-                          </code>
-                        </pre>
-                      </div>
-                    </div>
-                  )}
-
-                
-                </motion.div>
-              )}
+                </div>
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-    </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   )
 }
 

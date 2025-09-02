@@ -62,7 +62,7 @@ export default function Pricing() {
   }
 
   return (
-    <div className="bg-[#FAF3E0] relative pt-32 pb-20">
+    <div className="bg-[#F1F0EE] relative pt-32 pb-20">
       <div className="relative px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           
@@ -112,7 +112,7 @@ export default function Pricing() {
               transition={{ duration: 0.6, delay: 0.6 }}
               className="bg-orange-200 rounded-3xl p-2 shadow-lg"
             >
-              <div className="bg-[#FAF3E0] rounded-2xl p-8 h-full border border-amber-200 shadow-sm">
+              <div className="bg-[#F1F0EE] rounded-2xl p-8 h-full border border-amber-200 shadow-sm">
                 <div className="text-center mb-8">
                   <div className="inline-flex items-center gap-2 px-3 py-1 text-xs font-medium text-slate-600 bg-orange-200 rounded-full mb-4">
                     FREE PLAN
@@ -143,7 +143,7 @@ export default function Pricing() {
                 <Button
                   size="lg"
                   onClick={() => router.push("/docs")}
-                  className="w-full text-slate-700 px-6 py-3 rounded-xl font-semibold bg-[#FAF3E0] border-2 border-slate-300 hover:border-slate-400 hover:bg-slate-50 transition-all duration-200"
+                  className="w-full text-slate-700 px-6 py-3 rounded-xl font-semibold bg-[#F1F0EE] border-2 border-slate-300 hover:border-slate-400 hover:bg-slate-50 transition-all duration-200"
                 >
                   Start for free
                 </Button>

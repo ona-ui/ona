@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono, Inter, Montserrat, Orbitron, Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google"
+import { Geist, Geist_Mono, Inter, Montserrat, Orbitron, Outfit, Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google"
 import type { Metadata, Viewport } from "next"
 
 import "@workspace/ui/globals.css"
@@ -8,7 +8,7 @@ import { Providers } from "@/components/providers"
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
 
 // Polices
-const fontSans = Plus_Jakarta_Sans({
+const fontSans = Outfit({
   subsets: ["latin"],
   variable: "--font-sans",
 })

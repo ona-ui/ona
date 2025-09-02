@@ -35,7 +35,7 @@ export default function Hero() {
     }
   ]
   return (
-    <div className="min-h-screen bg-[#FAF3E0] relative pt-20 sm:pt-24 lg:pt-20 overflow-hidden">
+    <div className="min-h-screen bg-[#F1F0EE] relative pt-20 sm:pt-24 lg:pt-20 overflow-hidden">
       {/* Grid background */}
       <div className="absolute inset-0" style={{
         backgroundSize: '24px 24px'
@@ -43,7 +43,7 @@ export default function Hero() {
       
       {/* Aurora Background */}
       <div className="absolute inset-0 overflow-hidden">
-  <LightRays
+  {/* <LightRays
     raysOrigin="top-center"
     raysColor="#ffbf47"
     raysSpeed={3.5}
@@ -54,7 +54,7 @@ export default function Hero() {
     noiseAmount={0.8}
     distortion={0.05}
     className="custom-rays"
-  />
+  /> */}
       </div>
       
       <div className="relative px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
@@ -198,7 +198,7 @@ export default function Hero() {
                   onClick={() => router.push('/docs')}
                   className="group relative text-white px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 bg-gradient-to-r from-[#C96342] to-[#B55638] hover:from-[#B55638] hover:to-[#A14D2F] shadow-lg hover:shadow-xl hover:shadow-orange-500/25 w-full sm:w-auto"
                 >
-                  Browse 40 components
+                  Browse 31 components
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 group-hover:rotate-45 transition-all duration-300" />
                 </Button>
               </motion.div>
@@ -345,8 +345,6 @@ export default function Hero() {
         </div>
       </div>
       
-      {/* Transition fluide vers la section suivante */}
-      <div className="absolute bottom-0 left-0 right-0 h-20 sm:h-32 lg:h-40 bg-gradient-to-b from-transparent via-amber-50/30 to-amber-50/60 pointer-events-none"></div>
     </div>
   )
 }

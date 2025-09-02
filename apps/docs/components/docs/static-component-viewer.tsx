@@ -72,7 +72,7 @@ export function StaticComponentViewer({ component }: StaticComponentViewerProps)
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF3E0] relative overflow-hidden">
+    <div className="min-h-screen bg-[#F1F0EE] relative overflow-hidden">
       {/* Light grid background like hero */}
       <div className="absolute inset-0" style={{
         backgroundSize: '24px 24px'
@@ -110,7 +110,7 @@ export function StaticComponentViewer({ component }: StaticComponentViewerProps)
                   </Badge>
                 )}
                 {component.requiredTier && (
-                  <Badge variant="outline" className="text-slate-600 border-slate-300 bg-[#FAF3E0]/80">
+                  <Badge variant="outline" className="text-slate-600 border-slate-300 bg-[#F1F0EE]/80">
                     {component.requiredTier}
                   </Badge>
                 )}
@@ -132,7 +132,7 @@ export function StaticComponentViewer({ component }: StaticComponentViewerProps)
         {/* Stats with hero-like styling */}
         <div className="mx-auto max-w-4xl">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Card className="bg-[#FAF3E0]/80 backdrop-blur-sm border shadow-sm">
+            <Card className="bg-[#F1F0EE]/80 backdrop-blur-sm border shadow-sm">
               <CardContent className="p-5 text-center">
                 <div className="text-2xl font-bold text-zinc-800">
                   {component.viewCount || 0}
@@ -140,7 +140,7 @@ export function StaticComponentViewer({ component }: StaticComponentViewerProps)
                 <p className="text-sm text-slate-600">Vues</p>
               </CardContent>
             </Card>
-            <Card className="bg-[#FAF3E0]/80 backdrop-blur-sm border shadow-sm">
+            <Card className="bg-[#F1F0EE]/80 backdrop-blur-sm border shadow-sm">
               <CardContent className="p-5 text-center">
                 <div className="text-2xl font-bold text-zinc-800">
                   {component.copyCount || 0}
@@ -148,7 +148,7 @@ export function StaticComponentViewer({ component }: StaticComponentViewerProps)
                 <p className="text-sm text-slate-600">Copies</p>
               </CardContent>
             </Card>
-            <Card className="bg-[#FAF3E0]/80 backdrop-blur-sm border shadow-sm">
+            <Card className="bg-[#F1F0EE]/80 backdrop-blur-sm border shadow-sm">
               <CardContent className="p-5 text-center">
                 <div className="text-2xl font-bold text-zinc-800">
                   {component.versions?.length || 0}
@@ -156,7 +156,7 @@ export function StaticComponentViewer({ component }: StaticComponentViewerProps)
                 <p className="text-sm text-slate-600">Versions</p>
               </CardContent>
             </Card>
-            <Card className="bg-[#FAF3E0]/80 backdrop-blur-sm border shadow-sm">
+            <Card className="bg-[#F1F0EE]/80 backdrop-blur-sm border shadow-sm">
               <CardContent className="p-5 text-center">
                 <div className="text-2xl font-bold text-zinc-800">
                   {component.conversionRate || '0%'}
@@ -208,7 +208,7 @@ export function StaticComponentViewer({ component }: StaticComponentViewerProps)
 
               {activeTab === 'preview' && (
                 <div className="flex-1 outline-none relative rounded-xl">
-                  <div className="max-w-screen relative rounded-xl border border-slate-200 bg-[#FAF3E0]/90 backdrop-blur-sm shadow-sm">
+                  <div className="max-w-screen relative rounded-xl border border-slate-200 bg-[#F1F0EE]/90 backdrop-blur-sm shadow-sm">
                     <div className="flex items-center justify-end gap-3 p-4 border-b border-slate-100">
                       <Button
                         variant="outline"

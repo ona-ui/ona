@@ -36,7 +36,7 @@ export default function FAQ() {
   }
 
   return (
-    <div className="bg-[#FAF3E0] relative py-20">
+    <div className="bg-[#F1F0EE] relative py-20">
       {/* Effet de transition subtil depuis le Hero */}
       <div className="absolute top-0 left-0 right-0 h-32 to-white pointer-events-none"></div>
 
@@ -52,7 +52,7 @@ export default function FAQ() {
             transition={{ duration: 0.8 }}
           >
             <motion.div
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-800 bg-[#FAF3E0]/80 backdrop-blur-sm rounded-full border shadow-sm mb-6"
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-800 bg-[#F1F0EE]/80 backdrop-blur-sm rounded-full border shadow-sm mb-6"
               style={{borderColor: 'rgba(201, 99, 66, 0.3)'}}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -83,7 +83,7 @@ export default function FAQ() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-                className="border rounded-xl bg-[#FAF3E0]/50 backdrop-blur-sm hover:bg-[#FAF3E0]/80 transition-all duration-200"
+                className="border rounded-xl bg-[#F1F0EE]/50 backdrop-blur-sm hover:bg-[#F1F0EE]/80 transition-all duration-200"
               >
                 <button
                   onClick={() => toggleFAQ(index)}

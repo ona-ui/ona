@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ChevronDown, ChevronRight, Folder, Search, FileText, Code2, Menu, X } from 'lucide-react'
+import { ChevronDown, ChevronRight, Folder, Search, FileText, Code2, Menu, X, Grid, Tag, Crown } from 'lucide-react'
 
 interface DocsSection {
   title: string
@@ -44,9 +44,18 @@ const docsSections: DocsSection[] = [
 
 export function StaticDocsSidebar({ navigationData, categories = [], isOpen = false, onToggle }: StaticDocsSidebarProps) {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['all']))
   const [searchTerm, setSearchTerm] = useState('')
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const pathname = usePathname()
+
+  // Auto-expand all categories on mount
+  useEffect(() => {
+    if (categories.length > 0) {
+      const allCategoryIds = categories.map(cat => cat.id)
+      setExpandedCategories(new Set(allCategoryIds))
+    }
+  }, [categories])
 
   // Close mobile sidebar when pathname changes
   useEffect(() => {
@@ -84,6 +93,16 @@ export function StaticDocsSidebar({ navigationData, categories = [], isOpen = fa
     setExpandedCategories(newExpanded)
   }
 
+  const toggleSection = (sectionId: string) => {
+    const newExpanded = new Set(expandedSections)
+    if (newExpanded.has(sectionId)) {
+      newExpanded.delete(sectionId)
+    } else {
+      newExpanded.add(sectionId)
+    }
+    setExpandedSections(newExpanded)
+  }
+
   const filterCategories = () => {
     if (!Array.isArray(filteredCategories)) return []
     if (!searchTerm) return filteredCategories
@@ -102,7 +121,7 @@ export function StaticDocsSidebar({ navigationData, categories = [], isOpen = fa
       {!isMobileOpen && (
         <button
           onClick={() => setIsMobileOpen(!isMobileOpen)}
-          className="sidebar-toggle fixed top-16 left-4 z-50 md:hidden p-2 bg-[#FAF3E0]/90 backdrop-blur-sm border border-slate-200 rounded-lg shadow-sm hover:bg-[#FAF3E0] transition-colors"
+          className="sidebar-toggle fixed top-16 left-4 z-50 md:hidden p-2 bg-[#F1F0EE]/90 backdrop-blur-sm border border-slate-200 rounded-lg shadow-sm hover:bg-[#F1F0EE] transition-colors"
           aria-label="Toggle sidebar"
         >
           <Menu className="w-5 h-5" />
@@ -115,7 +134,7 @@ export function StaticDocsSidebar({ navigationData, categories = [], isOpen = fa
       )}
 
       {/* Sidebar */}
-      <div className={`sidebar-container bg-[#FAF3E0]/80 backdrop-blur-sm border-r border-slate-200 shadow-sm flex flex-col transition-transform duration-300 ease-in-out
+      <div className={`sidebar-container bg-[#F1F0EE] flex flex-col transition-transform duration-300 ease-in-out
         ${isMobileOpen ? 'fixed left-0 top-0 h-full z-30 translate-x-0 w-64' : 'fixed left-0 top-0 h-full z-30 -translate-x-full w-64'}
         md:relative md:z-auto md:translate-x-0 md:h-full md:w-full
       `}>
@@ -130,7 +149,7 @@ export function StaticDocsSidebar({ navigationData, categories = [], isOpen = fa
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-200/50 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:transition-colors hover:[&::-webkit-scrollbar-thumb]:bg-slate-300/70" style={{scrollbarWidth: 'thin', scrollbarColor: 'rgba(148, 163, 184, 0.3) transparent'}}>
+        <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-200/50 hover:scrollbar-thumb-slate-300/70">
         {/* Docs Sections */}
         <div className="px-4 py-3">
           <nav className="space-y-1">
@@ -138,10 +157,10 @@ export function StaticDocsSidebar({ navigationData, categories = [], isOpen = fa
               <Link
                 key={section.href}
                 href={section.href}
-                className={`flex items-center gap-2 px-2 py-2 text-sm rounded-lg transition-colors ${
+                className={`flex items-center gap-2 py-2 text-sm rounded-md transition-colors ${
                   pathname === section.href
-                    ? 'bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 font-medium shadow-sm border border-amber-200/50'
-                    : 'text-slate-600 hover:text-zinc-800 hover:bg-slate-50'
+                    ? 'bg-slate-100 text-slate-900 font-medium'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
                 {section.icon}
@@ -151,79 +170,84 @@ export function StaticDocsSidebar({ navigationData, categories = [], isOpen = fa
           </nav>
         </div>
 
-        {/* Categories as Section Titles */}
-        <div className="px-4 py-3 border-t border-slate-100">
-          {shouldSkipCategories ? (
-            // Show subcategories under the category name as title
+        {/* Component Sections */}
+        <div className="px-4 py-3 border-t border-slate-200">
+          <div className="space-y-4">
+            {/* All Sections - Always visible */}
             <div>
-              <h3 className="text-sm font-semibold text-zinc-800 mb-3">
-                {filteredCategories[0]?.name}
-              </h3>
-              <nav className="space-y-1">
-                {directSubcategories.filter((sub: Subcategory) => (sub.componentsCount || 0) > 0).map((subcategory: Subcategory) => {
-                  const subcategoryPath = `/docs/components/category/${filteredCategories[0]?.slug}/${subcategory.slug}`
+              <div className="flex items-center gap-3 mb-4 cursor-pointer hover:opacity-70 transition-opacity">
+                <Grid className="w-4 h-4 text-slate-600" />
+                <span className="text-base font-semibold" style={{color: '#161616'}}>All Sections</span>
+              </div>
+              
+              <div className="ml-2 space-y-1">
+                {filterCategories().map((category) => {
+                  const hasSubcategories = category.subcategories && category.subcategories.length > 0
+                  const isExpanded = expandedCategories.has(category.id)
+                  
                   return (
-                    <Link
-                      key={subcategory.id}
-                      href={subcategoryPath}
-                      className={`flex items-center justify-between px-3 py-2 text-sm rounded-lg transition-all hover:scale-[1.02] ${
-                        pathname === subcategoryPath
-                          ? 'bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 font-medium shadow-sm border border-amber-200/50'
-                          : 'text-slate-600 hover:text-zinc-800 hover:bg-slate-50 border border-transparent hover:border-slate-200'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <Folder className="w-4 h-4" />
-                        <span className="font-medium">{subcategory.name}</span>
-                      </div>
-                      <div className="px-2 py-0.5 text-xs text-slate-500 bg-[#FAF3E0]/80 rounded-md shadow-sm">
-                        {subcategory.componentsCount || 0}
-                      </div>
-                    </Link>
+                    <div key={category.id}>
+                      <button
+                        onClick={() => toggleCategory(category.id)}
+                        className={`flex items-center justify-between w-full text-left rounded-md p-2 transition-all ${
+                          isExpanded 
+                            ? 'bg-slate-50/60' 
+                            : 'hover:bg-white/80'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-base font-medium" style={{color: '#161616'}}>{category.name}</span>
+                        </div>
+                        {hasSubcategories && (
+                          isExpanded ? (
+                            <ChevronDown className="w-4 h-4 text-slate-700" />
+                          ) : (
+                            <ChevronRight className="w-4 h-4 text-slate-500" />
+                          )
+                        )}
+                      </button>
+                      
+                      {isExpanded && hasSubcategories && (
+                        <div className="ml-4 mt-1 mb-2 space-y-1 pl-3">
+                          {category.subcategories?.filter((sub: Subcategory) => (sub.componentsCount || 0) > 0).map((subcategory: Subcategory) => {
+                            const subcategoryPath = `/docs/components/category/${category.slug}/${subcategory.slug}`
+                            return (
+                              <Link
+                                key={subcategory.id}
+                                href={subcategoryPath}
+                                className={`flex items-center justify-between px-3 py-2 text-base rounded-md transition-colors ${
+                                  pathname === subcategoryPath
+                                    ? 'bg-slate-50/60 font-semibold'
+                                    : 'text-slate-700 hover:bg-white/60'
+                                }`}
+                                style={{color: pathname === subcategoryPath ? '#161616' : undefined}}
+                              >
+                                <span>{subcategory.name}</span>
+                                <span className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md font-medium">
+                                  {subcategory.componentsCount || 0}
+                                </span>
+                              </Link>
+                            )
+                          })}
+                        </div>
+                      )}
+                    </div>
                   )
                 })}
-              </nav>
+              </div>
             </div>
-          ) : (
-            // Show each category as its own section
-            <div className="space-y-6">
-              {filterCategories().map((category) => {
-                const hasSubcategories = category.subcategories && category.subcategories.length > 0
-                
-                return (
-                  <div key={category.id}>
-                    <h3 className="text-sm font-semibold text-zinc-800 mb-3">
-                      {category.name}
-                    </h3>
-                    
-                    {hasSubcategories && (
-                      <nav className="space-y-1">
-                        {category.subcategories?.filter((sub: Subcategory) => (sub.componentsCount || 0) > 0).map((subcategory: Subcategory) => {
-                          const subcategoryPath = `/docs/components/category/${category.slug}/${subcategory.slug}`
-                          return (
-                            <Link
-                              key={subcategory.id}
-                              href={subcategoryPath}
-                              className={`flex items-center justify-between px-2 py-1 text-sm rounded-sm transition-all hover:scale-[1.02] ${
-                                pathname === subcategoryPath
-                                  ? 'bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 font-medium shadow-sm border border-amber-200/50'
-                                  : 'text-slate-600 hover:text-zinc-800 hover:bg-slate-50 border border-transparent hover:border-slate-200'
-                              }`}
-                            >
-                              <span className="font-medium">{subcategory.name}</span>
-                              <div className="px-2 py-0.5 text-xs text-slate-500 bg-[#FAF3E0]/80 rounded-md shadow-sm">
-                                {subcategory.componentsCount || 0}
-                              </div>
-                            </Link>
-                          )
-                        })}
-                      </nav>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          )}
+          </div>
+        </div>
+
+        {/* Premium CTA - Sticky */}
+        <div className="sticky bottom-0 bg-[#F1F0EE] p-4 border-t border-slate-200/50 backdrop-blur-sm">
+          <Link
+            href="/pricing"
+            className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-[#C96342] to-[#B55638] hover:from-[#B55638] hover:to-[#A14D2F] text-white text-sm font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-[1.02]"
+          >
+            <Crown className="w-4 h-4" />
+            Get Premium
+          </Link>
         </div>
       </div>
     </div>

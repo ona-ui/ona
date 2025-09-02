@@ -7,7 +7,7 @@ import LightRays from './aurora-background'
 
 export default function Footer() {
   return (
-    <footer className="bg-[#FAF3E0] relative overflow-hidden border-t border-slate-200/50">
+    <footer className="bg-[#F1F0EE] relative overflow-hidden border-t border-slate-200/50">
 
       <div className="relative px-6 py-16 lg:px-8">
         <div className="mx-auto max-w-7xl">
@@ -28,7 +28,7 @@ export default function Footer() {
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               <div className="mb-6">
-                <div className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-800 bg-[#FAF3E0]/80 backdrop-blur-sm rounded-full border shadow-sm mb-4" 
+                <div className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-800 bg-[#F1F0EE]/80 backdrop-blur-sm rounded-full border shadow-sm mb-4" 
                      style={{borderColor: 'rgba(201, 99, 66, 0.3)'}}>
                   <div className="w-2 h-2 rounded-full animate-pulse" style={{backgroundColor: '#C96342'}}></div>
                   ONA UI
@@ -116,7 +116,7 @@ export default function Footer() {
                     <motion.a
                       key={label}
                       href={href}
-                      className="p-2 text-slate-600 hover:text-slate-900 bg-[#FAF3E0]/50 backdrop-blur-sm rounded-lg border border-slate-200/50 hover:border-orange-200 hover:bg-orange-50/50 transition-all duration-200 shadow-sm hover:shadow-md"
+                      className="p-2 text-slate-600 hover:text-slate-900 bg-[#F1F0EE]/50 backdrop-blur-sm rounded-lg border border-slate-200/50 hover:border-orange-200 hover:bg-orange-50/50 transition-all duration-200 shadow-sm hover:shadow-md"
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                       aria-label={label}

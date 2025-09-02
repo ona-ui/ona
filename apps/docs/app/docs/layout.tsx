@@ -14,20 +14,22 @@ export default async function DocsLayout({
   })
 
   return (
-    <div className="min-h-screen bg-[#FAF3E0] relative">
+    <div className="min-h-screen bg-[#F1F0EE] relative">
       {/* Light grid background like hero */}
       <div className="absolute inset-0" style={{
         backgroundSize: '24px 24px'
       }}></div>
       
       <Navbar/>
-      <div className="flex h-screen">
+      <div className="flex h-screen pt-16">
         {/* Sidebar - Fixed container */}
-        <div className="hidden md:block w-64 flex-shrink-0">
-          <StaticDocsSidebar
-            navigationData={navigationData}
-            categories={categories}
-          />
+        <div className="hidden md:block w-64 flex-shrink-0 h-full overflow-y-auto">
+          <div className="sticky top-0">
+            <StaticDocsSidebar
+              navigationData={navigationData}
+              categories={categories}
+            />
+          </div>
         </div>
 
         {/* Mobile sidebar - rendered separately */}
@@ -39,8 +41,8 @@ export default async function DocsLayout({
         </div>
 
         {/* Main content - Scrollable */}
-        <main className="flex-1 overflow-y-auto pt-16">
-          <div className="p-4 md:p-8 relative">
+        <main className="flex-1 overflow-y-auto h-full">
+          <div className="p-4 md:p-4 relative">
             {children}
           </div>
         </main>

@@ -60,7 +60,7 @@ export function StaticSubcategoryPage({
 }: StaticSubcategoryPageProps) {
   if (components.length === 0) {
     return (
-      <div className="min-h-screen bg-[#FAF3E0] relative overflow-hidden">
+      <div className="min-h-screen bg-[#F1F0EE] relative overflow-hidden">
         <div className="absolute inset-0" style={{
           backgroundSize: '24px 24px'
         }}></div>
@@ -81,13 +81,13 @@ export function StaticSubcategoryPage({
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF3E0] pt-15 relative overflow-hidden">
+    <div className="min-h-screen bg-[#F1F0EE] relative overflow-hidden">
       {/* Light grid background like hero */}
       <div className="absolute inset-0" style={{
         backgroundSize: '24px 24px'
       }}></div>
       
-      <div className="relative px-6 py-8">
+      <div className="relative px-6 py-2">
         <div className="mx-auto max-w-7xl">
           {/* Breadcrumbs with hero-like styling */}
           <div className="mb-6 flex items-center space-x-1 text-sm text-slate-600">

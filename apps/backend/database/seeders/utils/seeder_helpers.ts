@@ -139,7 +139,7 @@ export class SeederHelpers {
   ${componentName}
 </button>`,
       
-      card: `<div class="bg-[#FAF3E0] rounded-lg shadow-md p-6">
+      card: `<div class="bg-[#F1F0EE] rounded-lg shadow-md p-6">
   <h3 class="text-xl font-semibold mb-2">${componentName}</h3>
   <p class="text-gray-600 mb-4">Description du composant</p>
   <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
@@ -151,13 +151,13 @@ export class SeederHelpers {
   <div class="container mx-auto px-4 text-center">
     <h1 class="text-5xl font-bold mb-6">${componentName}</h1>
     <p class="text-xl mb-8">Description captivante du produit</p>
-    <button class="px-8 py-4 bg-[#FAF3E0] text-blue-600 rounded-lg font-semibold hover:bg-gray-100">
+    <button class="px-8 py-4 bg-[#F1F0EE] text-blue-600 rounded-lg font-semibold hover:bg-gray-100">
       Commencer
     </button>
   </div>
 </section>`,
 
-      form: `<form class="max-w-md mx-auto bg-[#FAF3E0] p-6 rounded-lg shadow-md">
+      form: `<form class="max-w-md mx-auto bg-[#F1F0EE] p-6 rounded-lg shadow-md">
   <h2 class="text-2xl font-bold mb-6">${componentName}</h2>
   <div class="mb-4">
     <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>

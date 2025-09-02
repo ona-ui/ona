@@ -21,7 +21,7 @@ export default function MagicLinkPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF3E0] relative overflow-hidden flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#F1F0EE] relative overflow-hidden flex items-center justify-center p-4">
       {/* Grid background like hero */}
       <div className="absolute inset-0" style={{
         backgroundSize: '24px 24px'

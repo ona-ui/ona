@@ -76,7 +76,7 @@ function MagicLinkVerifyContent() {
   }, [searchParams, router]);
 
   return (
-    <div className="min-h-screen bg-[#FAF3E0] relative overflow-hidden flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#F1F0EE] relative overflow-hidden flex items-center justify-center p-4">
       {/* Grid background like hero */}
       <div className="absolute inset-0" style={{
         backgroundSize: '24px 24px'
@@ -106,7 +106,7 @@ function MagicLinkVerifyContent() {
         </div>
 
         {/* Contenu principal */}
-        <div className="max-w-md mx-auto p-8 bg-[#FAF3E0]/80 backdrop-blur-sm rounded-3xl shadow-lg border" style={{borderColor: 'rgba(201, 99, 66, 0.3)'}}>
+        <div className="max-w-md mx-auto p-8 bg-[#F1F0EE]/80 backdrop-blur-sm rounded-3xl shadow-lg border" style={{borderColor: 'rgba(201, 99, 66, 0.3)'}}>
           <div className="text-center">
             {status === 'loading' && (
               <>
@@ -237,7 +237,7 @@ function MagicLinkVerifyContent() {
 export default function MagicLinkVerifyPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[#FAF3E0] relative overflow-hidden flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#F1F0EE] relative overflow-hidden flex items-center justify-center p-4">
         <div className="absolute inset-0" style={{
           backgroundSize: '24px 24px'
         }}></div>
@@ -263,7 +263,7 @@ export default function MagicLinkVerifyPage() {
             </p>
           </div>
 
-          <div className="max-w-md mx-auto p-8 bg-[#FAF3E0]/80 backdrop-blur-sm rounded-3xl shadow-lg border" style={{borderColor: 'rgba(201, 99, 66, 0.3)'}}>
+          <div className="max-w-md mx-auto p-8 bg-[#F1F0EE]/80 backdrop-blur-sm rounded-3xl shadow-lg border" style={{borderColor: 'rgba(201, 99, 66, 0.3)'}}>
             <div className="text-center">
               <div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(135deg, #C96342, #E8915B)'}}>
                 <svg

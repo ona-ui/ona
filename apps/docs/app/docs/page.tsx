@@ -1,6 +1,6 @@
 export default function DocsHomePage() {
   return (
-    <div className="min-h-screen bg-[#FAF3E0]">
+    <div className="min-h-screen bg-[#F1F0EE]">
       <div className="max-w-4xl mx-auto px-6 py-16">
         <article className="prose prose-lg prose-slate max-w-none">
           <header className="mb-12">
