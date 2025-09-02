@@ -13,10 +13,17 @@ services:
       - ./traefik/acme:/acme
     labels:
       - "traefik.enable=true"
+      # === Router Dashboard sécurisé ===
       - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
-      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
-      - "traefik.http.routers.traefik.service=api@internal"   # 👈 AJOUT ICI
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=traefik-ipallow,traefik-auth,security-headers"
+
+      # --- IP allow-list (autorise seulement ces IP/plages) ---
+      # Exemples : ton IP publique /32, ton LAN, éventuellement IPv6
+      - "traefik.http.middlewares.traefik-ipallow.ipallowlist.sourcerange=80.15.118.132/32, 192.168.1.0/24, 2001:db8::/48"
+
       # Sécurité : redirection HTTPS
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
       - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
@@ -28,6 +35,8 @@ services:
       - "traefik.http.middlewares.security-headers.headers.stsSeconds=31536000"
       - "traefik.http.middlewares.security-headers.headers.stsIncludeSubdomains=true"
       - "traefik.http.middlewares.security-headers.headers.stsPreload=true"
+
+      
 
   postgres:
     image: postgres:17-alpine
