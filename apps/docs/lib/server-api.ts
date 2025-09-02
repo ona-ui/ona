@@ -51,6 +51,43 @@ export class ServerApi {
     return response.json()
   }
 
+  private static async fetchApiNoCache<T>(endpoint: string, useHeaders = true): Promise<T> {
+    const url = `${API_BASE_URL}/api/public${endpoint}`
+
+    const requestHeaders: Record<string, string> = {
+      'Content-Type': 'application/json',
+    }
+
+    // 🔧 FIX: Récupérer les cookies depuis les headers Next.js pour les requêtes SSR
+    // Seulement si useHeaders est true (pour éviter les erreurs dans generateStaticParams)
+    if (useHeaders) {
+      try {
+        const headersList = await headers()
+        const cookie = headersList.get('cookie')
+
+        // Transmettre les cookies si disponibles
+        if (cookie) {
+          requestHeaders['Cookie'] = cookie
+        }
+      } catch (error) {
+      }
+    }
+
+    const response = await fetch(url, {
+      headers: requestHeaders,
+      credentials: useHeaders ? 'include' : 'same-origin',
+      // Pas de cache - toujours récupérer les données fraîches
+      cache: 'no-store'
+    })
+
+    if (!response.ok) {
+      console.error(`API Error: ${response.status} ${response.statusText} for ${url}`)
+      throw new Error(`API Error: ${response.status} ${response.statusText}`)
+    }
+
+    return response.json()
+  }
+
   /**
    * Fetch categories with optional subcategories
    */
@@ -130,7 +167,7 @@ export class ServerApi {
     const endpoint = `/components${query ? `?${query}` : ''}`
 
     try {
-      const result = await this.fetchApi<any>(endpoint, useHeaders)
+      const result = await this.fetchApiNoCache<any>(endpoint, useHeaders)
 
       console.log(result)
 
@@ -157,7 +194,7 @@ export class ServerApi {
    */
   static async getComponentById(componentId: string): Promise<Component | null> {
     try {
-      const result = await this.fetchApi<any>(`/components/${componentId}?includeVersions=true`)
+      const result = await this.fetchApiNoCache<any>(`/components/${componentId}?includeVersions=true`)
       return result?.data || result || null
     } catch (error) {
       console.error(`Error fetching component ${componentId}:`, error)
@@ -196,7 +233,7 @@ export class ServerApi {
    */
   static async getFeaturedComponents(): Promise<{ data: Component[] }> {
     try {
-      const result = await this.fetchApi<any>('/components/featured')
+      const result = await this.fetchApiNoCache<any>('/components/featured')
       
       if (result?.data && Array.isArray(result.data)) {
         return { data: result.data }
@@ -217,7 +254,7 @@ export class ServerApi {
    */
   static async getPopularComponents(): Promise<{ data: Component[] }> {
     try {
-      const result = await this.fetchApi<any>('/components/popular')
+      const result = await this.fetchApiNoCache<any>('/components/popular')
       
       if (result?.data && Array.isArray(result.data)) {
         return { data: result.data }

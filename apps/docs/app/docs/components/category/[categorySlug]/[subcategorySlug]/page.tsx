@@ -28,7 +28,7 @@ export default async function SubcategoryPage({ params }: SubcategoryPageProps) 
     // Await params before using them
     const resolvedParams = await params
     
-    // Fetch categories to find the current one
+    // Fetch categories to find the current one (cached via ISR)
     const { data: categories } = await ServerApi.getCategories({
       includeSubcategories: true
     })
@@ -40,7 +40,7 @@ export default async function SubcategoryPage({ params }: SubcategoryPageProps) 
       notFound()
     }
     
-    // Fetch components for this subcategory
+    // Fetch components for this subcategory (always fresh data, no cache)
     const { data: components } = await ServerApi.getComponents({
       subcategoryId: subcategory.id,
       status: 'published',
@@ -61,5 +61,5 @@ export default async function SubcategoryPage({ params }: SubcategoryPageProps) 
   }
 }
 
-// ISR configuration
-export const revalidate = 10
+// ISR configuration - only for categories/subcategories structure, not components
+export const revalidate = 300 // 5 minutes for categories structure
