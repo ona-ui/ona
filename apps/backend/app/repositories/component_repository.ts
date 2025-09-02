@@ -117,8 +117,8 @@ export class ComponentRepository {
     if (filters.categoryId) {
       const conditions: SQL<unknown>[] = [];
       
-      // Ajouter le filtre de statut seulement s'il est spécifié
-      if (filters.status !== undefined) {
+      // Ajouter le filtre de statut seulement s'il est spécifié et non null
+      if (filters.status !== undefined && filters.status !== null) {
         conditions.push(eq(components.status, filters.status));
       } else if (filters.status !== null) {
         // Par défaut, filtrer sur published sauf si explicitement null
@@ -190,8 +190,13 @@ export class ComponentRepository {
     // Sans filtre de catégorie, logique existante
     const conditions: SQL<unknown>[] = [];
 
-    // Toujours filtrer par statut publié par défaut
-    conditions.push(eq(components.status, filters.status || 'published'));
+    // Ajouter le filtre de statut seulement s'il est spécifié et non null
+    if (filters.status !== undefined && filters.status !== null) {
+      conditions.push(eq(components.status, filters.status));
+    } else if (filters.status !== null) {
+      // Par défaut, filtrer sur published sauf si explicitement null
+      conditions.push(eq(components.status, 'published'));
+    }
 
     if (filters.subcategoryId) {
       conditions.push(eq(components.subcategoryId, filters.subcategoryId));
@@ -275,8 +280,8 @@ export class ComponentRepository {
     if (filters.categoryId) {
       const conditions: SQL<unknown>[] = [];
       
-      // Ajouter le filtre de statut seulement s'il est spécifié
-      if (filters.status !== undefined) {
+      // Ajouter le filtre de statut seulement s'il est spécifié et non null
+      if (filters.status !== undefined && filters.status !== null) {
         conditions.push(eq(components.status, filters.status));
       } else if (filters.status !== null) {
         // Par défaut, filtrer sur published sauf si explicitement null
@@ -377,8 +382,8 @@ export class ComponentRepository {
     // Sans filtre de catégorie, logique existante
     const conditions: SQL<unknown>[] = [];
     
-    // Ajouter le filtre de statut seulement s'il est spécifié
-    if (filters.status !== undefined) {
+    // Ajouter le filtre de statut seulement s'il est spécifié et non null
+    if (filters.status !== undefined && filters.status !== null) {
       conditions.push(eq(components.status, filters.status));
     } else if (filters.status !== null) {
       // Par défaut, filtrer sur published sauf si explicitement null
