@@ -40,12 +40,12 @@ export default async function SubcategoryPage({ params }: SubcategoryPageProps) 
       notFound()
     }
     
-    // Fetch components for this subcategory (always fresh data, no cache)
+    // Fetch components for this subcategory (cache court de 30s pour permettre la génération statique)
     const { data: components } = await ServerApi.getComponents({
       subcategoryId: subcategory.id,
       status: 'published',
       includeVersions: true
-    })
+    }, true, true) // useHeaders=true, shortCache=true
     
     return (
       <StaticSubcategoryPage

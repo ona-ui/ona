@@ -51,6 +51,45 @@ export class ServerApi {
     return response.json()
   }
 
+  private static async fetchApiShortCache<T>(endpoint: string, useHeaders = true): Promise<T> {
+    const url = `${API_BASE_URL}/api/public${endpoint}`
+
+    const requestHeaders: Record<string, string> = {
+      'Content-Type': 'application/json',
+    }
+
+    // 🔧 FIX: Récupérer les cookies depuis les headers Next.js pour les requêtes SSR
+    // Seulement si useHeaders est true (pour éviter les erreurs dans generateStaticParams)
+    if (useHeaders) {
+      try {
+        const headersList = await headers()
+        const cookie = headersList.get('cookie')
+
+        // Transmettre les cookies si disponibles
+        if (cookie) {
+          requestHeaders['Cookie'] = cookie
+        }
+      } catch (error) {
+      }
+    }
+
+    const response = await fetch(url, {
+      headers: requestHeaders,
+      credentials: useHeaders ? 'include' : 'same-origin',
+      // Cache court pour permettre la génération statique mais garder les données fraîches
+      next: {
+        revalidate: 30, // 30 secondes de cache pour les composants
+      }
+    })
+
+    if (!response.ok) {
+      console.error(`API Error: ${response.status} ${response.statusText} for ${url}`)
+      throw new Error(`API Error: ${response.status} ${response.statusText}`)
+    }
+
+    return response.json()
+  }
+
   private static async fetchApiNoCache<T>(endpoint: string, useHeaders = true): Promise<T> {
     const url = `${API_BASE_URL}/api/public${endpoint}`
 
@@ -152,7 +191,7 @@ export class ServerApi {
     status?: 'published' | 'draft'
     limit?: number
     includeVersions?: boolean
-  }, useHeaders = true): Promise<{ data: Component[] }> {
+  }, useHeaders = true, shortCache = false): Promise<{ data: Component[] }> {
     const searchParams = new URLSearchParams()
 
     if (params?.categoryId) searchParams.set('categoryId', params.categoryId)
@@ -167,7 +206,10 @@ export class ServerApi {
     const endpoint = `/components${query ? `?${query}` : ''}`
 
     try {
-      const result = await this.fetchApiNoCache<any>(endpoint, useHeaders)
+      // Utiliser un cache court pour les composants si demandé, sinon cache standard
+      const result = shortCache 
+        ? await this.fetchApiShortCache<any>(endpoint, useHeaders)
+        : await this.fetchApi<any>(endpoint, useHeaders)
 
       console.log(result)
 
@@ -194,7 +236,7 @@ export class ServerApi {
    */
   static async getComponentById(componentId: string): Promise<Component | null> {
     try {
-      const result = await this.fetchApiNoCache<any>(`/components/${componentId}?includeVersions=true`)
+      const result = await this.fetchApiShortCache<any>(`/components/${componentId}?includeVersions=true`)
       return result?.data || result || null
     } catch (error) {
       console.error(`Error fetching component ${componentId}:`, error)
@@ -233,7 +275,7 @@ export class ServerApi {
    */
   static async getFeaturedComponents(): Promise<{ data: Component[] }> {
     try {
-      const result = await this.fetchApiNoCache<any>('/components/featured')
+      const result = await this.fetchApiShortCache<any>('/components/featured')
       
       if (result?.data && Array.isArray(result.data)) {
         return { data: result.data }
@@ -254,7 +296,7 @@ export class ServerApi {
    */
   static async getPopularComponents(): Promise<{ data: Component[] }> {
     try {
-      const result = await this.fetchApiNoCache<any>('/components/popular')
+      const result = await this.fetchApiShortCache<any>('/components/popular')
       
       if (result?.data && Array.isArray(result.data)) {
         return { data: result.data }
