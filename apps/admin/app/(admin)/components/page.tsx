@@ -89,6 +89,7 @@ import { VersionForm, type CreateVersionFormData } from "../../../components/adm
 import { VersionList } from "../../../components/admin/components/version-list"
 import type { FullComponent, CreateComponentData, CreateComponentVersionData, ComponentVersion } from "@workspace/types/components"
 import type { ComponentStatus } from "@workspace/types"
+import { componentsApi } from "../../../lib/api/components"
 
 // Schéma de validation pour la création de composant
 const createComponentSchema = z.object({
@@ -119,7 +120,8 @@ function ComponentForm({
   categories,
   subcategories,
   selectedCategoryId,
-  setSelectedCategoryId
+  setSelectedCategoryId,
+  isEdit = false
 }: {
   onSubmit: (data: CreateComponentFormData) => void
   isSubmitting: boolean
@@ -129,6 +131,7 @@ function ComponentForm({
   subcategories: any[]
   selectedCategoryId: string
   setSelectedCategoryId: (id: string) => void
+  isEdit?: boolean
 }) {
   const form = useForm<CreateComponentFormData>({
     resolver: zodResolver(createComponentSchema),
@@ -385,7 +388,10 @@ function ComponentForm({
             Annuler
           </Button>
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Création..." : "Créer le composant"}
+            {isSubmitting 
+              ? (isEdit ? "Modification..." : "Création...") 
+              : (isEdit ? "Modifier le composant" : "Créer le composant")
+            }
           </Button>
         </DialogFooter>
       </form>
@@ -399,14 +405,19 @@ export default function ComponentsPage() {
   const [selectedCategoryId, setSelectedCategoryId] = React.useState<string>("")
   
   const createDialog = useDialog()
+  const editDialog = useDialog()
   const deleteDialog = useDialog()
+  const statusDialog = useDialog()
   const versionCreateDialog = useDialog()
   const versionDeleteDialog = useDialog()
   const versionEditDialog = useDialog()
+  const versionStatusDialog = useDialog()
   const [selectedComponent, setSelectedComponent] = React.useState<FullComponent | null>(null)
   const [selectedVersion, setSelectedVersion] = React.useState<ComponentVersion | null>(null)
   const [selectedComponentForVersion, setSelectedComponentForVersion] = React.useState<string>("")
   const [expandedComponents, setExpandedComponents] = React.useState<Set<string>>(new Set())
+  const [newStatus, setNewStatus] = React.useState<ComponentStatus>("draft")
+  const [newVersionStatus, setNewVersionStatus] = React.useState<"draft" | "published">("draft")
 
   // Hooks pour les données
   const { data: componentsResponse, isLoading, error } = useComponents({
@@ -469,6 +480,35 @@ export default function ComponentsPage() {
     }
   }
 
+  // Fonction de modification de composant
+  const handleEditComponent = async (data: CreateComponentFormData) => {
+    if (!selectedComponent) return
+
+    try {
+      const updateData: any = {
+        subcategoryId: data.subcategoryId,
+        name: data.name,
+        slug: data.slug,
+        description: data.description,
+        isFree: data.isFree ?? true,
+        requiredTier: data.requiredTier || "free",
+        tags: data.tags || [],
+        conversionRate: data.conversionRate,
+        testedCompanies: data.testedCompanies || [],
+        sortOrder: data.sortOrder || 0,
+        isNew: data.isNew ?? false,
+        isFeatured: data.isFeatured ?? false
+      }
+      
+      await updateMutation.mutateAsync({ id: selectedComponent.id, data: updateData })
+      editDialog.closeDialog()
+      setSelectedComponent(null)
+      console.log("Composant modifié:", data.name)
+    } catch (error) {
+      console.error("Erreur lors de la modification:", error)
+    }
+  }
+
   // Fonction de suppression de composant
   const handleDeleteComponent = async () => {
     if (!selectedComponent) return
@@ -480,6 +520,35 @@ export default function ComponentsPage() {
       console.log("Composant supprimé:", selectedComponent.name)
     } catch (error) {
       console.error("Erreur lors de la suppression:", error)
+    }
+  }
+
+  // Fonction de changement de statut de composant
+  const handleChangeComponentStatus = async () => {
+    if (!selectedComponent) return
+
+    try {
+      const statusData: any = {
+        status: newStatus,
+        publishedAt: newStatus === "published" ? new Date().toISOString() : undefined,
+        archivedAt: newStatus === "archived" ? new Date().toISOString() : undefined
+      }
+      
+      // Utiliser l'API changeComponentStatus si elle existe, sinon utiliser update
+      if (typeof (componentsApi as any).changeComponentStatus === 'function') {
+        await (componentsApi as any).changeComponentStatus(selectedComponent.id, statusData)
+      } else {
+        await updateMutation.mutateAsync({ 
+          id: selectedComponent.id, 
+          data: { status: newStatus }
+        })
+      }
+      
+      statusDialog.closeDialog()
+      setSelectedComponent(null)
+      console.log("Statut du composant changé:", selectedComponent.name, "->", newStatus)
+    } catch (error) {
+      console.error("Erreur lors du changement de statut:", error)
     }
   }
 
@@ -554,6 +623,26 @@ export default function ComponentsPage() {
       console.log("Version définie par défaut:", version.versionNumber)
     } catch (error) {
       console.error("Erreur lors de la mise à jour:", error)
+    }
+  }
+
+  // Fonction pour changer le statut d'une version (temporaire - jusqu'à ce que le backend supporte les statuts de versions)
+  const handleChangeVersionStatus = async () => {
+    if (!selectedVersion) return
+
+    try {
+      // Pour l'instant, on simule le changement de statut via une mise à jour
+      // En attendant que le backend supporte les statuts de versions
+      console.log("Changement de statut de version (simulé):", selectedVersion.versionNumber, "->", newVersionStatus)
+      
+      // TODO: Implémenter une vraie API de changement de statut quand le backend le supportera
+      // await versionsApi.changeVersionStatus(selectedVersion.componentId, selectedVersion.id, { status: newVersionStatus })
+      
+      versionStatusDialog.closeDialog()
+      setSelectedVersion(null)
+      console.log("Statut de la version changé:", selectedVersion.versionNumber, "->", newVersionStatus)
+    } catch (error) {
+      console.error("Erreur lors du changement de statut de version:", error)
     }
   }
 
@@ -737,7 +826,20 @@ export default function ComponentsPage() {
       label: "Modifier",
       icon: EditIcon,
       onClick: (component: FullComponent) => {
+        // Définir la catégorie sélectionnée pour le formulaire
+        setSelectedCategoryId(component.subcategory?.categoryId || "")
         setSelectedComponent(component)
+        editDialog.openDialog()
+      }
+    },
+    {
+      key: "change_status",
+      label: "Changer le statut",
+      icon: SettingsIcon,
+      onClick: (component: FullComponent) => {
+        setSelectedComponent(component)
+        setNewStatus(component.status)
+        statusDialog.openDialog()
       }
     },
     {
@@ -1099,6 +1201,16 @@ export default function ComponentsPage() {
                                   <EditIcon className="h-4 w-4 mr-2" />
                                   Modifier
                                 </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => {
+                                    setSelectedVersion(version)
+                                    setNewVersionStatus("draft") // Status par défaut
+                                    versionStatusDialog.openDialog()
+                                  }}
+                                >
+                                  <SettingsIcon className="h-4 w-4 mr-2" />
+                                  Changer le statut
+                                </DropdownMenuItem>
                                 {!version.isDefault && (
                                   <DropdownMenuItem
                                     onClick={() => handleSetDefaultVersion(version)}
@@ -1292,6 +1404,151 @@ export default function ComponentsPage() {
             }}
             isEdit={true}
           />
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog de modification de composant */}
+      <Dialog open={editDialog.isOpen} onOpenChange={editDialog.setIsOpen}>
+        <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Modifier le composant</DialogTitle>
+            <DialogDescription>
+              Modifiez les informations de ce composant.
+            </DialogDescription>
+          </DialogHeader>
+          <ComponentForm
+            onSubmit={handleEditComponent}
+            isSubmitting={updateMutation.isPending}
+            defaultValues={selectedComponent ? {
+              categoryId: selectedComponent.subcategory?.categoryId || "",
+              subcategoryId: selectedComponent.subcategoryId || "",
+              name: selectedComponent.name,
+              slug: selectedComponent.slug,
+              description: selectedComponent.description || "",
+              isFree: selectedComponent.isFree,
+              requiredTier: (selectedComponent as any).requiredTier || "free",
+              tags: selectedComponent.tags || [],
+              conversionRate: selectedComponent.conversionRate || 0,
+              testedCompanies: (selectedComponent as any).testedCompanies || [],
+              sortOrder: selectedComponent.sortOrder || 0,
+              isNew: selectedComponent.isNew,
+              isFeatured: selectedComponent.isFeatured
+            } : undefined}
+            onCancel={() => {
+              editDialog.closeDialog()
+              setSelectedComponent(null)
+            }}
+            categories={categories}
+            subcategories={subcategories}
+            selectedCategoryId={selectedCategoryId}
+            setSelectedCategoryId={setSelectedCategoryId}
+            isEdit={true}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog de changement de statut de composant */}
+      <Dialog open={statusDialog.isOpen} onOpenChange={statusDialog.setIsOpen}>
+        <DialogContent className="sm:max-w-[400px]">
+          <DialogHeader>
+            <DialogTitle>Changer le statut</DialogTitle>
+            <DialogDescription>
+              Modifiez le statut de ce composant.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <FormLabel>Nouveau statut</FormLabel>
+              <Select value={newStatus} onValueChange={(value) => setNewStatus(value as ComponentStatus)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="draft">Brouillon</SelectItem>
+                  <SelectItem value="published">Publié</SelectItem>
+                  <SelectItem value="archived">Archivé</SelectItem>
+                  <SelectItem value="deprecated">Obsolète</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {selectedComponent && (
+              <div className="text-sm text-muted-foreground">
+                Composant: <strong>{selectedComponent.name}</strong><br />
+                Statut actuel: <StatusBadge status={selectedComponent.status} />
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={() => statusDialog.closeDialog()}
+            >
+              Annuler
+            </Button>
+            <Button 
+              type="button" 
+              onClick={handleChangeComponentStatus}
+              disabled={updateMutation.isPending}
+            >
+              {updateMutation.isPending ? "Changement..." : "Changer le statut"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog de changement de statut de version */}
+      <Dialog open={versionStatusDialog.isOpen} onOpenChange={versionStatusDialog.setIsOpen}>
+        <DialogContent className="sm:max-w-[400px]">
+          <DialogHeader>
+            <DialogTitle>Changer le statut de la version</DialogTitle>
+            <DialogDescription>
+              Modifiez le statut de cette version du composant.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <FormLabel>Nouveau statut</FormLabel>
+              <Select 
+                value={newVersionStatus} 
+                onValueChange={(value) => setNewVersionStatus(value as "draft" | "published")}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="draft">Brouillon</SelectItem>
+                  <SelectItem value="published">Publié</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {selectedVersion && (
+              <div className="text-sm text-muted-foreground">
+                Version: <strong>v{selectedVersion.versionNumber}</strong><br />
+                Framework: <strong>{selectedVersion.framework}</strong><br />
+                Statut actuel: <StatusBadge status="draft" />
+                <div className="text-xs mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded">
+                  Note: La gestion des statuts de versions sera bientôt disponible dans le backend.
+                </div>
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={() => versionStatusDialog.closeDialog()}
+            >
+              Annuler
+            </Button>
+            <Button 
+              type="button" 
+              onClick={handleChangeVersionStatus}
+              disabled={updateVersionMutation.isPending}
+            >
+              {updateVersionMutation.isPending ? "Changement..." : "Changer le statut"}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
