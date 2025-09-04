@@ -35,7 +35,7 @@ export default function Hero() {
     }
   ]
   return (
-    <div className="min-h-screen bg-[#F1F0EE] relative pt-20 sm:pt-24 lg:pt-20 overflow-hidden">
+    <div className="min-h-screen bg-[#F1F0EE] relative pt-32 sm:pt-36 lg:pt-32 overflow-hidden">
       {/* Grid background */}
       <div className="absolute inset-0" style={{
         backgroundSize: '24px 24px'

@@ -62,7 +62,7 @@ export default function Pricing() {
   }
 
   return (
-    <div className="bg-[#F1F0EE] relative pt-32 pb-20">
+    <div className="bg-[#F1F0EE] relative pt-44 pb-20">
       <div className="relative px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           

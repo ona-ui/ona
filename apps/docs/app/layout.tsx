@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next"
 
 import "@workspace/ui/globals.css"
 import { Providers } from "@/components/providers"
+import { Banner } from "@/components/banner"
 
 // Base URL du site pour les URLs canoniques / OG / sitemap
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
@@ -102,6 +103,7 @@ export default function RootLayout({
       <body
         className={`${fontSans.variable} ${fontDisplay.variable} ${fontMono.variable} font-sans antialiased`}
       >
+        <Banner />
         <Providers>{children}</Providers>
       </body>
     </html>

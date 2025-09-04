@@ -9,7 +9,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { signOut } from '@/lib/auth-client'
 
 const navigation = [
-  { name: 'Blocks', href: '/docs', badge: null },
+  { name: 'Blocks', href: '/docs/blocks', badge: null },
   { name: 'Templates', href: '/docs', badge: 'soon' },
   { name: 'Price', href: '/pricing', badge: null },
 ]

@@ -143,7 +143,9 @@ export default class ComponentsController extends BasePublicController {
           // Ajouter des indicateurs visuels
           accessIndicator: this.getAccessIndicator(component, this.isPremium(ctx)),
           // URLs des fichiers avec stratégie R2-first
-          urls: componentUrls
+          urls: componentUrls,
+          // Ajouter previewImageUrl avec logique de fallback
+          previewImageUrl: component.previewImageLarge || component.previewImageSmall || null
         };
       }))
 
@@ -372,6 +374,7 @@ export default class ComponentsController extends BasePublicController {
         // codePreview: component.hasAccess || component.isFree ? component.codePreview : undefined,
         accessIndicator: this.getAccessIndicator(component, this.isPremium(ctx)),
         relevanceScore: this.calculateRelevanceScore(component, data.q),
+        previewImageUrl: component.previewImageLarge || component.previewImageSmall || null
       }))
 
       const responseData = {
@@ -541,6 +544,7 @@ export default class ComponentsController extends BasePublicController {
               ...componentWithAccess,
               // codePreview: componentWithAccess.hasAccess || componentWithAccess.isFree ? componentWithAccess.codePreview : undefined,
               accessIndicator: this.getAccessIndicator(componentWithAccess, this.isPremium(ctx)),
+              previewImageUrl: componentWithAccess.previewImageLarge || componentWithAccess.previewImageSmall || null
             }
           })
         )
@@ -620,6 +624,7 @@ export default class ComponentsController extends BasePublicController {
         ...component,
         // codePreview: component.hasAccess || component.isFree ? component.codePreview : undefined,
         accessIndicator: this.getAccessIndicator(component, this.isPremium(ctx)),
+        previewImageUrl: component.previewImageLarge || component.previewImageSmall || null
       }))
 
       const responseData = {
@@ -705,6 +710,7 @@ export default class ComponentsController extends BasePublicController {
         ...component,
         // codePreview: component.hasAccess || component.isFree ? component.codePreview : undefined,
         accessIndicator: this.getAccessIndicator(component, this.isPremium(ctx)),
+        previewImageUrl: component.previewImageLarge || component.previewImageSmall || null
       }))
 
       const responseData = {
@@ -775,6 +781,7 @@ export default class ComponentsController extends BasePublicController {
         // Note: codePreview n'existe pas sur ComponentWithAccess
         accessIndicator: this.getAccessIndicator(component, this.isPremium(ctx)),
         popularityScore: (component.viewCount || 0) + ((component.copyCount || 0) * 2), // Score de popularité simple
+        previewImageUrl: component.previewImageLarge || component.previewImageSmall || null
       }))
 
       const responseData = {
