@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ChevronDown, ChevronRight, Folder, Search, FileText, Code2, Menu, X, Grid, Tag, Crown } from 'lucide-react'
+import { ChevronDown, ChevronRight, Folder, Search, FileText, Code2, Menu, X, Grid, Tag, Crown, PanelLeftOpen, PanelLeftClose } from 'lucide-react'
 
 interface DocsSection {
   title: string
@@ -151,6 +151,26 @@ export function StaticDocsSidebar({ navigationData, categories = [], isOpen = fa
         </div>
 
         <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-200/50 hover:scrollbar-thumb-slate-300/70">
+          {/* Toggle button - subtle arrows */}
+          {onToggle && (
+            <button
+              onClick={onToggle}
+              className={`absolute top-4 ${isCollapsed ? 'right-0 -mr-3' : 'right-4'} flex items-center justify-center w-6 h-6 text-slate-400 hover:text-slate-600 transition-all duration-200 hover:bg-slate-100/60 rounded group z-10`}
+              title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              <div className="flex">
+                <ChevronRight className={`w-3 h-3 transition-transform duration-200 ${isCollapsed ? 'rotate-0' : 'rotate-180'}`} />
+                <ChevronRight className={`w-3 h-3 -ml-1 transition-transform duration-200 ${isCollapsed ? 'rotate-0' : 'rotate-180'}`} />
+              </div>
+              {/* Tooltip pour mode collapsed */}
+              {isCollapsed && (
+                <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                  Expand
+                </div>
+              )}
+            </button>
+          )}
+
           {/* Docs Sections */}
           <div className={`${isCollapsed ? 'px-2' : 'px-4'} py-3 transition-all duration-300`}>
             <nav className="space-y-1">

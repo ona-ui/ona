@@ -87,7 +87,7 @@ export default function AllSectionsPage() {
         const categoriesMap = new Map<string, CategoryWithComponents>()
         
         // Initialiser les catégories
-        categoriesResponse.data.categories.forEach(category => {
+        categoriesResponse.data.forEach(category => {
           categoriesMap.set(category.id, {
             id: category.id,
             name: category.name,
@@ -98,10 +98,40 @@ export default function AllSectionsPage() {
         })
 
         // Ajouter les composants aux catégories
-        componentsResponse.data.components.forEach(component => {
-          const category = categoriesMap.get(component.categoryId)
+        componentsResponse.data.data.forEach(component => {
+          const category = categoriesMap.get(component.subcategory.category.id)
           if (category) {
-            category.components.push(component)
+            // Transformer le PublicComponent en ComponentWithAccess
+            const componentWithAccess: ComponentWithAccess = {
+              id: component.id,
+              name: component.name,
+              slug: component.slug,
+              description: component.description,
+              previewImageUrl: component.previewImageLarge || component.previewImageSmall,
+              categoryId: component.subcategory.category.id,
+              subcategoryId: component.subcategory.id,
+              isFree: component.isFree,
+              isNew: component.isNew,
+              isFeatured: component.isFeatured,
+              accessIndicator: {
+                type: component.isFree ? 'free' : (component.canAccess ? 'premium_accessible' : 'premium_locked'),
+                label: component.isFree ? 'Gratuit' : (component.canAccess ? 'Premium accessible' : 'Premium verrouillé'),
+                canAccess: component.canAccess || component.isFree,
+                icon: component.isFree ? '🆓' : (component.canAccess ? '✅' : '🔒'),
+                upgradeRequired: !component.isFree && !component.canAccess
+              },
+              category: {
+                id: component.subcategory.category.id,
+                name: component.subcategory.category.name,
+                slug: component.subcategory.category.slug
+              },
+              subcategory: {
+                id: component.subcategory.id,
+                name: component.subcategory.name,
+                slug: component.subcategory.slug
+              }
+            }
+            category.components.push(componentWithAccess)
           }
         })
 

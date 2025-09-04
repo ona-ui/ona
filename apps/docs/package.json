@@ -13,10 +13,11 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
-    "@workspace/ui": "*",
-    "@workspace/types": "*",
     "@tanstack/react-query": "^5.85.3",
     "@tanstack/react-query-devtools": "^5.85.3",
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "@workspace/types": "*",
+    "@workspace/ui": "*",
     "better-auth": "^1.3.7",
     "framer-motion": "^12.23.12",
     "lucide-react": "^0.475.0",
@@ -27,6 +28,7 @@
     "posthog-node": "^5.7.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-syntax-highlighter": "^15.6.6",
     "sonner": "^2.0.7"
   },
   "devDependencies": {
@@ -39,7 +41,7 @@
     "eslint-config-next": "^15.4.5",
     "typescript": "^5.9.2"
   },
-   "engines": {
+  "engines": {
     "node": ">=22.11.0"
   }
 }

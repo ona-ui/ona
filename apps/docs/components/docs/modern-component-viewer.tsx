@@ -8,6 +8,8 @@ import { Copy, Eye, Code2, ExternalLink, Sparkles, Monitor, Smartphone, Tv, Refr
 import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 interface Component {
   id: string
@@ -102,7 +104,7 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
         transition={{ duration: 0.3 }}
         className="mb-6"
       >
-        <div className="bg-white/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+        <div className="bg-white/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 max-w-full">
           {/* Header */}
           <div className="px-6 py-4 border-b border-slate-200/50">
             <div className="flex items-start justify-between">
@@ -357,6 +359,7 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.2 }}
+                className="max-w-full"
               >
                 {selectedVersion && (
                   <div className="space-y-3">
@@ -370,7 +373,7 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
                       <span className="text-xs text-slate-500">v{selectedVersion.versionNumber}</span>
                     </div>
                     
-                    <div className="bg-slate-900 rounded-xl overflow-hidden">
+                    <div className="bg-slate-900 rounded-xl overflow-hidden w-full">
                       <div className="bg-slate-800 px-4 py-2 flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <div className="flex gap-1.5">
@@ -383,11 +386,23 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
                           </span>
                         </div>
                       </div>
-                      <pre className="p-4 overflow-x-auto text-sm max-h-[400px] overflow-y-auto">
-                        <code className="text-slate-100 leading-relaxed font-mono">
+                      <div className="p-0 overflow-hidden text-sm max-h-[400px]">
+                        <SyntaxHighlighter
+                          language="typescript"
+                          style={oneDark}
+                          customStyle={{
+                            margin: 0,
+                            padding: '16px',
+                            background: 'transparent',
+                            fontSize: '14px',
+                            maxHeight: '400px',
+                            overflow: 'auto'
+                          }}
+                          wrapLongLines={true}
+                        >
                           {selectedVersion.codeFull || '// Full code not available'}
-                        </code>
-                      </pre>
+                        </SyntaxHighlighter>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -407,7 +422,7 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
             className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm"
             onClick={closeFullscreen}
           >
-            <div className="absolute inset-4 bg-white rounded-2xl overflow-hidden">
+            <div className="absolute inset-4  rounded-2xl overflow-hidden">
               <div className="h-full flex flex-col">
                 <div className="flex items-center justify-between p-4 border-b border-slate-200">
                   <h3 className="text-lg font-semibold text-zinc-800">{component.name} - Fullscreen Preview</h3>
@@ -542,6 +557,7 @@ function PreviewIframe({
     </div>
   )
 }
+
 
 // Export with old name for backward compatibility if needed
 export const ModernComponentViewer = ComponentPreview

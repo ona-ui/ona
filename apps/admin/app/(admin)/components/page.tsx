@@ -87,6 +87,7 @@ import {
 } from "../../../hooks/use-versions"
 import { VersionForm, type CreateVersionFormData } from "../../../components/admin/components/version-form"
 import { VersionList } from "../../../components/admin/components/version-list"
+import { ImageInputWithPreview } from "../../../components/admin/image-input-with-preview"
 import type { FullComponent, CreateComponentData, CreateComponentVersionData, ComponentVersion } from "@workspace/types/components"
 import type { ComponentStatus } from "@workspace/types"
 import { componentsApi } from "../../../lib/api/components"
@@ -99,6 +100,8 @@ const createComponentSchema = z.object({
   slug: z.string().min(1, "Le slug est obligatoire").max(100, "Le slug ne peut pas dépasser 100 caractères")
     .regex(/^[a-z0-9-]+$/, "Le slug ne peut contenir que des lettres minuscules, des chiffres et des tirets"),
   description: z.string().max(1000, "La description ne peut pas dépasser 1000 caractères").optional(),
+  previewImageLarge: z.string().url("L'URL de l'image large doit être valide").optional().or(z.literal("")),
+  previewImageSmall: z.string().url("L'URL de l'image petite doit être valide").optional().or(z.literal("")),
   isFree: z.boolean().optional(),
   requiredTier: z.enum(["free", "pro", "team", "enterprise"]).optional(),
   tags: z.array(z.string()).optional(),
@@ -141,6 +144,8 @@ function ComponentForm({
       name: "",
       slug: "",
       description: "",
+      previewImageLarge: "",
+      previewImageSmall: "",
       isFree: true,
       requiredTier: "free",
       tags: [],
@@ -290,6 +295,44 @@ function ComponentForm({
               </FormItem>
             )}
           />
+
+          {/* Section Images de prévisualisation */}
+          <div className="space-y-4">
+            <div className="border-t pt-4">
+              <h3 className="text-lg font-medium mb-4">Images de prévisualisation</h3>
+              <div className="grid gap-4">
+                <FormField
+                  control={form.control}
+                  name="previewImageLarge"
+                  render={({ field }) => (
+                    <ImageInputWithPreview
+                      label="Image de prévisualisation (grande)"
+                      placeholder="https://exemple.com/image-large.jpg"
+                      description="Image utilisée dans les vues détaillées et les cartes de composants (recommandé: 800x600px)"
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      previewSize="large"
+                    />
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="previewImageSmall"
+                  render={({ field }) => (
+                    <ImageInputWithPreview
+                      label="Image de prévisualisation (petite)"
+                      placeholder="https://exemple.com/image-small.jpg"
+                      description="Image utilisée dans les listes et aperçus rapides (recommandé: 400x300px)"
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      previewSize="medium"
+                    />
+                  )}
+                />
+              </div>
+            </div>
+          </div>
 
           <div className="grid grid-cols-2 gap-4">
             <FormField
@@ -460,6 +503,8 @@ export default function ComponentsPage() {
         name: data.name,
         slug: data.slug,
         description: data.description,
+        previewImageLarge: data.previewImageLarge || undefined,
+        previewImageSmall: data.previewImageSmall || undefined,
         isFree: data.isFree ?? true,
         requiredTier: data.requiredTier || "free",
         accessType: "full_access" as any,
@@ -490,6 +535,8 @@ export default function ComponentsPage() {
         name: data.name,
         slug: data.slug,
         description: data.description,
+        previewImageLarge: data.previewImageLarge || undefined,
+        previewImageSmall: data.previewImageSmall || undefined,
         isFree: data.isFree ?? true,
         requiredTier: data.requiredTier || "free",
         tags: data.tags || [],
@@ -1425,6 +1472,8 @@ export default function ComponentsPage() {
               name: selectedComponent.name,
               slug: selectedComponent.slug,
               description: selectedComponent.description || "",
+              previewImageLarge: selectedComponent.previewImageLarge || "",
+              previewImageSmall: selectedComponent.previewImageSmall || "",
               isFree: selectedComponent.isFree,
               requiredTier: (selectedComponent as any).requiredTier || "free",
               tags: selectedComponent.tags || [],

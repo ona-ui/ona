@@ -101,7 +101,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${fontSans.variable} ${fontDisplay.variable} ${fontMono.variable} font-sans antialiased`}
+        className={`${fontSans.variable} ${fontDisplay.variable} ${fontMono.variable} font-sans antialiased bg-[#F1F0EE]`}
       >
         <Banner />
         <Providers>{children}</Providers>

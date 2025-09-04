@@ -20,7 +20,7 @@ export function DocsLayoutClient({ children, navigationData, categories }: DocsL
       <div className="min-h-screen bg-[#F1F0EE] relative">
         <div className="absolute inset-0" style={{ backgroundSize: '24px 24px' }}></div>
         <Navbar />
-        <div className="flex h-screen pt-28">
+        <div className="flex h-screen pt-40">
           <div className="hidden md:block w-64 flex-shrink-0 h-full overflow-y-auto">
             <div className="sticky top-0">
               <StaticDocsSidebar
@@ -48,20 +48,21 @@ export function DocsLayoutClient({ children, navigationData, categories }: DocsL
       
       <Navbar />
       
-      <div className="flex h-screen pt-28">
-        {/* Sidebar - Desktop */}
-        <div className={`hidden md:block flex-shrink-0 h-full overflow-y-auto transition-all duration-300 ease-in-out ${
-          isCollapsed ? 'w-16' : 'w-64'
-        }`}>
-          <div className="sticky top-0">
-            <StaticDocsSidebar
-              navigationData={navigationData}
-              categories={categories}
-              isCollapsed={isCollapsed}
-              onToggle={toggle}
-            />
-          </div>
+      {/* Sidebar - Desktop - Fixed position */}
+      <div className={`hidden md:block fixed left-0 top-32 bottom-0 transition-all duration-300 ease-in-out z-20 ${
+        isCollapsed ? 'w-16' : 'w-64'
+      }`}>
+        <div className="h-full overflow-y-auto">
+          <StaticDocsSidebar
+            navigationData={navigationData}
+            categories={categories}
+            isCollapsed={isCollapsed}
+            onToggle={toggle}
+          />
         </div>
+      </div>
+
+      <div className="flex pt-32" style={{ height: 'calc(100vh - 32px)' }}>
 
         {/* Mobile sidebar - rendered separately */}
         <div className="md:hidden">
@@ -72,25 +73,12 @@ export function DocsLayoutClient({ children, navigationData, categories }: DocsL
         </div>
 
         {/* Main content area with rounded container */}
-        <main className={`flex-1 overflow-y-auto h-full transition-all duration-300 ease-in-out ${
-          isCollapsed ? 'ml-4' : 'ml-6'
+        <main className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${
+          isCollapsed ? 'md:ml-20' : 'md:ml-72'
         }`}>
-          {/* Toggle button - Desktop only */}
-          <button
-            onClick={toggle}
-            className="hidden md:flex items-center justify-center w-8 h-8 bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 mb-4 ml-2 mt-2 text-slate-600 hover:text-slate-900"
-            title={isCollapsed ? 'Étendre la sidebar' : 'Réduire la sidebar'}
-          >
-            {isCollapsed ? (
-              <PanelLeftOpen className="w-4 h-4" />
-            ) : (
-              <PanelLeftClose className="w-4 h-4" />
-            )}
-          </button>
-
           {/* Rounded container for content */}
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200/50 mr-4 mb-4 min-h-[calc(100vh-8rem)] overflow-hidden">
-            <div className="p-6 md:p-8">
+          <div className="rounded-2xl shadow-sm mr-4 mb-4 mt-2 flex-1 flex flex-col bg-[#F1F0EE]">
+            <div className="p-6 md:p-8 flex-1 overflow-y-auto">
               {children}
             </div>
           </div>
