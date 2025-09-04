@@ -73,14 +73,26 @@ export default function AllSectionsPage() {
           throw new Error(categoriesResponse.message || 'Erreur lors du chargement des catégories')
         }
 
-        // Récupérer tous les composants
-        const componentsResponse = await componentsApi.getComponents({
-          status: 'published',
-          limit: 1000 // Récupérer tous les composants
-        })
+        // Récupérer tous les composants avec pagination
+        const allComponents: any[] = []
+        let currentPage = 1
+        let hasMore = true
+        const limit = 50 // Limite maximum autorisée par l'API
 
-        if (!componentsResponse.success) {
-          throw new Error(componentsResponse.message || 'Erreur lors du chargement des composants')
+        while (hasMore) {
+          const componentsResponse = await componentsApi.getComponents({
+            status: 'published',
+            limit,
+            page: currentPage
+          })
+
+          if (!componentsResponse.success) {
+            throw new Error(componentsResponse.message || 'Erreur lors du chargement des composants')
+          }
+
+          allComponents.push(...componentsResponse.data.data)
+          hasMore = componentsResponse.data.meta.hasNext
+          currentPage++
         }
 
         // Organiser les composants par catégorie
@@ -98,7 +110,7 @@ export default function AllSectionsPage() {
         })
 
         // Ajouter les composants aux catégories
-        componentsResponse.data.data.forEach(component => {
+        allComponents.forEach(component => {
           const category = categoriesMap.get(component.subcategory.category.id)
           if (category) {
             // Transformer le PublicComponent en ComponentWithAccess
