@@ -104,7 +104,7 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
         transition={{ duration: 0.3 }}
         className="mb-6"
       >
-        <div className="bg-white/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 max-w-full">
+        <div className="bg-white/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 w-full max-w-none">
           {/* Header */}
           <div className="px-6 py-4 border-b border-slate-200/50">
             <div className="flex items-start justify-between">
@@ -142,7 +142,7 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
 
           {/* Controls */}
           <div className="px-6 py-3 bg-slate-50/50 border-b border-slate-200/50">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between flex-wrap gap-3">
               {/* Compact Toggle */}
               <div className="relative bg-white rounded-lg px-1 shadow-sm border border-slate-200">
                 <div className="relative flex">
@@ -336,7 +336,7 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="bg-white rounded-xl p-4 min-h-[500px] flex items-center justify-center" style={getViewportStyles()}>
+                <div className="bg-white rounded-xl p-4 min-h-[500px] flex items-center justify-center overflow-hidden" style={getViewportStyles()}>
                   {selectedVersion?.codePreview ? (
                     <PreviewIframe
                       key={refreshKey}
@@ -373,7 +373,7 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
                       <span className="text-xs text-slate-500">v{selectedVersion.versionNumber}</span>
                     </div>
                     
-                    <div className="bg-slate-900 rounded-xl overflow-hidden w-full">
+                    <div className="bg-slate-900 rounded-xl overflow-hidden w-full max-w-full">
                       <div className="bg-slate-800 px-4 py-2 flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <div className="flex gap-1.5">
@@ -386,7 +386,7 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
                           </span>
                         </div>
                       </div>
-                      <div className="p-0 overflow-hidden text-sm max-h-[400px]">
+                      <div className="p-0 overflow-auto text-sm max-h-[400px] max-w-full">
                         <SyntaxHighlighter
                           language="typescript"
                           style={oneDark}
@@ -525,7 +525,7 @@ function PreviewIframe({
   }
 
   return (
-    <div className="relative w-full min-h-[600px] flex justify-center">
+    <div className="relative w-full min-h-[600px] flex justify-center overflow-hidden">
       {!isLoaded && !hasError && (
         <div className="absolute inset-0 flex items-center justify-center bg-slate-50 rounded-lg">
           <div className="text-center">
