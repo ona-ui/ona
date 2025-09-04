@@ -466,10 +466,14 @@ export default function ComponentsPage() {
   const { data: componentsResponse, isLoading, error } = useComponents({
     includeStats: true,
     includeVersions: true,
+    includeSubcategory: true,
     page,
     limit
   })
-  const { data: categoriesResponse } = useCategories()
+  const { data: categoriesResponse } = useCategories({
+    includeSubcategories: true,
+    includeStats: true
+  })
   const { data: subcategoriesResponse } = useSubcategories({ categoryId: selectedCategoryId })
   const createMutation = useCreateComponent()
   const updateMutation = useUpdateComponent()

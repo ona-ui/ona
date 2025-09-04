@@ -42,6 +42,14 @@ interface ComponentWithAccess {
   }
 }
 
+interface SubcategoryWithComponents {
+  id: string
+  name: string
+  slug: string
+  description?: string
+  components: ComponentWithAccess[]
+}
+
 interface CategoryWithComponents {
   id: string
   name: string
@@ -51,11 +59,11 @@ interface CategoryWithComponents {
 }
 
 export default function AllSectionsPage() {
-  const [categoriesWithComponents, setCategoriesWithComponents] = useState<CategoryWithComponents[]>([])
+  const [subcategoriesWithComponents, setSubcategoriesWithComponents] = useState<SubcategoryWithComponents[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [filteredCategories, setFilteredCategories] = useState<CategoryWithComponents[]>([])
+  const [filteredSubcategories, setFilteredSubcategories] = useState<SubcategoryWithComponents[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,29 +98,33 @@ export default function AllSectionsPage() {
             throw new Error(componentsResponse.message || 'Erreur lors du chargement des composants')
           }
 
-          allComponents.push(...componentsResponse.data.data)
-          hasMore = componentsResponse.data.meta.hasNext
+          allComponents.push(...componentsResponse.data.components)
+          hasMore = componentsResponse.data.pagination.hasNext
           currentPage++
         }
 
-        // Organiser les composants par catégorie
-        const categoriesMap = new Map<string, CategoryWithComponents>()
+        // Organiser les composants par sous-catégorie
+        const subcategoriesMap = new Map<string, SubcategoryWithComponents>()
         
-        // Initialiser les catégories
-        categoriesResponse.data.forEach(category => {
-          categoriesMap.set(category.id, {
-            id: category.id,
-            name: category.name,
-            slug: category.slug,
-            description: category.description,
-            components: []
-          })
+        // Initialiser les sous-catégories
+        categoriesResponse.data.categories.forEach((category: any) => {
+          if (category.subcategories) {
+            category.subcategories.forEach((subcategory: any) => {
+              subcategoriesMap.set(subcategory.id, {
+                id: subcategory.id,
+                name: subcategory.name,
+                slug: subcategory.slug,
+                description: subcategory.description,
+                components: []
+              })
+            })
+          }
         })
 
-        // Ajouter les composants aux catégories
-        allComponents.forEach(component => {
-          const category = categoriesMap.get(component.subcategory.category.id)
-          if (category) {
+        // Ajouter les composants aux sous-catégories
+        allComponents.forEach((component: any) => {
+          const subcategory = subcategoriesMap.get(component.subcategoryId)
+          if (subcategory) {
             // Transformer le PublicComponent en ComponentWithAccess
             const componentWithAccess: ComponentWithAccess = {
               id: component.id,
@@ -120,8 +132,8 @@ export default function AllSectionsPage() {
               slug: component.slug,
               description: component.description,
               previewImageUrl: component.previewImageLarge || component.previewImageSmall,
-              categoryId: component.subcategory.category.id,
-              subcategoryId: component.subcategory.id,
+              categoryId: component.subcategory?.category?.id || '',
+              subcategoryId: component.subcategoryId,
               isFree: component.isFree,
               isNew: component.isNew,
               isFeatured: component.isFeatured,
@@ -132,28 +144,28 @@ export default function AllSectionsPage() {
                 icon: component.isFree ? '🆓' : (component.canAccess ? '✅' : '🔒'),
                 upgradeRequired: !component.isFree && !component.canAccess
               },
-              category: {
+              category: component.subcategory?.category ? {
                 id: component.subcategory.category.id,
                 name: component.subcategory.category.name,
                 slug: component.subcategory.category.slug
-              },
+              } : undefined,
               subcategory: {
-                id: component.subcategory.id,
-                name: component.subcategory.name,
-                slug: component.subcategory.slug
+                id: subcategory.id,
+                name: subcategory.name,
+                slug: subcategory.slug
               }
             }
-            category.components.push(componentWithAccess)
+            subcategory.components.push(componentWithAccess)
           }
         })
 
-        // Convertir en array et filtrer les catégories vides
-        const categoriesArray = Array.from(categoriesMap.values())
-          .filter(category => category.components.length > 0)
+        // Convertir en array et filtrer les sous-catégories vides
+        const subcategoriesArray = Array.from(subcategoriesMap.values())
+          .filter(subcategory => subcategory.components.length > 0)
           .sort((a, b) => a.name.localeCompare(b.name))
 
-        setCategoriesWithComponents(categoriesArray)
-        setFilteredCategories(categoriesArray)
+        setSubcategoriesWithComponents(subcategoriesArray)
+        setFilteredSubcategories(subcategoriesArray)
       } catch (err) {
         console.error('Erreur lors du chargement des données:', err)
         setError(err instanceof Error ? err.message : 'Une erreur est survenue')
@@ -168,22 +180,22 @@ export default function AllSectionsPage() {
   // Filtrage par recherche
   useEffect(() => {
     if (!searchQuery.trim()) {
-      setFilteredCategories(categoriesWithComponents)
+      setFilteredSubcategories(subcategoriesWithComponents)
       return
     }
 
     const query = searchQuery.toLowerCase()
-    const filtered = categoriesWithComponents.map(category => ({
-      ...category,
-      components: category.components.filter(component =>
+    const filtered = subcategoriesWithComponents.map(subcategory => ({
+      ...subcategory,
+      components: subcategory.components.filter(component =>
         component.name.toLowerCase().includes(query) ||
         component.description?.toLowerCase().includes(query) ||
-        category.name.toLowerCase().includes(query)
+        subcategory.name.toLowerCase().includes(query)
       )
-    })).filter(category => category.components.length > 0)
+    })).filter(subcategory => subcategory.components.length > 0)
 
-    setFilteredCategories(filtered)
-  }, [searchQuery, categoriesWithComponents])
+    setFilteredSubcategories(filtered)
+  }, [searchQuery, subcategoriesWithComponents])
 
   const getAccessIcon = (accessIndicator: ComponentWithAccess['accessIndicator']) => {
     switch (accessIndicator.icon) {
@@ -257,9 +269,9 @@ export default function AllSectionsPage() {
     )
   }
 
-  const totalComponents = categoriesWithComponents.reduce((acc, cat) => acc + cat.components.length, 0)
-  const freeComponents = categoriesWithComponents.reduce((acc, cat) => 
-    acc + cat.components.filter(comp => comp.isFree).length, 0
+  const totalComponents = subcategoriesWithComponents.reduce((acc, subcat) => acc + subcat.components.length, 0)
+  const freeComponents = subcategoriesWithComponents.reduce((acc, subcat) => 
+    acc + subcat.components.filter(comp => comp.isFree).length, 0
   )
 
   return (
@@ -268,11 +280,11 @@ export default function AllSectionsPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-slate-900 mb-4">
-            Tous les Composants
+            Tous les Sections
           </h1>
           <p className="text-xl text-slate-600 mb-6">
-            Découvrez notre collection complète de {totalComponents} composants UI premium, 
-            dont {freeComponents} gratuits, organisés par catégories.
+            Découvrez notre collection complète de {totalComponents} sections UI premium, 
+            dont {freeComponents} gratuites, organisées par type.
           </p>
           
           {/* Barre de recherche */}
@@ -280,10 +292,10 @@ export default function AllSectionsPage() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
             <Input
               type="text"
-              placeholder="Rechercher un composant..."
+              placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-white border-slate-200 focus:border-[#C96342] focus:ring-[#C96342]"
+              className="pl-10 bg-white border-2 border-dashed border-slate-200 focus:border-[#C96342] focus:ring-[#C96342]"
             />
           </div>
         </div>
@@ -292,100 +304,104 @@ export default function AllSectionsPage() {
         {searchQuery && (
           <div className="mb-6">
             <p className="text-sm text-slate-600">
-              {filteredCategories.reduce((acc, cat) => acc + cat.components.length, 0)} résultat(s) 
+              {filteredSubcategories.reduce((acc, subcat) => acc + subcat.components.length, 0)} résultat(s) 
               pour "{searchQuery}"
             </p>
           </div>
         )}
 
-        {/* Catégories et composants */}
-        {filteredCategories.length === 0 ? (
+        {/* Sous-catégories et composants */}
+        {filteredSubcategories.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-slate-500 text-lg">
-              {searchQuery ? 'Aucun composant trouvé pour cette recherche.' : 'Aucun composant disponible.'}
+              {searchQuery ? 'Aucune section trouvée pour cette recherche.' : 'Aucune section disponible.'}
             </p>
           </div>
         ) : (
-          <div className="space-y-12">
-            {filteredCategories.map((category) => (
-              <section key={category.id} className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-2xl font-bold text-slate-900">
-                      {category.name}
-                    </h2>
-                    {category.description && (
-                      <p className="text-slate-600 mt-1">
-                        {category.description}
-                      </p>
-                    )}
+          <div className="space-y-16">
+            {filteredSubcategories.map((subcategory) => (
+              <section key={subcategory.id} className="space-y-6">
+                <div className="text-center max-w-2xl mx-auto">
+                  <h2 className="text-3xl font-bold text-slate-900 mb-2">
+                    {subcategory.name}
+                  </h2>
+                  {subcategory.description && (
+                    <p className="text-slate-600 text-base max-w-3xl mx-auto line-clamp-1">
+                      {subcategory.description}
+                    </p>
+                  )}
+                  <div className="mt-3">
+                    <Badge variant="outline" className="text-slate-500 border-dashed border-slate-300">
+                      {subcategory.components.length} composant{subcategory.components.length > 1 ? 's' : ''}
+                    </Badge>
                   </div>
-                  <Badge variant="outline" className="text-slate-600">
-                    {category.components.length} composant{category.components.length > 1 ? 's' : ''}
-                  </Badge>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {category.components.map((component) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {subcategory.components.map((component) => (
                     <Link
                       key={component.id}
-                      href={`/docs/components/category/${component.category?.slug}/${component.subcategory?.slug}`}
+                      href={`/docs/components/${component.slug}`}
                       className="group"
                     >
-                      <Card className="overflow-hidden hover:shadow-lg transition-all duration-200 group-hover:scale-[1.02] bg-white border-slate-200">
+                      <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group-hover:-translate-y-1 bg-white border-2 border-dashed border-slate-200 hover:border-slate-300 shadow-sm">
                         {/* Preview Image */}
-                        <div className="aspect-video bg-slate-100 relative overflow-hidden">
+                        <div className="aspect-[4/3] bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden rounded-t-xl">
                           {component.previewImageUrl ? (
                             <Image
                               src={component.previewImageUrl}
                               alt={component.name}
                               fill
-                              className="object-cover group-hover:scale-105 transition-transform duration-200"
-                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                              className="object-cover group-hover:scale-105 transition-transform duration-300"
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center">
-                              <Eye className="w-8 h-8 text-slate-400" />
+                              <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                                <Eye className="w-6 h-6 text-slate-400" />
+                              </div>
                             </div>
                           )}
                           
-                          {/* Badges overlay */}
-                          <div className="absolute top-3 left-3 flex gap-2">
-                            <Badge 
-                              className={`text-xs ${getAccessBadgeColor(component.accessIndicator)} flex items-center gap-1`}
-                            >
-                              {getAccessIcon(component.accessIndicator)}
-                              {component.accessIndicator.label}
-                            </Badge>
-                            
-                            {component.isNew && (
-                              <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-xs">
-                                Nouveau
-                              </Badge>
-                            )}
-                            
-                            {component.isFeatured && (
-                              <Badge className="bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 border-amber-200/50 text-xs">
-                                Populaire
+                          {/* Badges overlay - minimaliste */}
+                          {(component.isNew || component.isFeatured) && (
+                            <div className="absolute top-3 right-3 flex gap-1">
+                              {component.isNew && (
+                                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                              )}
+                              {component.isFeatured && (
+                                <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+
+                        <CardContent className="p-6">
+                          <div className="flex items-start justify-between gap-3 mb-3">
+                            <h3 className="font-medium text-slate-900 group-hover:text-slate-700 transition-colors leading-tight">
+                              {component.name}
+                            </h3>
+                            {component.isFree && (
+                              <Badge variant="secondary" className="bg-green-50 text-green-700 border-0 text-xs px-2 py-0.5 font-medium">
+                                Gratuit
                               </Badge>
                             )}
                           </div>
-                        </div>
-
-                        <CardContent className="p-4">
-                          <h3 className="font-semibold text-slate-900 group-hover:text-[#C96342] transition-colors">
-                            {component.name}
-                          </h3>
                           {component.description && (
-                            <p className="text-sm text-slate-600 mt-1 line-clamp-2">
+                            <p className="text-sm text-slate-500 leading-relaxed line-clamp-3 mb-4">
                               {component.description}
                             </p>
                           )}
-                          {component.subcategory && (
-                            <p className="text-xs text-slate-500 mt-2">
-                              {component.subcategory.name}
-                            </p>
-                          )}
+                          
+                          {/* Tech Stack Badges */}
+                          <div className="flex gap-2 mt-auto">
+                            <Badge variant="outline" className="text-xs px-2 py-0.5 border-dashed border-blue-200 text-blue-700 bg-blue-50">
+                              React
+                            </Badge>
+                            <Badge variant="outline" className="text-xs px-2 py-0.5 border-dashed border-cyan-200 text-cyan-700 bg-cyan-50">
+                              Tailwind
+                            </Badge>
+                          </div>
                         </CardContent>
                       </Card>
                     </Link>

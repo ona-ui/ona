@@ -366,17 +366,18 @@ export function useInvalidateComponents() {
  * Hook pour les composants d'une sous-catégorie spécifique
  */
 export function useComponentsBySubcategory(subcategoryId: UUID) {
-  return useComponents({ subcategoryId, includeVersions: true })
+  return useComponents({ subcategoryId, includeVersions: true, includeSubcategory: true })
 }
 
 /**
  * Hook pour les composants récents
  */
 export function useRecentComponents(limit = 10) {
-  return useComponents({ 
-    limit, 
+  return useComponents({
+    limit,
     sort: { field: "createdAt", direction: "desc" },
-    includeStats: true 
+    includeStats: true,
+    includeSubcategory: true
   })
 }
 
@@ -384,10 +385,11 @@ export function useRecentComponents(limit = 10) {
  * Hook pour les composants populaires
  */
 export function usePopularComponents(limit = 10) {
-  return useComponents({ 
-    limit, 
+  return useComponents({
+    limit,
     sort: { field: "viewCount", direction: "desc" },
-    includeStats: true 
+    includeStats: true,
+    includeSubcategory: true
   })
 }
 
@@ -395,14 +397,14 @@ export function usePopularComponents(limit = 10) {
  * Hook pour les composants en brouillon
  */
 export function useDraftComponents() {
-  return useComponents({ status: "draft" as ComponentStatus })
+  return useComponents({ status: "draft" as ComponentStatus, includeSubcategory: true })
 }
 
 /**
  * Hook pour les composants publiés
  */
 export function usePublishedComponents(params?: Omit<GetComponentsParams, "status">) {
-  return useComponents({ ...params, status: "published" as ComponentStatus })
+  return useComponents({ ...params, status: "published" as ComponentStatus, includeSubcategory: true })
 }
 
 // =====================================================

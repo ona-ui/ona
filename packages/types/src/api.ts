@@ -196,7 +196,17 @@ export interface GetComponentsRequest {
 /**
  * Réponse de liste des composants
  */
-export interface GetComponentsResponse extends APIPaginatedResponse<PublicComponent> {}
+export interface GetComponentsResponse extends APIResponse<{
+  components: PublicComponent[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
+}> {}
 
 /**
  * Requête de détail d'un composant
@@ -309,7 +319,9 @@ export interface GetCategoriesRequest {
 /**
  * Réponse de liste des catégories
  */
-export interface GetCategoriesResponse extends APIResponse<CategoryWithSubcategories[]> {}
+export interface GetCategoriesResponse extends APIResponse<{
+  categories: CategoryWithSubcategories[];
+}> {}
 
 /**
  * Requête de détail d'une catégorie

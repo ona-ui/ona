@@ -8,7 +8,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: bg-[#F1F0EE];
+  --background: #F1F0EE;
   --foreground: oklch(0 0 0);
   --card: oklch(1.0000 0 0);
   --card-foreground: oklch(0 0 0);

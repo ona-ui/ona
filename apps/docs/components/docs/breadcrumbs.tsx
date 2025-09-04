@@ -26,7 +26,7 @@ interface BreadcrumbsProps {
 
 export function Breadcrumbs({ category, subcategory, componentName }: BreadcrumbsProps) {
   const { data: categoriesData } = useCategories()
-  const categories = Array.isArray(categoriesData) ? categoriesData : (categoriesData?.data || [])
+  const categories = categoriesData?.data?.categories || []
 
   const getCategoryName = (slug: string) => {
     const cat = categories.find((c: any) => c.slug === slug)

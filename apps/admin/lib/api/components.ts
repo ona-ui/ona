@@ -46,6 +46,7 @@ export const componentsApi = {
     limit?: number
     sort?: ComponentSortOptions
     includeVersions?: boolean
+    includeSubcategory?: boolean
     includeStats?: boolean
   }): Promise<GetComponentsResponse> {
     const searchParams = new URLSearchParams()
@@ -68,6 +69,7 @@ export const componentsApi = {
       searchParams.set("sortDirection", params.sort.direction)
     }
     if (params?.includeVersions) searchParams.set("includeVersions", "true")
+    if (params?.includeSubcategory) searchParams.set("includeSubcategory", "true")
     if (params?.includeStats) searchParams.set("includeStats", "true")
 
     const queryString = searchParams.toString()
@@ -299,6 +301,7 @@ export interface GetComponentsParams extends PaginationParams {
   cssFramework?: string
   sort?: ComponentSortOptions
   includeVersions?: boolean
+  includeSubcategory?: boolean
   includeStats?: boolean
 }
 
