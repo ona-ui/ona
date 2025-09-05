@@ -485,7 +485,26 @@ export default function ComponentsPage() {
 
   // Extraction des données réelles
   // L'API retourne { data: { items: [], pagination: {} } }
-  const components = Array.isArray((componentsResponse?.data as any)?.items)
+  
+  // Debug: Affichons la structure des données reçues
+  React.useEffect(() => {
+    if (componentsResponse) {
+      console.log("componentsResponse structure:", JSON.stringify(componentsResponse, null, 2))
+      
+      // Debug spécifique pour les composants et leurs relations
+      const debugComponents = Array.isArray((componentsResponse?.data as any)?.items)
+        ? (componentsResponse?.data as any).items
+        : []
+      
+      if (debugComponents.length > 0) {
+        console.log("Premier composant:", JSON.stringify(debugComponents[0], null, 2))
+        console.log("Subcategory du premier composant:", debugComponents[0]?.subcategory)
+        console.log("Category du premier composant:", debugComponents[0]?.subcategory?.category)
+      }
+    }
+  }, [componentsResponse])
+  
+  const rawComponents = Array.isArray((componentsResponse?.data as any)?.items)
     ? (componentsResponse?.data as any).items
     : Array.isArray(componentsResponse?.data) ? componentsResponse.data : []
   
@@ -496,6 +515,69 @@ export default function ComponentsPage() {
   const subcategories = Array.isArray((subcategoriesResponse?.data as any)?.items)
     ? (subcategoriesResponse?.data as any).items
     : Array.isArray(subcategoriesResponse?.data) ? subcategoriesResponse.data : []
+  
+  // Fonction pour enrichir les composants avec les données de catégories
+  const enrichComponentsWithCategories = (components: any[], categories: any[]) => {
+    if (!components?.length || !categories?.length) return components
+    
+    // Créer un map des sous-catégories avec leurs catégories parent
+    const subcategoryMap = new Map()
+    
+    categories.forEach(category => {
+      if (category.subcategories?.length) {
+        category.subcategories.forEach((subcategory: any) => {
+          subcategoryMap.set(subcategory.id, {
+            ...subcategory,
+            category: {
+              id: category.id,
+              name: category.name,
+              slug: category.slug,
+              description: category.description,
+              productId: category.productId,
+              iconName: category.iconName,
+              sortOrder: category.sortOrder,
+              isActive: category.isActive,
+              createdAt: category.createdAt,
+              updatedAt: category.updatedAt
+            }
+          })
+        })
+      }
+    })
+    
+    // Enrichir chaque composant avec sa sous-catégorie complète
+    return components.map(component => {
+      if (component.subcategoryId && subcategoryMap.has(component.subcategoryId)) {
+        return {
+          ...component,
+          subcategory: subcategoryMap.get(component.subcategoryId)
+        }
+      }
+      return component
+    })
+  }
+  
+  // Enrichir les composants avec les données de catégories
+  const components = enrichComponentsWithCategories(rawComponents, categories)
+  
+  // Debug pour l'enrichissement
+  React.useEffect(() => {
+    console.log("Debug enrichissement:")
+    console.log("- rawComponents.length:", rawComponents.length)
+    console.log("- categories.length:", categories.length)
+    console.log("- enriched components.length:", components.length)
+    
+    if (components.length > 0) {
+      console.log("Premier composant enrichi:", {
+        id: components[0].id,
+        name: components[0].name,
+        subcategoryId: components[0].subcategoryId,
+        hasSubcategory: !!components[0].subcategory,
+        subcategoryName: components[0].subcategory?.name,
+        categoryName: components[0].subcategory?.category?.name
+      })
+    }
+  }, [rawComponents, categories, components])
     
   const total = (componentsResponse?.data as any)?.pagination?.total || components.length
 
