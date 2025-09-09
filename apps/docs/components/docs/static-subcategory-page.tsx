@@ -113,8 +113,14 @@ export function StaticSubcategoryPage({
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
+                id={`component-${index + 1}`}
               >
-                <ComponentPreview component={component} />
+                <div className="relative">
+                  <div className="absolute -left-8 top-4 text-sm font-medium text-slate-400">
+                    #{index + 1}
+                  </div>
+                  <ComponentPreview component={component} />
+                </div>
               </motion.div>
             ))}
           </div>

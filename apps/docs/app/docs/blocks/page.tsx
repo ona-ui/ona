@@ -121,10 +121,22 @@ export default function AllSectionsPage() {
           }
         })
 
+        // Créer un map pour trouver facilement la catégorie d'une sous-catégorie
+        const subcategoryToCategoryMap = new Map<string, any>()
+        categoriesResponse.data.categories.forEach((category: any) => {
+          if (category.subcategories) {
+            category.subcategories.forEach((subcategory: any) => {
+              subcategoryToCategoryMap.set(subcategory.id, category)
+            })
+          }
+        })
+
         // Ajouter les composants aux sous-catégories
         allComponents.forEach((component: any) => {
           const subcategory = subcategoriesMap.get(component.subcategoryId)
-          if (subcategory) {
+          const category = subcategoryToCategoryMap.get(component.subcategoryId)
+          
+          if (subcategory && category) {
             // Transformer le PublicComponent en ComponentWithAccess
             const componentWithAccess: ComponentWithAccess = {
               id: component.id,
@@ -132,7 +144,7 @@ export default function AllSectionsPage() {
               slug: component.slug,
               description: component.description,
               previewImageUrl: component.previewImageLarge || component.previewImageSmall,
-              categoryId: component.subcategory?.category?.id || '',
+              categoryId: category.id,
               subcategoryId: component.subcategoryId,
               isFree: component.isFree,
               isNew: component.isNew,
@@ -144,11 +156,11 @@ export default function AllSectionsPage() {
                 icon: component.isFree ? '🆓' : (component.canAccess ? '✅' : '🔒'),
                 upgradeRequired: !component.isFree && !component.canAccess
               },
-              category: component.subcategory?.category ? {
-                id: component.subcategory.category.id,
-                name: component.subcategory.category.name,
-                slug: component.subcategory.category.slug
-              } : undefined,
+              category: {
+                id: category.id,
+                name: category.name,
+                slug: category.slug
+              },
               subcategory: {
                 id: subcategory.id,
                 name: subcategory.name,
@@ -278,13 +290,13 @@ export default function AllSectionsPage() {
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-6 py-12">
         {/* Header */}
-        <div className="mb-10 text-center">
-          <h1 className="text-5xl md:text-6xl font-black text-slate-900 mb-6 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-700 bg-clip-text text-transparent">
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
             All Components
           </h1>
-          <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-3xl mx-auto font-medium leading-relaxed">
-            {totalComponents} premium sections ready to copy-paste. 
-            <span className="text-slate-900 font-semibold"> {freeComponents} free to start.</span>
+          <p className="text-base md:text-lg text-slate-600 mb-6 max-w-2xl mx-auto">
+            {totalComponents} sections ready to copy-paste. 
+            <span className="text-slate-900 font-medium"> {freeComponents} free to start.</span>
           </p>
           
           {/* Barre de recherche */}
@@ -310,7 +322,7 @@ export default function AllSectionsPage() {
           </div>
         )}
 
-        {/* Sous-catégories et composants */}
+        {/* Tous les composants ensemble */}
         {filteredSubcategories.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-slate-500 text-lg">
@@ -318,74 +330,52 @@ export default function AllSectionsPage() {
             </p>
           </div>
         ) : (
-          <div className="space-y-12">
-            {filteredSubcategories.map((subcategory) => (
-              <section key={subcategory.id} className="space-y-6">
-                <div className="text-center max-w-4xl mx-auto">
-                  <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4 tracking-tight">
-                    {subcategory.name}
-                  </h2>
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full border border-slate-200/60 shadow-sm">
-                    <div className="w-2 h-2 bg-[#C96342] rounded-full"></div>
-                    <span className="text-sm font-medium text-slate-700">
-                      {subcategory.components.length} component{subcategory.components.length > 1 ? 's' : ''}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {subcategory.components.map((component) => (
-                    <Link
-                      key={component.id}
-                      href={`/docs/components/${component.slug}`}
-                      className="group"
-                    >
-                      <Card className="overflow-hidden bg-white/90 backdrop-blur-sm border border-white/40 shadow-lg">
-                        {/* Preview Image */}
-                        <div className="aspect-[4/3] bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden">
-                          {component.previewImageUrl ? (
-                            <Image
-                              src={component.previewImageUrl}
-                              alt={component.name}
-                              fill
-                              className="object-cover"
-                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <div className="w-16 h-16 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center shadow-lg">
-                                <Eye className="w-8 h-8 text-slate-400" />
-                              </div>
-                            </div>
-                          )}
-                          
-                          {/* Status indicators */}
-                          <div className="absolute top-4 left-4 flex gap-2">
-                            {component.isFree && (
-                              <div className="px-3 py-1 bg-green-500/90 text-white text-xs font-semibold rounded-full backdrop-blur-sm shadow-lg">
-                                FREE
-                              </div>
-                            )}
-                            {component.isNew && (
-                              <div className="w-3 h-3 bg-blue-500 rounded-full shadow-lg"></div>
-                            )}
-                            {component.isFeatured && (
-                              <div className="w-3 h-3 bg-amber-500 rounded-full shadow-lg"></div>
-                            )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredSubcategories.flatMap((subcategory) => 
+              subcategory.components.map((component, componentIndex) => (
+                <Link
+                  key={component.id}
+                  href={`/docs/components/category/${component.category?.slug}/${component.subcategory?.slug}#component-${componentIndex + 1}`}
+                  className="group"
+                >
+                  <Card className="overflow-hidden bg-white/90 backdrop-blur-sm border border-gray-200 shadow-lg relative">
+                    <div className="absolute inset-1 border border-gray-300 rounded-md pointer-events-none"></div>
+                    {/* Preview Image */}
+                    <div className="aspect-[3/2] bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden">
+                      {component.previewImageUrl ? (
+                        <Image
+                          src={component.previewImageUrl}
+                          alt={component.name}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <div className="w-16 h-16 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                            <Eye className="w-8 h-8 text-slate-400" />
                           </div>
                         </div>
+                      )}
+                      
+                      {/* Badge section + Status indicators */}
+                      <div className="absolute top-4 left-4 flex flex-col gap-2 z-20">
+                        <div className="px-3 py-1.5 bg-[#C96342] text-white text-sm font-semibold rounded-lg shadow-md border border-[#B55638]">
+                          {subcategory.name}
+                        </div>
+                        
+                      </div>
+                    </div>
 
-                        <CardContent className="p-6">
-                          <h3 className="font-bold text-slate-900 group-hover:text-[#C96342] text-lg leading-tight">
-                            {component.name}
-                          </h3>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  ))}
-                </div>
-              </section>
-            ))}
+                    <CardContent className="p-6">
+                      <h3 className="font-semibold text-slate-900 group-hover:text-[#C96342] text-base leading-tight">
+                        {component.name}
+                      </h3>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))
+            )}
           </div>
         )}
       </div>
