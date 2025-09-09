@@ -225,8 +225,8 @@ export default function AllSectionsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F1F0EE]">
-        <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="min-h-screen bg-gradient-to-br from-[#F8F7F5] via-[#F1F0EE] to-[#EFEDE8]">
+        <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="mb-8">
             <Skeleton className="h-10 w-64 mb-4" />
             <Skeleton className="h-6 w-96 mb-6" />
@@ -256,8 +256,8 @@ export default function AllSectionsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#F1F0EE]">
-        <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="min-h-screen bg-gradient-to-br from-[#F8F7F5] via-[#F1F0EE] to-[#EFEDE8]">
+        <div className="max-w-7xl mx-auto px-6 py-12">
           <Alert className="max-w-2xl">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
@@ -275,27 +275,27 @@ export default function AllSectionsPage() {
   )
 
   return (
-    <div className="min-h-screen bg-[#F1F0EE]">
-      <div className="max-w-7xl mx-auto px-6 py-8">
+    <div className="min-h-screen">
+      <div className="max-w-7xl mx-auto px-6 py-12">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 mb-4">
-            Tous les Sections
+        <div className="mb-10 text-center">
+          <h1 className="text-5xl md:text-6xl font-black text-slate-900 mb-6 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-700 bg-clip-text text-transparent">
+            All Components
           </h1>
-          <p className="text-xl text-slate-600 mb-6">
-            Découvrez notre collection complète de {totalComponents} sections UI premium, 
-            dont {freeComponents} gratuites, organisées par type.
+          <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-3xl mx-auto font-medium leading-relaxed">
+            {totalComponents} premium sections ready to copy-paste. 
+            <span className="text-slate-900 font-semibold"> {freeComponents} free to start.</span>
           </p>
           
           {/* Barre de recherche */}
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+          <div className="relative max-w-lg mx-auto">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
             <Input
               type="text"
-              placeholder="Search..."
+              placeholder="Search components..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-white border-2 border-dashed border-slate-200 focus:border-[#C96342] focus:ring-[#C96342]"
+              className="pl-12 pr-4 py-4 text-lg bg-white/80 backdrop-blur-sm border-2 border-slate-200/60 rounded-2xl shadow-lg focus:border-[#C96342] focus:ring-2 focus:ring-[#C96342]/20"
             />
           </div>
         </div>
@@ -318,22 +318,18 @@ export default function AllSectionsPage() {
             </p>
           </div>
         ) : (
-          <div className="space-y-16">
+          <div className="space-y-12">
             {filteredSubcategories.map((subcategory) => (
               <section key={subcategory.id} className="space-y-6">
-                <div className="text-center max-w-2xl mx-auto">
-                  <h2 className="text-3xl font-bold text-slate-900 mb-2">
+                <div className="text-center max-w-4xl mx-auto">
+                  <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4 tracking-tight">
                     {subcategory.name}
                   </h2>
-                  {subcategory.description && (
-                    <p className="text-slate-600 text-base max-w-3xl mx-auto line-clamp-1">
-                      {subcategory.description}
-                    </p>
-                  )}
-                  <div className="mt-3">
-                    <Badge variant="outline" className="text-slate-500 border-dashed border-slate-300">
-                      {subcategory.components.length} composant{subcategory.components.length > 1 ? 's' : ''}
-                    </Badge>
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full border border-slate-200/60 shadow-sm">
+                    <div className="w-2 h-2 bg-[#C96342] rounded-full"></div>
+                    <span className="text-sm font-medium text-slate-700">
+                      {subcategory.components.length} component{subcategory.components.length > 1 ? 's' : ''}
+                    </span>
                   </div>
                 </div>
 
@@ -344,64 +340,45 @@ export default function AllSectionsPage() {
                       href={`/docs/components/${component.slug}`}
                       className="group"
                     >
-                      <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group-hover:-translate-y-1 bg-white border-2 border-dashed border-slate-200 hover:border-slate-300 shadow-sm">
+                      <Card className="overflow-hidden bg-white/90 backdrop-blur-sm border border-white/40 shadow-lg">
                         {/* Preview Image */}
-                        <div className="aspect-[4/3] bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden rounded-t-xl">
+                        <div className="aspect-[4/3] bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden">
                           {component.previewImageUrl ? (
                             <Image
                               src={component.previewImageUrl}
                               alt={component.name}
                               fill
-                              className="object-cover group-hover:scale-105 transition-transform duration-300"
+                              className="object-cover"
                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center">
-                              <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                                <Eye className="w-6 h-6 text-slate-400" />
+                              <div className="w-16 h-16 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                                <Eye className="w-8 h-8 text-slate-400" />
                               </div>
                             </div>
                           )}
                           
-                          {/* Badges overlay - minimaliste */}
-                          {(component.isNew || component.isFeatured) && (
-                            <div className="absolute top-3 right-3 flex gap-1">
-                              {component.isNew && (
-                                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                              )}
-                              {component.isFeatured && (
-                                <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
-                              )}
-                            </div>
-                          )}
+                          {/* Status indicators */}
+                          <div className="absolute top-4 left-4 flex gap-2">
+                            {component.isFree && (
+                              <div className="px-3 py-1 bg-green-500/90 text-white text-xs font-semibold rounded-full backdrop-blur-sm shadow-lg">
+                                FREE
+                              </div>
+                            )}
+                            {component.isNew && (
+                              <div className="w-3 h-3 bg-blue-500 rounded-full shadow-lg"></div>
+                            )}
+                            {component.isFeatured && (
+                              <div className="w-3 h-3 bg-amber-500 rounded-full shadow-lg"></div>
+                            )}
+                          </div>
                         </div>
 
                         <CardContent className="p-6">
-                          <div className="flex items-start justify-between gap-3 mb-3">
-                            <h3 className="font-medium text-slate-900 group-hover:text-slate-700 transition-colors leading-tight">
-                              {component.name}
-                            </h3>
-                            {component.isFree && (
-                              <Badge variant="secondary" className="bg-green-50 text-green-700 border-0 text-xs px-2 py-0.5 font-medium">
-                                Gratuit
-                              </Badge>
-                            )}
-                          </div>
-                          {component.description && (
-                            <p className="text-sm text-slate-500 leading-relaxed line-clamp-3 mb-4">
-                              {component.description}
-                            </p>
-                          )}
-                          
-                          {/* Tech Stack Badges */}
-                          <div className="flex gap-2 mt-auto">
-                            <Badge variant="outline" className="text-xs px-2 py-0.5 border-dashed border-blue-200 text-blue-700 bg-blue-50">
-                              React
-                            </Badge>
-                            <Badge variant="outline" className="text-xs px-2 py-0.5 border-dashed border-cyan-200 text-cyan-700 bg-cyan-50">
-                              Tailwind
-                            </Badge>
-                          </div>
+                          <h3 className="font-bold text-slate-900 group-hover:text-[#C96342] text-lg leading-tight">
+                            {component.name}
+                          </h3>
                         </CardContent>
                       </Card>
                     </Link>

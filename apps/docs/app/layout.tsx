@@ -9,7 +9,7 @@ import { Banner } from "@/components/banner"
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
 
 // Polices
-const fontSans = Outfit({
+const fontSans = Geist({
   subsets: ["latin"],
   variable: "--font-sans",
 })

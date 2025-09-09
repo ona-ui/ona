@@ -5,8 +5,6 @@ import Aurora from './aurora-background'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@workspace/ui/components/button'
-import WordSwitcher from './word-switcher'
-import LightRays from './aurora-background'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -35,37 +33,34 @@ export default function Hero() {
     }
   ]
   return (
-    <div className="min-h-screen bg-[#F1F0EE] relative pt-32 sm:pt-36 lg:pt-32 overflow-hidden">
-      {/* Grid background */}
+    <div className="min-h-screen bg-gradient-to-br from-[#F8F7F5] via-[#F1F0EE] to-[#EFEDE8] relative pt-32 sm:pt-36 lg:pt-32 overflow-hidden">
+      {/* Premium Grid background */}
       <div className="absolute inset-0" style={{
-        backgroundSize: '24px 24px'
+        backgroundImage: `
+          radial-gradient(circle at 25px 25px, rgba(200, 200, 200, 0.15) 2px, transparent 2px),
+          linear-gradient(0deg, transparent 24px, rgba(255, 255, 255, 0.1) 25px, rgba(255, 255, 255, 0.1) 26px, transparent 27px, transparent 74px, rgba(255, 255, 255, 0.1) 75px, rgba(255, 255, 255, 0.1) 76px, transparent 77px, transparent)
+        `,
+        backgroundSize: '50px 50px'
       }}></div>
       
-      {/* Aurora Background */}
+      {/* Premium Aurora Background */}
       <div className="absolute inset-0 overflow-hidden">
-  {/* <LightRays
-    raysOrigin="top-center"
-    raysColor="#ffbf47"
-    raysSpeed={3.5}
-    lightSpread={0.5}
-    rayLength={0.6}
-    followMouse={true}
-    mouseInfluence={0.1}
-    noiseAmount={0.8}
-    distortion={0.05}
-    className="custom-rays"
-  /> */}
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full h-full">
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-r from-orange-200/20 via-amber-200/30 to-yellow-200/20 rounded-full blur-3xl opacity-60 animate-pulse"></div>
+          <div className="absolute top-20 left-1/4 w-[600px] h-[300px] bg-gradient-to-r from-blue-200/15 via-purple-200/25 to-pink-200/15 rounded-full blur-3xl opacity-40 animate-pulse" style={{animationDelay: '2s'}}></div>
+          <div className="absolute top-40 right-1/4 w-[400px] h-[200px] bg-gradient-to-r from-green-200/10 via-emerald-200/20 to-teal-200/10 rounded-full blur-3xl opacity-30 animate-pulse" style={{animationDelay: '4s'}}></div>
+        </div>
       </div>
       
       <div className="relative px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
         <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col lg:flex-row gap-8 sm:gap-10 lg:gap-12 items-start min-h-[40vh] sm:min-h-[50vh] lg:min-h-[60vh]">
+          <div className="flex flex-col items-center text-center min-h-[60vh] sm:min-h-[70vh] lg:min-h-[80vh] relative">
             
-            {/* Left side - Content */}
+            {/* Centered Content */}
             <motion.div
-              className="w-full lg:pr-8 lg:flex-[2]"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
+              className="w-full max-w-4xl z-10 relative"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
               {/* TITRE classique avec effet original */}
@@ -75,7 +70,7 @@ export default function Hero() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
               >
-                <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-zinc-800 drop-shadow-[0_1.2px_1.2px_rgba(255,255,255,0.3)] tracking-[-0.5px] md:tracking-[-1px] leading-tight text-left">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-zinc-900 drop-shadow-[0_2px_4px_rgba(255,255,255,0.5)] tracking-[-0.5px] md:tracking-[-2px] leading-[0.95] text-center bg-gradient-to-b from-zinc-900 via-zinc-800 to-zinc-700 bg-clip-text text-transparent">
                   <motion.span
                     className=""
                     initial={{ opacity: 0 }}
@@ -93,16 +88,24 @@ export default function Hero() {
                     Else's{" "}
                     </motion.span>
                   <motion.span
-                    className="relative mx-1 sm:mx-2 px-2 py-1 sm:px-4 sm:py-1.5 rounded-full bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 font-medium shadow-sm border border-amber-200/50 text-sm sm:text-base"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6, delay: 0.9 }}
-                    style={{ display: 'inline-block', marginTop: '0.25rem', marginBottom: '0.25rem' }}
+                    className="relative mx-2 sm:mx-4 px-6 py-4 sm:px-10 sm:py-4 rounded-2xl bg-gradient-to-br text-slate-800 font-black shadow-xl text-xl sm:text-4xl md:text-4xl backdrop-blur-md transform perspective-1000"
+                    initial={{ opacity: 0, scale: 0.8, rotateY: 0 }}
+                    animate={{ opacity: 1, scale: 1, rotateY: 8 }}
+                    transition={{ duration: 0.8, delay: 0.9 }}
+                    style={{ 
+                      display: 'inline-block', 
+                      marginTop: '0.5rem', 
+                      marginBottom: '0.5rem',
+                      transformStyle: 'preserve-3d',
+                      boxShadow: '0 20px 40px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(148, 163, 184, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.3)'
+                    }}
+                    whileHover={{ 
+                      scale: 1.05, 
+                      rotateY: 4, 
+                      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(148, 163, 184, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.4)' 
+                    }}
                   >
-                    <WordSwitcher
-                      words={["ChatGPT", "Claude", "V0", "Gemini"]}
-                      interval={2500}
-                    />
+                    <span className="inline-block">AI Tools</span>
                   </motion.span>
                   <motion.span
                     initial={{ opacity: 0 }}
@@ -116,79 +119,20 @@ export default function Hero() {
 
               {/* Description */}
               <motion.p
-                className="text-base sm:text-lg text-slate-600 mb-6 sm:mb-8 leading-relaxed text-left"
+                className="text-xl sm:text-2xl md:text-3xl text-slate-700 mb-10 sm:mb-16 leading-relaxed text-center max-w-4xl mx-auto font-medium"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
               >
-                Copy-paste ready. Tailwind styled. Actually convert.
+                <span className="text-slate-600">Copy-paste ready. Tailwind styled. Actually convert.</span>
                 <br />
-                <strong className="text-slate-900 font-semibold">Ship unique apps while competitors use generic AI designs.</strong>
+                <strong className="text-slate-900 font-bold bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 bg-clip-text text-transparent">Ship unique apps while competitors use generic AI designs.</strong>
               </motion.p>
 
-              {/* Component Types Badges - Infinite Scroll */}
-              <motion.div
-                className="mb-4 sm:mb-6 overflow-hidden max-w-full sm:max-w-lg lg:max-w-xl"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.7 }}
-              >
-                <div className="relative mb-3 overflow-hidden">
-                  <div
-                    className="flex gap-3 whitespace-nowrap"
-                    style={{
-                      animation: 'scroll-left 30s linear infinite'
-                    }}
-                  >
-                    {[
-                      "Hero sections",
-                      "Pricing tables",
-                      "Navigation",
-                      "Features",
-                      "CTAs",
-                      "Forms",
-                      "Testimonials",
-                      "FAQ sections",
-                      "Contact forms",
-                      "Footer",
-                      "About sections",
-                      "Team cards",
-                      "Blog layouts",
-                      "Product cards",
-                      "Stats sections",
-                      "Hero sections",
-                      "Pricing tables",
-                      "Navigation",
-                      "Features",
-                      "CTAs",
-                      "Forms",
-                      "Testimonials",
-                      "FAQ sections",
-                      "Contact forms",
-                      "Footer",
-                      "About sections",
-                      "Team cards",
-                      "Blog layouts",
-                      "Product cards",
-                      "Stats sections"
-                    ].map((item, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white/60 backdrop-blur-sm rounded-lg border border-dashed border-slate-300 shadow-sm flex-shrink-0"
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <p className="text-sm text-slate-500 leading-relaxed">
-                  All battle-tested. All production-ready. All impossible for AI to generate.
-                </p>
-              </motion.div>
 
               {/* CTA Buttons avec orange */}
               <motion.div
-                className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start mb-6 sm:mb-8"
+                className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center mb-8 sm:mb-12"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.8 }}
@@ -196,16 +140,16 @@ export default function Hero() {
                 <Button
                   size="lg"
                   onClick={() => router.push('/docs')}
-                  className="group relative text-white px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 bg-gradient-to-r from-[#C96342] to-[#B55638] hover:from-[#B55638] hover:to-[#A14D2F] shadow-lg hover:shadow-xl hover:shadow-orange-500/25 w-full sm:w-auto"
+                  className="group relative text-white px-8 py-4 sm:px-12 sm:py-6 rounded-xl cursor-pointer text-lg sm:text-lg font-semibold transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 bg-gradient-to-r from-[#C96342] to-[#B55638] hover:from-[#B55638] hover:to-[#A14D2F] shadow-lg hover:shadow-xl hover:shadow-orange-500/25 w-full sm:w-auto"
                 >
                   Browse 31 components
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 group-hover:rotate-45 transition-all duration-300" />
+                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-all duration-300" />
                 </Button>
               </motion.div>
 
               {/* Trust Bar */}
               <motion.div
-                className="flex flex-wrap gap-3 sm:gap-4 text-xs text-slate-600"
+                className="flex flex-wrap justify-center gap-6 sm:gap-8 text-base text-slate-700"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.9 }}
@@ -216,130 +160,119 @@ export default function Hero() {
                   "From real startups",
                   "Lifetime updates"
                 ].map((item, index) => (
-                  <div key={index} className="flex items-center gap-1.5">
-                    <Check className="w-3 h-3 text-green-600" />
-                    <span>{item}</span>
-                  </div>
+                  <motion.div 
+                    key={index} 
+                    className="flex items-center gap-3 px-4 py-2 rounded-full bg-white/40 backdrop-blur-sm shadow-lg border border-white/30"
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Check className="w-5 h-5 text-green-600" />
+                    <span className="font-semibold">{item}</span>
+                  </motion.div>
                 ))}
               </motion.div>
             </motion.div>
-            {/* Right side - Infinite Scroll Images */}
-            <motion.div
-              className="w-full mt-8 sm:mt-10 lg:mt-0 lg:pl-8 lg:flex-[2]"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-            >
-              <div className="relative">
-                <motion.div
-                  className="aspect-[4/5] sm:aspect-[5/6] rounded-2xl overflow-hidden relative"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.8, delay: 0.6 }}
-                  whileHover={{ scale: 1.02 }}
-                >
-                  {/* Container pour le défilement infini */}
-                  <div className="relative h-full overflow-hidden">
-                    {/* Desktop - Défilement vertical */}
-                    <div className="hidden md:block animate-infinite-scroll-vertical flex flex-col">
-                      {/* Premier cycle d'images */}
-                      {images.map((image, index) => (
-                        <div key={`first-${index}`} className="w-full h-[120%] flex-shrink-0 p-4 sm:p-6">
-                          <Image
-                            src={image.src}
-                            alt={image.alt}
-                            width={600}
-                            height={600}
-                            className="object-contain w-full h-full"
-                            priority={index === 0}
-                          />
-                        </div>
-                      ))}
-                      {/* Deuxième cycle d'images pour la continuité */}
-                      {images.map((image, index) => (
-                        <div key={`second-${index}`} className="w-full h-[120%] flex-shrink-0 p-4 sm:p-6">
-                          <Image
-                            src={image.src}
-                            alt={image.alt}
-                            width={600}
-                            height={600}
-                            className="object-contain w-full h-full"
-                          />
-                        </div>
-                      ))}
-                    </div>
+            
+            {/* Scattered Images with 3D Rotations */}
+            <div className="absolute inset-0 pointer-events-none">
+              {/* Image 1 - Top Left avec effet 3D */}
+              <motion.div
+                className="absolute top-8 left-8 sm:top-12 sm:left-12 lg:top-16 lg:left-20"
+                initial={{ opacity: 0, scale: 0.7, rotateX: -20, rotateY: -30, rotateZ: -25 }}
+                animate={{ opacity: 0.8, scale: 1, rotateX: -15, rotateY: -25, rotateZ: -20 }}
+                transition={{ duration: 1.2, delay: 1.2 }}
+                whileHover={{ scale: 1.1, rotateX: -10, rotateY: -20, rotateZ: -15, y: -10 }}
+                style={{ transformStyle: 'preserve-3d' }}
+              >
+                <div className="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 rounded-3xl shadow-2xl bg-white/90 backdrop-blur-md p-3 transform perspective-1000" style={{
+                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                }}>
+                  <Image
+                    src={images[0]?.src || "/placeholder.png"}
+                    alt={images[0]?.alt || "Placeholder"}
+                    width={250}
+                    height={250}
+                    className="object-cover w-full h-full rounded-2xl"
+                  />
+                </div>
+              </motion.div>
 
-                    {/* Mobile - Défilement horizontal */}
-                    <div className="md:hidden animate-infinite-scroll-horizontal flex flex-row">
-                      {/* Premier cycle d'images */}
-                      {images.map((image, index) => (
-                        <div key={`first-mobile-${index}`} className="w-[120%] h-full flex-shrink-0 p-3 sm:p-6">
-                          <Image
-                            src={image.src}
-                            alt={image.alt}
-                            width={600}
-                            height={600}
-                            className="object-contain w-full h-full"
-                            priority={index === 0}
-                          />
-                        </div>
-                      ))}
-                      {/* Deuxième cycle d'images pour la continuité */}
-                      {images.map((image, index) => (
-                        <div key={`second-mobile-${index}`} className="w-[120%] h-full flex-shrink-0 p-3 sm:p-6">
-                          <Image
-                            src={image.src}
-                            alt={image.alt}
-                            width={600}
-                            height={600}
-                            className="object-contain w-full h-full"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                </motion.div>
-              </div>
+              {/* Image 2 - Top Right avec rotation extrême */}
+              <motion.div
+                className="absolute top-6 right-8 sm:top-8 sm:right-12 lg:top-10 lg:right-20"
+                initial={{ opacity: 0, scale: 0.8, rotate: 45 }}
+                animate={{ opacity: 0.7, scale: 1, rotate: 35 }}
+                transition={{ duration: 1, delay: 1.4 }}
+                whileHover={{ scale: 1.08, rotate: 25, y: -8 }}
+              >
+                <div className="w-28 h-28 sm:w-36 sm:h-36 lg:w-44 lg:h-44 rounded-3xl shadow-2xl bg-white/85 backdrop-blur-md p-2 transform">
+                  <Image
+                    src={images[1]?.src || "/placeholder.png"}
+                    alt={images[1]?.alt || "Placeholder"}
+                    width={220}
+                    height={220}
+                    className="object-cover w-full h-full rounded-2xl"
+                  />
+                </div>
+              </motion.div>
+
+              {/* Image 3 - Bottom Left avec effet 3D inverse */}
+              <motion.div
+                className="absolute bottom-20 left-6 sm:bottom-24 sm:left-10 lg:bottom-28 lg:left-16"
+                initial={{ opacity: 0, scale: 0.7, rotateX: 25, rotateY: 30, rotateZ: 20 }}
+                animate={{ opacity: 0.6, scale: 1, rotateX: 20, rotateY: 25, rotateZ: 15 }}
+                transition={{ duration: 1.1, delay: 1.6 }}
+                whileHover={{ scale: 1.1, rotateX: 15, rotateY: 20, rotateZ: 10, y: -12 }}
+                style={{ transformStyle: 'preserve-3d' }}
+              >
+                <div className="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 rounded-3xl shadow-2xl bg-white/80 backdrop-blur-md p-2.5 transform perspective-1000">
+                  <Image
+                    src={images[2]?.src || "/placeholder.png"}
+                    alt={images[2]?.alt || "Placeholder"}
+                    width={230}
+                    height={230}
+                    className="object-cover w-full h-full rounded-2xl"
+                  />
+                </div>
+              </motion.div>
+
+              {/* Image 4 - Bottom Right avec rotation dramatique */}
+              <motion.div
+                className="absolute bottom-16 right-6 sm:bottom-20 sm:right-10 lg:bottom-24 lg:right-16"
+                initial={{ opacity: 0, scale: 0.8, rotate: -50 }}
+                animate={{ opacity: 0.75, scale: 1, rotate: -35 }}
+                transition={{ duration: 1.3, delay: 1.8 }}
+                whileHover={{ scale: 1.12, rotate: -25, y: -10 }}
+              >
+                <div className="w-36 h-36 sm:w-44 sm:h-44 lg:w-52 lg:h-52 rounded-3xl shadow-2xl bg-white/90 backdrop-blur-md p-3 transform" style={{
+                  boxShadow: '0 30px 60px -12px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.08)'
+                }}>
+                  <Image
+                    src={images[3]?.src || "/placeholder.png"}
+                    alt={images[3]?.alt || "Placeholder"}
+                    width={260}
+                    height={260}
+                    className="object-cover w-full h-full rounded-2xl"
+                  />
+                </div>
+              </motion.div>
+
+
+              {/* Additional decorative elements */}
+              <motion.div
+                className="absolute top-1/3 left-1/4 w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-r from-orange-200/30 to-amber-200/30 backdrop-blur-sm"
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 2 }}
+              />
               
-              {/* Style pour l'animation */}
-              <style jsx>{`
-                @keyframes infinite-scroll-vertical {
-                  0% {
-                    transform: translateY(0);
-                  }
-                  100% {
-                    transform: translateY(-50%);
-                  }
-                }
-                
-                @keyframes infinite-scroll-horizontal {
-                  0% {
-                    transform: translateX(0);
-                  }
-                  100% {
-                    transform: translateX(-50%);
-                  }
-                }
-                
-                .animate-infinite-scroll-vertical {
-                  animation: infinite-scroll-vertical 16s linear infinite;
-                }
-                
-                .animate-infinite-scroll-horizontal {
-                  animation: infinite-scroll-horizontal 4s linear infinite;
-                }
-                
-                @keyframes scroll-left {
-                  0% {
-                    transform: translateX(0);
-                  }
-                  100% {
-                    transform: translateX(-50%);
-                  }
-                }
-              `}</style>
-            </motion.div>
+              <motion.div
+                className="absolute bottom-1/3 right-1/4 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-r from-blue-200/20 to-purple-200/20 backdrop-blur-sm"
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 2.2 }}
+              />
+            </div>
 
           </div>
         </div>
