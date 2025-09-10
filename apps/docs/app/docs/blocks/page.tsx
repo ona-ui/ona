@@ -239,28 +239,25 @@ export default function AllSectionsPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#F8F7F5] via-[#F1F0EE] to-[#EFEDE8]">
         <div className="max-w-7xl mx-auto px-6 py-12">
-          <div className="mb-8">
-            <Skeleton className="h-10 w-64 mb-4" />
-            <Skeleton className="h-6 w-96 mb-6" />
-            <Skeleton className="h-10 w-full max-w-md" />
+          <div className="mb-8 text-center">
+            <div className="h-10 w-64 mx-auto mb-4 bg-gradient-to-r from-slate-200/60 via-slate-150/40 to-slate-200/60 rounded-lg animate-pulse" />
+            <div className="h-6 w-96 mx-auto mb-6 bg-gradient-to-r from-slate-200/60 via-slate-150/40 to-slate-200/60 rounded animate-pulse" />
+            <div className="h-12 w-full max-w-md mx-auto bg-gradient-to-r from-slate-200/60 via-slate-150/40 to-slate-200/60 rounded-2xl animate-pulse" />
           </div>
           
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="mb-12">
-              <Skeleton className="h-8 w-48 mb-6" />
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {[1, 2, 3, 4].map((j) => (
-                  <Card key={j} className="overflow-hidden">
-                    <Skeleton className="h-48 w-full" />
-                    <CardContent className="p-4">
-                      <Skeleton className="h-5 w-3/4 mb-2" />
-                      <Skeleton className="h-4 w-1/2" />
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <Card key={i} className="overflow-hidden bg-white/90 backdrop-blur-sm border border-gray-200 shadow-lg relative">
+                <div className="absolute inset-1 border border-gray-300 rounded-md pointer-events-none"></div>
+                <div className="aspect-[3/2] bg-gradient-to-br from-slate-200/40 via-slate-100/30 to-slate-200/40 relative overflow-hidden animate-pulse">
+                  <div className="absolute top-4 left-4 w-20 h-8 bg-gradient-to-r from-slate-300/60 via-slate-200/40 to-slate-300/60 rounded-lg animate-pulse" />
+                </div>
+                <CardContent className="p-6">
+                  <div className="h-5 w-3/4 bg-gradient-to-r from-slate-200/60 via-slate-150/40 to-slate-200/60 rounded animate-pulse" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     )
@@ -360,7 +357,7 @@ export default function AllSectionsPage() {
                       
                       {/* Badge section + Status indicators */}
                       <div className="absolute top-4 left-4 flex flex-col gap-2 z-20">
-                        <div className="px-3 py-1.5 bg-[#C96342] text-white text-sm font-semibold rounded-lg shadow-md border border-[#B55638]">
+                        <div className="px-3 py-1.5 bg-white/90 backdrop-blur-sm text-[#C96342] text-sm font-semibold rounded-lg shadow-md border border-white/60">
                           {subcategory.name}
                         </div>
                         

@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@workspace/ui/components/button'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import WordSwitcher from './word-switcher'
 
 export default function Hero() {
 
@@ -105,7 +106,11 @@ export default function Hero() {
                       boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(148, 163, 184, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.4)' 
                     }}
                   >
-                    <span className="inline-block">AI Tools</span>
+                    <WordSwitcher 
+                      words={["AI Tools", "Claude", "V0", "Cursor", "ChatGPT"]}
+                      interval={3000}
+                      className="inline-block"
+                    />
                   </motion.span>
                   <motion.span
                     initial={{ opacity: 0 }}

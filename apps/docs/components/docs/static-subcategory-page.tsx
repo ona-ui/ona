@@ -87,7 +87,7 @@ export function StaticSubcategoryPage({
         backgroundSize: '24px 24px'
       }}></div>
       
-      <div className="relative px-6 py-2">
+      <div className="relative py-2">
         <div className="mx-auto max-w-7xl">
           {/* Breadcrumbs with hero-like styling */}
           <div className="mb-6 flex items-center space-x-1 text-sm text-slate-600">
@@ -116,9 +116,6 @@ export function StaticSubcategoryPage({
                 id={`component-${index + 1}`}
               >
                 <div className="relative">
-                  <div className="absolute -left-8 top-4 text-sm font-medium text-slate-400">
-                    #{index + 1}
-                  </div>
                   <ComponentPreview component={component} />
                 </div>
               </motion.div>

@@ -83,13 +83,13 @@ export default function FAQ() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-                className="border rounded-xl bg-[#F1F0EE]/50 backdrop-blur-sm hover:bg-[#F1F0EE]/80 transition-all duration-200"
+                className="border border-[#B55638] rounded-xl bg-[#F1F0EE]/50 backdrop-blur-sm hover:bg-[#F1F0EE]/80 transition-all duration-200"
               >
                 <button
                   onClick={() => toggleFAQ(index)}
                   className="w-full p-4 text-left flex items-center justify-between hover:bg-slate-50/30 transition-colors duration-200 rounded-xl"
                 >
-                  <h3 className="text-base font-medium text-zinc-800 pr-4">
+                  <h3 className="text-base font-medium text-zinc-800 pr-4 cursor-pointer">
                     {item.question}
                   </h3>
                   <motion.div
