@@ -47,28 +47,6 @@ If you’re interested in contributing, expect a well-designed system where your
 
 ---
 
-## 📦 Installation (SOON)
-
-```bash
-# Install via npm
-npm install @ona/ui
-
-# Or use the CLI
-npx ona add hero
-```
-
-Then import and use:
-
-```jsx
-import { Hero } from "@ona/ui"
-
-export default function Page() {
-  return <Hero variant="conversion" />
-}
-```
-
----
-
 ## 🌍 Vision
 
 The future of development is **AI-assisted**. But AI alone produces generic, copy-pasted designs. Ona exists to fill that gap: **premium, human-curated UI sections that AI can’t generate**. Combine the speed of AI with the quality of Ona, and you unlock a new era of development.
@@ -105,19 +83,9 @@ You can follow progress in the [Project Board](https://github.com/orgs/ona-labs/
 
 ---
 
-## 🤝 Contributing
-
-We welcome contributors who want to help us build the **largest and most reliable library of production-ready UI sections**. Because our system of components and asset management is highly structured and scalable, contributing here means your work will have real impact across thousands of projects.
-
-* Check the [contribution guide](./CONTRIBUTING.md)
-* Explore the architecture docs
-* Submit PRs for new sections, fixes, or integrations
-
----
-
 ## 📲 Stay Connected
 
-* 🐦 Twitter: [@onalabs_io](https://twitter.com/onalabs_io)
+* 🐦 Twitter: [@ona_ui](https://twitter.com/ona_ui)
 * 💬 Discord: [Join our community](https://discord.gg/XzsMz8BjbV)
 * 🌐 Website: [ona-ui.com](https://ona-ui.com)
 
