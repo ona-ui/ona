@@ -28,28 +28,28 @@ const fontMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Ona UI — Components premium qui convertissent",
+    default: "Ona UI — Premium Components That Actually Convert",
     template: "%s — Ona UI",
   },
   description:
-    "Ona UI est une librairie de composants premium, issus de pages réelles à fort taux de conversion. Expédiez des pages uniques qui convertissent, sans look générique.",
+    "Premium React components extracted from real high-converting landing pages. Ship unique interfaces that convert at 6-8%, not generic AI-generated designs that everyone ignores.",
   applicationName: "Ona UI",
   openGraph: {
     type: "website",
     siteName: "Ona UI",
     url: siteUrl,
-    title: "Ona UI — Components premium qui convertissent",
+    title: "Ona UI — Premium Components That Actually Convert",
     description:
-      "Librairie de composants premium, non génériques, avec intégrations Stripe/Posthog/Supabase pour shipper vite et mieux convertir.",
-    images: [`${siteUrl}/image1.png`],
-    locale: "fr_FR",
+      "36 premium React components sourced from high-converting designs. Pre-built Stripe, Posthog & Supabase integrations. Ship faster, convert better.",
+    images: [`https://cdn.ona-ui.com/hero-ona.png`],
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ona UI — Components premium qui convertissent",
+    title: "Ona UI — Premium Components That Actually Convert",
     description:
-      "Des composants non génériques, basés sur des pages réelles à 10%+ de conversion. Shippez plus vite, convertissez mieux.",
-    images: [`${siteUrl}/image1.png`],
+      "Stop shipping generic AI-generated interfaces. 36 conversion-tested React components with pre-built integrations. Ship unique landing pages that convert.",
+    images: [`https://cdn.ona-ui.com/hero-ona.png`],
   },
   robots: {
     index: true,
